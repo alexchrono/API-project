@@ -22,6 +22,20 @@ module.exports = (sequelize, DataTypes) => {
           }
         }
       },
+      firstName: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          isAlpha: true,
+        }
+      },
+      lastName: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          isAlpha: true,
+        }
+      },
       email: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -43,7 +57,7 @@ module.exports = (sequelize, DataTypes) => {
       modelName: "User",
       defaultScope: {
         attributes: {
-          exclude: ["hashedPassword", "email", "createdAt", "updatedAt"]
+          exclude: ["firstName","lastName","hashedPassword", "email", "createdAt", "updatedAt"]
         }
       }
     }
