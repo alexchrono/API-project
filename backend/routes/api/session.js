@@ -19,12 +19,59 @@ const validateLogin = [
     handleValidationErrors
 ];
 
+/*const validateLogin2 = [
+  check('credential')
+  .notEmpty(),
+  check('password')
+  .notEmpty()
+] */
+
+const invalidCredentials = (err, req, res, next) => {
+
+  if(err.status===401){
+    res.status(401);
+    res.setHeader('Content-Type', 'application/json');
+    res.json({
+      message: "Invalid credentials"
+    });
+  }
+  else {
+    res.status(400);
+    res.setHeader('Content-Type', 'application/json');
+    res.json({
+      message: "Bad Request",
+      errors: {
+        credential: "Email or username is required",
+        password: "Password is required"
+      }
+    })
+  }
+};
+  let invalidCredentials2=((err,req,res,next)=>{
+
+    next(err)
+  })
+
   router.post(
     '/',
-    validateLogin,
+    validateLogin,invalidCredentials,
     async (req, res, next) => {
         const { credential, password } = req.body;
 
+        // let resBody={}
+        // if(!password && !credential){
+        //   resBody.credential="Email or username is required"
+        //   resBody.password="Password is required"
+        //   return next(err)
+        // }
+        // if(!password){
+        //   resBody.password="Password is required"
+        //   return next(err)
+        // }
+        // if(!credential){
+        //   resBody.credential="Email or username is required"
+        //   return next(err)
+        // }
         const user = await User.unscoped().findOne({
             where: {
                 [Op.or]: {
@@ -39,8 +86,11 @@ const validateLogin = [
         err.status = 401;
         err.title = 'Login failed';
         err.errors = { credential: 'The provided credentials were invalid.' };
+
         return next(err);
       }
+
+
 
       const safeUser = {
         id: user.id,
@@ -58,6 +108,11 @@ const validateLogin = [
       });
     }
   );
+
+  router.use(invalidCredentials)
+
+
+
   router.delete(
     '/',
     (_req, res) => {

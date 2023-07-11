@@ -34,11 +34,13 @@ const validateSignup = [
     '/',
     validateSignup,
     async (req, res) => {
-      const errors=validationResult(req);
-      if(!errors.isEmpty()){
+      const errors2=validationResult(req);
+      if(!errors2.isEmpty()){
+        console.log('in here')
         let newBag={}
         let target=errors.array()
         for (let ele of target){
+          console.log(ele)
           newBag.ele.param=ele.msg
         }
        res.status(400);
