@@ -12,12 +12,20 @@ const validateSignup = [
     check('email')
       .exists({ checkFalsy: true })
       .isEmail()
-      .withMessage('Please provide a valid email.'),
+      .withMessage('Invalid email'),
 
     check('username')
       .exists({ checkFalsy: true })
       .isLength({ min: 2 })
-      .withMessage('Please provide a username with at least 4 characters.'),
+      .withMessage('Username is required'),
+
+      check('firstName')
+    .exists({ checkFalsy: true })
+    .withMessage('First Name is required'),
+
+  check('lastName')
+    .exists({ checkFalsy: true })
+    .withMessage('Last Name is required'),
 
     handleValidationErrors
   ];
@@ -28,8 +36,13 @@ const validateSignup = [
     async (req, res) => {
       const errors=validationResult(req);
       if(!errors.isEmpty()){
+        let newBag={}
+        let target=errors.array()
+        for (let ele of target){
+          newBag.ele.param=ele.msg
+        }
        res.status(400);
-       return res.json({errors: errors.array()})
+       return res.json({message: "Bad Request", errors:newBag })
       }
 
       const { email, password, username,firstName,lastName } = req.body;
