@@ -38,7 +38,12 @@ const validateSignup = [
       })
       if (check) {
         res.status(500)
-        throw new Error('Error. This Email Already Exists')
+        res.setHeader('Content-Type','application/json')
+        res.json({
+          message: "User already exists",
+  errors: {
+    email: "User with that email already exists"
+        }})
 
       }
       let check2= await User.findOne({
@@ -46,8 +51,13 @@ const validateSignup = [
       })
       if (check2) {
         res.status(500)
-        throw new Error('Error.  This Username already exists')
-
+        res.setHeader('Content-Type','application/json')
+        res.json({
+          message: "User already exists",
+  errors: {
+    username: "User with that username already exists"
+  }
+        })
       }
 
       const hashedPassword =await bcrypt.hashSync(password);
@@ -68,7 +78,7 @@ const validateSignup = [
         user: safeUser
       });
 
- 
+
   }
   );
 

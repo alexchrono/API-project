@@ -23,7 +23,6 @@ module.exports = (sequelize, DataTypes) => {
      Spot.hasMany(models.Booking, { foreignKey: 'spotId' });
      const columnMapping = {
       through: 'Booking',
-      otherKey: 'userId',
       foreignKey: 'spotId',
       onDelete: 'CASCADE',
       hooks: true
