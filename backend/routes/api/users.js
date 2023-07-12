@@ -29,25 +29,26 @@ const validateSignup = [
 
     handleValidationErrors
   ];
-
+const middleware2=((err,req,res,next)=>{
+res.json({
+  message: "Bad Request",
+  errors: err.errors
+})
+})
   router.post(
     '/',
-    validateSignup,
-    async (req, res) => {
+    validateSignup,middleware2,
+    async (req, res,next) => {
+      const { email, password, username,firstName,lastName } = req.body;
       const errors2=validationResult(req);
       if(!errors2.isEmpty()){
-        console.log('in here')
-        let newBag={}
-        let target=errors.array()
-        for (let ele of target){
-          console.log(ele)
-          newBag.ele.param=ele.msg
+      next(err)
         }
-       res.status(400);
-       return res.json({message: "Bad Request", errors:newBag })
-      }
 
-      const { email, password, username,firstName,lastName } = req.body;
+
+
+
+
       let check= await User.findOne({
         where: {email:email }
       })
@@ -96,6 +97,8 @@ const validateSignup = [
 
   }
   );
-
+  // router.use((err,req,res,next)=>{
+  //   res.json({message: "Bad Request", errors:err.errors })
+  // })
 
   module.exports = router;

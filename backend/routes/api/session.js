@@ -2,20 +2,25 @@ const express = require('express');
 const { Op } = require('sequelize');
 const bcrypt = require('bcryptjs');
 
-const { setTokenCookie, restoreUser } = require('../../utils/auth');
+const { setTokenCookie, restoreUser,requireAuth } = require('../../utils/auth');
 const { User } = require('../../db/models');
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 const router = express.Router();
+const noLoggedInUser=((err,req,res,next)=>{
+res.status(200)
+res.setHeader('Content-Type','application/json')
+return res.json({ user: null });
+})
 
 const validateLogin = [
     check('credential')
         .exists({ checkFalsy: true })
         .notEmpty()
-        .withMessage('Please provide a valid email or username.'),
+        .withMessage("Email or username is required"),
     check('password')
         .exists({ checkFalsy: true })
-        .withMessage('Please provide a password.'),
+        .withMessage("Password is required"),
     handleValidationErrors
 ];
 
@@ -40,10 +45,7 @@ const invalidCredentials = (err, req, res, next) => {
     res.setHeader('Content-Type', 'application/json');
     res.json({
       message: "Bad Request",
-      errors: {
-        credential: "Email or username is required",
-        password: "Password is required"
-      }
+      errors: err.errors
     })
   }
 };
@@ -121,8 +123,9 @@ const invalidCredentials = (err, req, res, next) => {
     }
   );
   router.get(
-    '/',
-    (req, res) => {
+    '/',requireAuth,noLoggedInUser,
+    async (req, res) => {
+
       const { user } = req;
       if (user) {
         const safeUser = {
@@ -135,7 +138,7 @@ const invalidCredentials = (err, req, res, next) => {
         return res.json({
           user: safeUser
         });
-      } else return res.json({ user: null });
+      }
     }
   );
 
