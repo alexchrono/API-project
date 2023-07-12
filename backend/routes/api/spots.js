@@ -70,9 +70,11 @@ errors: err.errors})
 }
 
 
-router.get('/',async (req, res) => {
+
+router.get('/current',requireAuth,async (req, res) => {
 
     let allSpots= await Spot.findAll({
+        where: {ownerId: req.user.id},
     include: [
     {model: Review,
     attributes: ['stars']},
@@ -111,20 +113,15 @@ router.get('/',async (req, res) => {
             else {
                 ele.previewImage='no image for this spot'
             }
-            delete ele.SpotImages
-        })
+
+        });
+        delete ele.SpotImages
     })
 
     res.status(200)
     res.setHeader('Content-Type','application/json')
     res.json(newArray)
     })
-    // router.get('/current',requireAuth,restoreUser,async (req,res,next)=>{
-    //     const { token } = req.cookies;
-    //     console.log(Users.id)
-    //     res.status(200)
-    //     res.setHeader('Content-Type','application.json')
-    // })
 
     router.get('/:spotId',async (req, res) => {
         let realId=req.params.spotId
@@ -187,7 +184,56 @@ router.get('/',async (req, res) => {
               })
         }
     })
+    router.get('/',async (req, res) => {
 
+        let allSpots= await Spot.findAll({
+        include: [
+        {model: Review,
+        attributes: ['stars']},
+        {model: SpotImage,
+        attributes: ['url']}]})
+
+        // allSpots.toJson()
+        let newArray=[]
+        allSpots.forEach((ele)=>{
+
+        newArray.push(ele.toJSON())
+        })
+        newArray.forEach((ele)=>{
+            let starsAmount=0
+            let starsCount=0
+            ele.Reviews.forEach((review)=>{
+
+                if(review.stars){
+                starsAmount+=review.stars
+                starsCount+=1
+                }
+            })
+            if(starsAmount !==0){
+                ele.avgRating=(starsAmount/starsCount)
+            }
+            else {
+                ele.avgRating='This spot has no ratings'
+            }
+            delete ele.Reviews
+        })
+        newArray.forEach((ele)=>{
+            ele.SpotImages.forEach((spotimg)=>{
+                if(spotimg.url){
+                    ele.previewImage=spotimg.url
+                }
+                else {
+                    ele.previewImage='no image for this spot'
+                }
+
+            })
+            delete ele.SpotImages
+        })
+
+        res.status(200)
+        res.setHeader('Content-Type','application/json')
+        res.json(newArray)
+        })
     router.post('/',requireAuth,validateLogin2,displayValidationErrors,async (req,res,next)=>{
         let {address,city,state,country,lat,lng,name,description,price}=req.body
 
