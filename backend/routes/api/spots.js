@@ -69,7 +69,34 @@ const displayValidationErrors=(err,req,res,next)=>{
 errors: err.errors})
 }
 
-
+router.post('/:spotId/images',requireAuth,async (req,res)=>{
+    let specId=req.params.spotId
+    let {url,preview}=req.body
+    let testToFind= await Spot.findOne({
+        where: {id:specId}
+    })
+    if (testToFind){
+    let newBag=await SpotImage.create({
+        spotId: specId,
+        url,
+        preview
+    })
+    res.status(200)
+    res.setHeader('Content-Type','application/json')
+    let thingToFind= await SpotImage.findOne({
+        where: {url:url},
+        attributes: ['id','url','preview']
+    })
+    res.json(thingToFind)
+    }
+    else {
+        res.status(404)
+        res.setHeader('Content-Type','application/json')
+        res.json({
+            message: "Spot couldn't be found"
+          })
+    }
+})
 
 router.get('/current',requireAuth,async (req, res) => {
 
@@ -121,6 +148,37 @@ router.get('/current',requireAuth,async (req, res) => {
     res.status(200)
     res.setHeader('Content-Type','application/json')
     res.json(newArray)
+    })
+
+    router.put('/:spotId',requireAuth,validateLogin2,displayValidationErrors,async (req,res)=>{
+        let {address,city,state,country,lat,lng,name,description,price}=req.body
+        let targetSpot= await Spot.findOne({
+            where: {ownerId: req.user.id,
+                    id: req.params.spotId}
+        })
+        if (targetSpot){
+            targetSpot.address=address,
+            targetSpot.city=city,
+            targetSpot.state=state,
+            targetSpot.country=country,
+            targetSpot.lat=lat,
+            targetSpot.lng=lng,
+            targetSpot.name=name,
+            targetSpot.description=description,
+            targetSpot.price=price,
+            targetSpot.updatedAt=Date.now();
+
+            res.status(200)
+            res.json(targetSpot)
+        }
+
+        else {
+            res.status(404)
+            .setHeader('Content-Type','application/json')
+            .json({
+                message: "Spot couldn't be found"
+              })
+        }
     })
 
     router.get('/:spotId',async (req, res) => {
