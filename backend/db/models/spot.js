@@ -50,6 +50,9 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Spot',
+    scopes: {
+      reviews: {attributes: ['id','ownerId','address','city','state','country','lat','lng','name','price']}
+    }
   });
   return Spot;
 };

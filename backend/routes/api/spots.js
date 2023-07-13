@@ -73,8 +73,10 @@ errors: err.errors})
 router.post('/:spotId/images',requireAuth,async (req,res)=>{
     let specId=req.params.spotId
     let {url,preview}=req.body
+    let owner=req.user.id
     let testToFind= await Spot.findOne({
-        where: {id:specId}
+        where: {id:specId,
+                ownerId:owner}
     })
     if (testToFind){
     let newBag=await SpotImage.create({

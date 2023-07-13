@@ -27,6 +27,9 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Review',
+    defaultScope: {attributes: ['id','userId','spotId','review','stars','createdAt','updatedAt']},
+
   });
   return Review;
 };
+// attributes: ['id','userId','spotId','review','stars','createdAt','updatedAt'],
