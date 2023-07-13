@@ -18,7 +18,7 @@ router.get('/current',requireAuth,async(req,res)=>{
                 exclude: ['description','createdAt','updatedAt']
             }},
 
-            ]
+             ]
     })
 
     res.status(200)
