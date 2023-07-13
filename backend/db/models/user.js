@@ -35,7 +35,7 @@ module.exports = (sequelize, DataTypes) => {
 
   User.init(
     {
-    
+
       username: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -84,6 +84,11 @@ module.exports = (sequelize, DataTypes) => {
       defaultScope: {
         attributes: {
           exclude: ["firstName","lastName","hashedPassword", "email", "createdAt", "updatedAt"]
+        }
+      },
+      scopes: {
+        returnAll: {
+          
         }
       }
     }

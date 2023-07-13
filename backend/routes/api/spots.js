@@ -7,6 +7,7 @@ const { Spot,SpotImage,Review, User } = require('../../db/models');
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 const e = require('express');
+const spot = require('../../db/models/spot');
 const router = express.Router();
 
 
@@ -292,6 +293,30 @@ router.get('/current',requireAuth,async (req, res) => {
         res.setHeader('Content-Type','application/json')
         res.json(newArray)
         })
+
+    router.delete('/:spotId',requireAuth,async (req,res,next)=>{
+
+        let testing=await Spot.destroy({
+            where: {
+                id:req.params.spotId,
+                ownerId:req.user.id}})
+                console.log(testing)
+        if (testing){
+
+            res.status(200)
+            .setHeader('Content-Type','application/json')
+            .json({
+                message: "Successfully deleted"
+              })
+        }
+        else {
+            res.status(404)
+            .setHeader('Content-Type','application/json')
+            .json({
+                message: "Spot couldn't be found"
+              })
+        }
+    })
     router.post('/',requireAuth,validateLogin2,displayValidationErrors,async (req,res,next)=>{
         let {address,city,state,country,lat,lng,name,description,price}=req.body
 
