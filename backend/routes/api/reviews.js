@@ -11,11 +11,31 @@ const e = require('express');
 const spot = require('../../db/models/spot');
 const router = express.Router();
 const middleware2=((err,req,res,next)=>{
-    res.json({
+    res.status(400)
+    .setHeader('Content-Type','application/json')
+    .json({
       message: "Bad Request",
       errors: err.errors
     })
     })
+const authorizationCatch=(err,req,res,next)=>{
+res.status(403)
+.setHeader('Content-Type','application/json')
+.json('You do not have access to perform the requested operation')
+}
+
+    const validateLogin = [
+        check('review')
+            .exists({ checkFalsy: true })
+            .notEmpty()
+            .withMessage("Review text is required"),
+            check('stars')
+            .exists({ checkFalsy: true })
+            .isIn([1, 2, 3, 4, 5])
+            .withMessage("Stars must be an integer from 1 to 5"),
+        handleValidationErrors
+    ]
+
 router.post('/:reviewId/images',requireAuth,async (req,res)=>{
     if(!await Review.findByPk(req.params.reviewId)){
         res.status(404)
@@ -56,6 +76,8 @@ router.post('/:reviewId/images',requireAuth,async (req,res)=>{
         })
     }
 })
+
+
 router.get('/current',requireAuth,async(req,res)=>{
     let goal=await Review.findAll({
 
@@ -108,23 +130,63 @@ else  {
 
 
 })
+router.put('/:reviewId',requireAuth,validateLogin,middleware2,async(req,res)=>{
+let testReview=await Review.findByPk(req.params.reviewId)
+if(!testReview){
+    res.status(404)
+    .setHeader('Content-Type','application/json')
+    .json({
+        message: "Review couldn't be found"
+      })
+}
+else if(testReview && testReview.userId===req.user.id){
+const {review,stars}=req.body
+testReview.review=review
+testReview.stars=stars
+testReview.updatedAt=Date.now()
+res.status(200)
+.setHeader('Content-Type','application/json')
+.json(testReview)
+}
+else {
+    res.status(403)
+    .setHeader('Content-Type','application/json')
+    .json({
+        message: "Access Denied. You cannot edit a post which is not yours"
+      })
+}
+})
 
-// router.get('/:spotId/reviews',async (req,res)=>{
-//     req.params.spotId
-//     let test=Review.findAll({
-//         where: {
-//            spotId:req.params.spotId
-//         },
-//         include: {[
-//             {model: User,
-//             attributes: ['id','firstName','lastName']},
-//             {model:ReviewImage,
-//             attributes: ['id','url']}
-//         ]}
-//     })
-//     res.status(200)
-//     .setHeader('Content-Type','application/json')
+router.delete('/:reviewId',requireAuth,async (req,res,next)=>{
+    let test=Review.findByPk(req.params.reviewId)
+    if(!test){
+        res.status(404)
+        .setHeader('Content-Type','application/json')
+        .json(
+            {
+                message: "Review couldn't be found"
+              }
+        )
+    }
+    // else if(test.userId !==req.user.id){
+    //     next(err)
+    // }
+    else if(test && test.userId===req.user.id){
+        Review.destroy({
+            where: {
+                id:req.params.reviewId
+            }
+        })
+        res.status(200)
+        .setHeader('Content-Type','application/json')
+        .json({
+            message: "Successfully deleted"
+          })
+    }
 
-// })
+
+},authorizationCatch)
+
+
 
 module.exports=router

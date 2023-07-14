@@ -3,7 +3,7 @@ const { Op } = require('sequelize');
 const bcrypt = require('bcryptjs');
 
 const { setTokenCookie, restoreUser, requireAuth } = require('../../utils/auth');
-const { Spot, SpotImage, Review, User } = require('../../db/models');
+const { Spot, SpotImage, Review, ReviewImage,User } = require('../../db/models');
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 const e = require('express');
@@ -163,7 +163,33 @@ router.post('/:spotId/images', requireAuth, async (req, res) => {
         })
     }
 })
+router.get('/:spotId/reviews',async (req,res)=>{
 
+    let test=await Review.findAll({
+        where: {
+           spotId:req.params.spotId
+        },
+        attributes: ['id','userId','spotId','review','stars','createdAt','updatedAt'],
+        include: [
+            {model: User,
+            attributes: ['id','firstName','lastName']},
+            {model:ReviewImage,
+            attributes: ['id','url']}
+        ],
+    })
+    if(test.length>0){
+    res.status(200)
+    .setHeader('Content-Type','application/json')
+    .json({Reviews: test})
+    }
+    else {
+        res.status(404)
+        .setHeader('Content-Type','application/json')
+        .json({
+            message: "Spot couldn't be found"
+          })
+    }
+})
 router.get('/current', requireAuth, async (req, res) => {
 
     let allSpots = await Spot.findAll({
