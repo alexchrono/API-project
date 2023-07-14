@@ -15,15 +15,26 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: 'CASCADE',
       hooks: true });
       Review.belongsTo(models.Spot, { foreignKey: 'spotId' });
-
+      Review.hasMany(models.SpotImage, {foreignKey: 'spotId',otherKey:'spotId'})
+//       const columnMapping = {
+//         through: 'Spot',
+//  otherKey: 'id',
+//  foreignKey: 'id'
+//       }
+//       Review.belongsToMany(models.SpotImage,columnMapping)
     }
   }
   Review.init({
+    id: {type:DataTypes.INTEGER,
+      primaryKey: true,
+    autoIncrement:true},
     spotId: DataTypes.INTEGER,
     userId: DataTypes.INTEGER,
     review: DataTypes.STRING,
 
-    stars: DataTypes.INTEGER
+    stars: DataTypes.INTEGER,
+    createdAt: DataTypes.DATE,
+    updatedAt: DataTypes.DATE
   }, {
     sequelize,
     modelName: 'Review',

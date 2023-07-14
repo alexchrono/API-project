@@ -20,7 +20,9 @@ module.exports = (sequelize, DataTypes) => {
       hooks: true
      });
       //put on delete cascade and has hooks true here
-     Spot.hasMany(models.Booking, { foreignKey: 'spotId' });
+     Spot.hasMany(models.Booking, { foreignKey: 'spotId',onDelete: 'CASCADE',
+     hooks: true });
+     //if you experience problems delete the ondeletecascadeabove
      const columnMapping = {
       through: 'Booking',
       foreignKey: 'spotId',

@@ -11,9 +11,18 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       SpotImage.belongsTo(models.Spot, { foreignKey: 'spotId' });
+//       const columnMapping = {
+//         through: 'Spot',
+//  otherKey: 'id',
+//  foreignKey: 'id'
+//       }
+//       SpotImage.belongsToMany(models.Review,columnMapping)
+SpotImage.belongsTo(models.Review, {foreignKey: 'spotId',otherKey:'spotId'})
     }
   }
   SpotImage.init({
+    id: {type:DataTypes.INTEGER,
+    primaryKey: true},
     spotId: DataTypes.INTEGER,
     url: DataTypes.STRING,
     preview: DataTypes.BOOLEAN
