@@ -3,12 +3,35 @@ const { Op } = require('sequelize');
 const bcrypt = require('bcryptjs');
 
 const { setTokenCookie, restoreUser, requireAuth } = require('../../utils/auth');
-const { Spot, SpotImage, Review, ReviewImage,User } = require('../../db/models');
+const { Spot, SpotImage, Review, ReviewImage,User,Booking } = require('../../db/models');
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 const e = require('express');
 const spot = require('../../db/models/spot');
+const booking = require('../../db/models/booking');
 const router = express.Router();
+let validateLoginBooking=[(req,res,next)=>{
+    let startDate= new Date(req.body.startDate)
+    let endDate= new Date(req.body.endDate)
+        if(startDate>endDate){
+           res.status(400)
+          .setHeader('Content-Type','application/json')
+          .json(
+          {
+            message: "Bad Request",
+            errors: {
+              endDate: "endDate cannot be on or before startDate"
+            }
+          })
+        }
+        else {
+            next()
+        }
+    }
+
+
+];
+
 
 
 const validateLogin = [
@@ -21,7 +44,13 @@ const validateLogin = [
         .withMessage("Password is required"),
     handleValidationErrors
 ];
-
+const catchAuthoError=(err,req,res,next)=>{
+    res.status(403)
+    .setHeader('Content-Type','application/json')
+    .json({
+        message: "Forbidden"
+      })
+    }
 const validateLogin2 = [
     check('address')
         .exists({ checkFalsy: true })
@@ -131,17 +160,72 @@ router.post('/:spotId/reviews', requireAuth, validateLogin3, displayValidationEr
     }
 
 })
+router.get('/:spotId/bookings',requireAuth,async (req,res)=>{
+    let realTest=await Spot.findByPk(req.params.spotId)
+    if(!realTest){
+        res.status(404)
+        .setHeader('Content-Type','application/json')
+        .json({
+            message: "Spot couldn't be found"
+        })
+    }
+    if(realTest.ownerId!==req.user.id){
+        let result= await Booking.findAll({
+            where: {
+                spotId:req.params.spotId
+            },
+            attributes: ['spotId','startDate','endDate']
+        })
+
+        res.status(200)
+        .setHeader('Content-Type','application/json')
+        .json({Bookings:result})
+    }
+
+    else if(realTest.ownerId===req.user.id){
+    let test= await Booking.findAll({
+        where: {
+            spotId:req.params.spotId,
+        },
+        include: {model:User,
+        attributes: ['id','firstName','lastName']}
+
+    })
+    let newArray=[]
+    test.forEach((ele) => {
+
+        newArray.push(ele.toJSON())
+    })
+    let returnArray=[]
+    newArray.forEach((booking)=>{
+        let returnObj={}
+        returnObj.User=booking.User
+        returnObj.id=booking.id
+        returnObj.spotId=booking.spotId
+        returnObj.userId=booking.userId
+        returnObj.startDate=booking.startDate
+        returnObj.endDate=booking.endDate
+        returnObj.createdAt=booking.createdAt
+        returnObj.updatedAt=booking.updatedAt
+        returnArray.push(returnObj)
+    })
+    res.status(200)
+    .setHeader('Content-Type','application/json')
+    .json({Bookings: returnArray})
+    }
+
+
+})
 router.post('/:spotId/images', requireAuth, async (req, res) => {
     let specId = req.params.spotId
     let { url, preview } = req.body
     let owner = req.user.id
     let testToFind = await Spot.findOne({
         where: {
-            id: specId,
-            ownerId: owner
+            id: specId
         }
     })
-    if (testToFind) {
+    if (testToFind && testToFind.ownerId==owner) {
         let newBag = await SpotImage.create({
             spotId: specId,
             url,
@@ -155,14 +239,105 @@ router.post('/:spotId/images', requireAuth, async (req, res) => {
         })
         res.json(thingToFind)
     }
-    else {
+    else if (!test) {
         res.status(404)
         res.setHeader('Content-Type', 'application/json')
         res.json({
             message: "Spot couldn't be found"
         })
     }
-})
+    else {
+        next(err)
+    }
+},catchAuthoError)
+router.post('/:spotId/bookings',requireAuth,validateLoginBooking,async (req,res)=>{
+let test= await Spot.findByPk(req.params.spotId)
+if(!test){
+   return res.status(404)
+    .setHeader('Content-Type','application/json')
+    .json({
+        message: "Spot couldn't be found"
+      })
+}
+
+let {startDate,endDate}=req.body
+
+startDate=new Date(startDate)
+endDate=new Date(endDate)
+if(test && test.ownerId===req.user.id){
+    return next(err)
+}
+ if(test && test.ownerId!==req.user.id){
+    let datesToCheckStart= await Booking.findAll({
+        where: {
+            spotId:req.params.spotId,
+
+            startDate: {
+                [Op.between]: [startDate,endDate]
+            }}})
+    let datesToCheckEnd= await Booking.findAll({
+        where: {
+            spotId:req.params.spotId,
+
+            endDate: {
+                [Op.between]: [startDate,endDate]
+            }}})
+
+
+    if (datesToCheckStart.length===0 && datesToCheckEnd.length===0){
+        let goal=await Booking.create({
+            spotId:req.params.spotId,
+            userId:req.user.id,
+            startDate,
+            endDate
+        })
+        res.status(200)
+.setHeader('Content-Type','application/json')
+.json(goal)
+    }
+    else if(datesToCheckStart.length>0 && datesToCheckEnd.length===0){
+        res.status(403)
+        .setHeader('Content-Type','application/json')
+        res.json({message: "Sorry, this spot is already booked for the specified dates",
+            errors: {
+              endDate: "End date conflicts with an existing booking",
+            }
+          })
+
+    }
+    else if(datesToCheckEnd.length>0 && datesToCheckStart.length===0){
+        res.status(403)
+        .setHeader('Content-Type','application/json')
+        res.json({message: "Sorry, this spot is already booked for the specified dates",
+            errors: {
+
+                startDate: "Start date conflicts with an existing booking",
+
+            }
+          })
+
+    }
+    else{
+        res.status(403)
+        .setHeader('Content-Type','application/json')
+        .json({message: "Sorry, this spot is already booked for the specified dates",
+            errors: {
+                startDate: "Start date conflicts with an existing booking",
+                endDate: "End date conflicts with an existing booking",
+            }
+          })
+
+    }
+
+}
+
+
+
+
+
+
+
+},catchAuthoError)
 router.get('/:spotId/reviews',async (req,res)=>{
 
     let test=await Review.findAll({
@@ -251,11 +426,11 @@ router.put('/:spotId', requireAuth, validateLogin2, displayValidationErrors, asy
     let { address, city, state, country, lat, lng, name, description, price } = req.body
     let targetSpot = await Spot.findOne({
         where: {
-            ownerId: req.user.id,
+
             id: req.params.spotId
         }
     })
-    if (targetSpot) {
+    if (targetSpot && targetSpot.ownerId===req.user.id) {
         targetSpot.address = address,
             targetSpot.city = city,
             targetSpot.state = state,
@@ -272,14 +447,17 @@ router.put('/:spotId', requireAuth, validateLogin2, displayValidationErrors, asy
         res.json(targetSpot)
     }
 
-    else {
+    else if(!targetSpot){
         res.status(404)
             .setHeader('Content-Type', 'application/json')
             .json({
                 message: "Spot couldn't be found"
             })
     }
-})
+    else if (targetSpot && targetSpot.ownerId!==req.user.id){
+        next(err)
+    }
+},catchAuthoError)
 
 router.get('/:spotId', async (req, res) => {
     let realId = req.params.spotId
@@ -403,15 +581,20 @@ router.get('/', async (req, res) => {
 })
 
 router.delete('/:spotId', requireAuth, async (req, res, next) => {
-
+    let check= await Spot.findByPk(req.params.spotId)
     let testing = await Spot.destroy({
         where: {
             id: req.params.spotId,
             ownerId: req.user.id
         }
     })
-    console.log(testing)
-    if (testing) {
+
+    if(!check){
+        res.status(404)
+            .setHeader('Content-Type', 'application/json')
+            .json({
+                message: "Spot couldn't be found"})}
+   else if (testing) {
 
         res.status(200)
             .setHeader('Content-Type', 'application/json')
@@ -419,14 +602,11 @@ router.delete('/:spotId', requireAuth, async (req, res, next) => {
                 message: "Successfully deleted"
             })
     }
-    else {
-        res.status(404)
-            .setHeader('Content-Type', 'application/json')
-            .json({
-                message: "Spot couldn't be found"
-            })
+
+    else if(check&& check.ownerId!==req.user.id){
+        next(err)
     }
-})
+},catchAuthoError)
 router.post('/', requireAuth, validateLogin2, displayValidationErrors, async (req, res, next) => {
     let { address, city, state, country, lat, lng, name, description, price } = req.body
 

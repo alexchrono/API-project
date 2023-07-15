@@ -18,10 +18,12 @@ const middleware2=((err,req,res,next)=>{
       errors: err.errors
     })
     })
-const authorizationCatch=(err,req,res,next)=>{
+const catchAuthError=(err,req,res,next)=>{
 res.status(403)
 .setHeader('Content-Type','application/json')
-.json('You do not have access to perform the requested operation')
+.json({
+    message: "Forbidden"
+  })
 }
 
     const validateLogin = [
@@ -37,13 +39,16 @@ res.status(403)
     ]
 
 router.post('/:reviewId/images',requireAuth,async (req,res)=>{
-    if(!await Review.findByPk(req.params.reviewId)){
+    let test2=await Review.findByPk(req.params.reviewId)
+    if(!test2 ){
         res.status(404)
         .setHeader('Content-Type','application/json')
         .json({
             message: "Review couldn't be found"
           })
     }
+    else if(test2 && test2.userId===req.user.id){
+
     let count=await ReviewImage.count({
         where: {
            reviewId:req.params.reviewId
@@ -57,13 +62,7 @@ router.post('/:reviewId/images',requireAuth,async (req,res)=>{
             "message": "Maximum number of images for this resource was reached"
           })
     }
-    let test=await Review.findOne({
-        where: {
-            userId:req.user.id,
-            id: req.params.reviewId
-        }
-    })
-    if (test){
+
        let goal= await ReviewImage.create({
             reviewId:req.params.reviewId,
             url:req.body.url
@@ -73,9 +72,11 @@ router.post('/:reviewId/images',requireAuth,async (req,res)=>{
         .json({
             id:goal.id,
             url:goal.url
-        })
-    }
-})
+        })}
+        else if(test2 && test2.userId!==req.user.id){
+            next(err)
+        }
+},catchAuthError)
 
 
 router.get('/current',requireAuth,async(req,res)=>{
@@ -149,16 +150,12 @@ res.status(200)
 .json(testReview)
 }
 else {
-    res.status(403)
-    .setHeader('Content-Type','application/json')
-    .json({
-        message: "Access Denied. You cannot edit a post which is not yours"
-      })
+next(err)
 }
-})
+},catchAuthError)
 
 router.delete('/:reviewId',requireAuth,async (req,res,next)=>{
-    let test=Review.findByPk(req.params.reviewId)
+    let test=await Review.findByPk(req.params.reviewId)
     if(!test){
         res.status(404)
         .setHeader('Content-Type','application/json')
@@ -168,10 +165,8 @@ router.delete('/:reviewId',requireAuth,async (req,res,next)=>{
               }
         )
     }
-    // else if(test.userId !==req.user.id){
-    //     next(err)
-    // }
-    else if(test && test.userId===req.user.id){
+
+    else if(test && test.userId==req.user.id){
         Review.destroy({
             where: {
                 id:req.params.reviewId
@@ -183,9 +178,12 @@ router.delete('/:reviewId',requireAuth,async (req,res,next)=>{
             message: "Successfully deleted"
           })
     }
+     else if(test && test.userId !==req.user.id){
+        next(err)
+    }
 
 
-},authorizationCatch)
+},catchAuthError)
 
 
 
