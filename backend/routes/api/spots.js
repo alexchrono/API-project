@@ -31,7 +31,60 @@ let validateLoginBooking=[(req,res,next)=>{
 
 
 ];
-
+const validateLoginLastOne = [
+    check('page')
+    .optional()
+        .exists({ checkFalsy: true })
+        .notEmpty()
+        .custom((value)=>{
+            if (parseInt(value)<1){
+                return false
+            }
+            else {
+                return true
+            }
+        })
+        .withMessage("Page must be greater than or equal to 1"),
+        check('size')
+        .optional()
+        .exists({ checkFalsy: true })
+        .notEmpty()
+        .custom((value)=>{
+            if (parseInt(value)<1){
+                return false
+            }
+            else {
+                return true
+            }
+        })
+        .withMessage("Size must be greater than or equal to 1")
+        ,
+        check('minLat')
+        .optional()
+        .isFloat({min:-90, max:90})
+        .withMessage('Minimum latitude is invalid'),
+        check('maxLat')
+        .optional()
+        .isFloat({min:-90, max:90})
+        .withMessage("Maximum latitude is invalid"),
+        check('minLng')
+        .optional()
+        .isFloat({min:-180, max:180})
+        .withMessage('Minimum longitude is invalid'),
+        check('maxLng')
+        .optional()
+        .isFloat({min:-180, max:180})
+        .withMessage('Maximum longitude is invalid'),
+        check('minPrice')
+        .optional()
+        .isFloat({min:0})
+        .withMessage('Minimum price must be greater than or equal to 0'),
+        check('maxPrice')
+        .optional()
+        .isFloat({min:0})
+        .withMessage('Maximum price must be greater than or equal to 0'),
+    handleValidationErrors
+];
 
 
 const validateLogin = [
@@ -422,6 +475,8 @@ router.get('/current', requireAuth, async (req, res) => {
     res.json(newArray)
 })
 
+
+
 router.put('/:spotId', requireAuth, validateLogin2, displayValidationErrors, async (req, res) => {
     let { address, city, state, country, lat, lng, name, description, price } = req.body
     let targetSpot = await Spot.findOne({
@@ -524,61 +579,7 @@ router.get('/:spotId', async (req, res) => {
         })
     }
 })
-router.get('/', async (req, res) => {
 
-    let allSpots = await Spot.findAll({
-        include: [
-            {
-                model: Review,
-                attributes: ['stars']
-            },
-            {
-                model: SpotImage,
-                attributes: ['url']
-            }]
-    })
-
-    // allSpots.toJson()
-    let newArray = []
-    allSpots.forEach((ele) => {
-
-        newArray.push(ele.toJSON())
-    })
-    newArray.forEach((ele) => {
-        let starsAmount = 0
-        let starsCount = 0
-        ele.Reviews.forEach((review) => {
-
-            if (review.stars) {
-                starsAmount += review.stars
-                starsCount += 1
-            }
-        })
-        if (starsAmount !== 0) {
-            ele.avgRating = (starsAmount / starsCount)
-        }
-        else {
-            ele.avgRating = 'This spot has no ratings'
-        }
-        delete ele.Reviews
-    })
-    newArray.forEach((ele) => {
-        ele.SpotImages.forEach((spotimg) => {
-            if (spotimg.url) {
-                ele.previewImage = spotimg.url
-            }
-            else {
-                ele.previewImage = 'no image for this spot'
-            }
-
-        })
-        delete ele.SpotImages
-    })
-
-    res.status(200)
-    res.setHeader('Content-Type', 'application/json')
-    res.json(newArray)
-})
 
 router.delete('/:spotId', requireAuth, async (req, res, next) => {
     let check= await Spot.findByPk(req.params.spotId)
@@ -625,6 +626,117 @@ router.post('/', requireAuth, validateLogin2, displayValidationErrors, async (re
     res.status(201)
     res.setHeader('Content-Type', 'application/json')
     res.json(newBag)
+})
+router.get('/', validateLoginLastOne,displayValidationErrors,async (req, res) => {
+    let {page,size,maxLat,minLat,minLng,maxLng,minPrice,maxPrice}=req.query;
+    if(!page){
+        page=1
+    }
+    if(!size){
+        size=20
+    }
+    page=parseInt(page)
+    size=parseInt(size)
+    let pagination= {limit: size,
+    offset: (page-1)}
+    let where= {
+
+    }
+    if(maxLat && minLat){
+        maxLat=parseFloat(maxLat)
+        minLat=parseFloat(minLat)
+        where.lat = {[Op.between]: [minLat, maxLat]};
+    }
+    else if(maxLat) {
+        maxLat=parseFloat(maxLat)
+        where.lat={[Op.lte]: maxLat}
+    }
+    else if(minLat) {
+        minLat=parseFloat(minLat)
+        where.lat={[Op.gte]:minLat}
+    }
+    if (minLng && maxLng){
+        minLng=parseFloat(minLng)
+        maxLng=parseFloat(maxLng)
+        where.lng = {[Op.between]: [minLng, maxLng]};
+    }
+   else if (minLng) {
+    minLng=parseFloat(minLng)
+    where.lng={[Op.gte]:minLng}
+}
+   else if(maxLng) {
+    maxLng=parseFloat(maxLng)
+    where.lng={[Op.lte]:maxLng}
+}
+if(minPrice && maxPrice){
+    minPrice=parseFloat(minPrice)
+    maxPrice=parseFloat(maxPrice)
+    where.price = {[Op.between]: [minPrice, maxPrice]};
+}
+    else if(minPrice){
+        minPrice=parseFloat(minPrice)
+        where.price={[Op.gte]:minPrice}
+    }
+   else if(maxPrice) {
+    maxPrice=parseFloat(maxPrice)
+    where.price={[Op.lte]:maxPrice}
+}
+
+    let allSpots = await Spot.findAll({
+        ...pagination,
+        where,
+        include: [
+            {
+                model: Review,
+                attributes: ['stars']
+            },
+            {
+                model: SpotImage,
+                attributes: ['url']
+            }]
+    })
+
+    // allSpots.toJson()
+    let newArray = []
+    allSpots.forEach((ele) => {
+
+        newArray.push(ele.toJSON())
+    })
+    newArray.forEach((ele) => {
+        let starsAmount = 0
+        let starsCount = 0
+        ele.Reviews.forEach((review) => {
+
+            if (review.stars) {
+                starsAmount += review.stars
+                starsCount += 1
+            }
+        })
+        if (starsAmount !== 0) {
+            ele.avgRating = (starsAmount / starsCount)
+        }
+        else {
+            ele.avgRating = 'This spot has no ratings'
+        }
+
+        delete ele.Reviews
+    })
+    newArray.forEach((ele) => {
+        ele.SpotImages.forEach((spotimg) => {
+            if (spotimg.url) {
+                ele.previewImage = spotimg.url
+            }
+            else {
+                ele.previewImage = 'no image for this spot'
+            }
+
+        })
+        delete ele.SpotImages
+    })
+
+    res.status(200)
+    res.setHeader('Content-Type', 'application/json')
+    res.json({Spots:newArray,page:page,size:size})
 })
 
 
