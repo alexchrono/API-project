@@ -74,7 +74,7 @@ const invalidCredentials = (err, req, res, next) => {
         //   resBody.credential="Email or username is required"
         //   return next(err)
         // }
-        const user = await User.unscoped().findOne({
+        const user= await User.unscoped().findOne({
             where: {
                 [Op.or]: {
                     username: credential,
