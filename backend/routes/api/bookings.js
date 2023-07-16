@@ -255,7 +255,7 @@ if(test.userId!==req.user.id){
 }
 let testStartDate=new Date(test.startDate).toISOString()
 let tester=new Date().toISOString()
-console.log('testStartDate',testStartDate,'tester',tester)
+
 if(testStartDate<=tester){
     res.status(400)
     .setHeader('Content-Type','application/json')
