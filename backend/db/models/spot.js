@@ -26,6 +26,7 @@ module.exports = (sequelize, DataTypes) => {
      const columnMapping = {
       through: 'Booking',
       foreignKey: 'spotId',
+      otherKey: 'userId',
       onDelete: 'CASCADE',
       hooks: true
      }
@@ -35,7 +36,7 @@ module.exports = (sequelize, DataTypes) => {
       otherKey: 'userId',
       foreignKey: 'spotId'
      }
-     Spot.belongsToMany(models.User, columnMapping2);
+    //  Spot.belongsToMany(models.User, columnMapping2);
     }
   }
   Spot.init({
