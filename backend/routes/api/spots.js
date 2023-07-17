@@ -11,6 +11,16 @@ const spot = require('../../db/models/spot');
 const booking = require('../../db/models/booking');
 const router = express.Router();
 
+
+const authError = function (err, req, res, next) {
+    res.status(401);
+    res.setHeader('Content-Type','application/json')
+    res.json(
+        {
+            message: "Authentication required"
+          }
+    );
+  };
 let validateLoginBooking=[(req,res,next)=>{
     let startDate= new Date(req.body.startDate)
     let endDate= new Date(req.body.endDate)
@@ -175,7 +185,7 @@ const displayValidationErrors2 = (err, req, res, next) => {
         errors: err.errors
     })
 }
-router.post('/:spotId/reviews', requireAuth, validateLogin3, displayValidationErrors, async (req, res) => {
+router.post('/:spotId/reviews', requireAuth,authError, validateLogin3, displayValidationErrors, async (req, res) => {
     let { review, stars } = req.body
     if (! await Spot.findByPk(req.params.spotId)) {
          res.status(404)
@@ -214,7 +224,7 @@ router.post('/:spotId/reviews', requireAuth, validateLogin3, displayValidationEr
     }
 
 })
-router.get('/:spotId/bookings',requireAuth,async (req,res)=>{
+router.get('/:spotId/bookings',requireAuth,authError,async (req,res)=>{
     let realTest=await Spot.findByPk(req.params.spotId)
     if(!realTest){
         res.status(404)
@@ -270,7 +280,7 @@ router.get('/:spotId/bookings',requireAuth,async (req,res)=>{
 
 
 })
-router.post('/:spotId/images', requireAuth, async (req, res) => {
+router.post('/:spotId/images', requireAuth,authError, async (req, res) => {
     let specId = req.params.spotId
     let { url, preview } = req.body
     let owner = req.user.id
@@ -304,7 +314,7 @@ router.post('/:spotId/images', requireAuth, async (req, res) => {
         next(err)
     }
 },catchAuthoError)
-router.post('/:spotId/bookings',requireAuth,validateLoginBooking,async (req,res)=>{
+router.post('/:spotId/bookings',requireAuth,authError,validateLoginBooking,async (req,res)=>{
 let test= await Spot.findByPk(req.params.spotId)
 if(!test){
    return res.status(404)
@@ -419,7 +429,7 @@ router.get('/:spotId/reviews',async (req,res)=>{
           })
     }
 })
-router.get('/current', requireAuth, async (req, res) => {
+router.get('/current', requireAuth,authError, async (req, res) => {
 
     let allSpots = await Spot.findAll({
         where: { ownerId: req.user.id },
@@ -478,7 +488,7 @@ router.get('/current', requireAuth, async (req, res) => {
 
 
 
-router.put('/:spotId', requireAuth, validateLogin2, displayValidationErrors, async (req, res) => {
+router.put('/:spotId', requireAuth,authError, validateLogin2, displayValidationErrors, async (req, res) => {
     let { address, city, state, country, lat, lng, name, description, price } = req.body
     let targetSpot = await Spot.findOne({
         where: {
@@ -582,7 +592,7 @@ router.get('/:spotId', async (req, res) => {
 })
 
 
-router.delete('/:spotId', requireAuth, async (req, res, next) => {
+router.delete('/:spotId', requireAuth,authError, async (req, res, next) => {
     let check= await Spot.findByPk(req.params.spotId)
     let testing = await Spot.destroy({
         where: {
@@ -609,7 +619,7 @@ router.delete('/:spotId', requireAuth, async (req, res, next) => {
         next(err)
     }
 },catchAuthoError)
-router.post('/', requireAuth, validateLogin2, displayValidationErrors, async (req, res, next) => {
+router.post('/', requireAuth,authError, validateLogin2, displayValidationErrors, async (req, res, next) => {
     let { address, city, state, country, lat, lng, name, description, price } = req.body
 
     let newBag = await Spot.create({

@@ -9,6 +9,15 @@ const { handleValidationErrors } = require('../../utils/validation');
 const e = require('express');
 const spot = require('../../db/models/spot');
 const router = express.Router();
+const authError = function (err, req, res, next) {
+    res.status(401);
+    res.setHeader('Content-Type','application/json')
+    res.json(
+        {
+            message: "Authentication required"
+          }
+    );
+  };
 let validateNoBookings=[(req,res,next)=>{
     let startDate= new Date(req.body.startDate)
     let endDate= new Date(req.body.endDate)
@@ -77,7 +86,7 @@ const catchAuthoError=(err,req,res,next)=>{
     }
 
 
-router.get('/current',requireAuth,async (req,res)=>{
+router.get('/current',requireAuth,authError,async (req,res)=>{
     let goal=await Booking.findAll({
         where: {userId:req.user.id},
         include: {model:Spot,
@@ -130,7 +139,7 @@ const makeError = (status, message, res,data = {}) => {
     return res.status(status).json({ message, ...data });
   };
 
-router.put('/:bookingId',requireAuth,async (req,res)=>{
+router.put('/:bookingId',requireAuth,authError,async (req,res)=>{
     let {startDate,endDate}=req.body
     let tstartDate=new Date(startDate)
     let tendDate= new Date(endDate)
@@ -243,7 +252,7 @@ router.put('/:bookingId',requireAuth,async (req,res)=>{
 
 
 })
-router.delete('/:bookingId',requireAuth,async(req,res)=>{
+router.delete('/:bookingId',requireAuth,authError,async(req,res)=>{
 let test= await Booking.findByPk(req.params.bookingId)
 if(!test){
     return makeError(404,"Booking couldn't be found",res)

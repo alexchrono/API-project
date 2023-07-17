@@ -7,7 +7,15 @@ const { check, validationResult } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 
 const router = express.Router();
-
+const authError = function (err, req, res, next) {
+  res.status(401);
+  res.setHeader('Content-Type','application/json')
+  res.json(
+      {
+          message: "Authentication required"
+        }
+  );
+};
 const validateSignup= [
     check('email')
       .exists({ checkFalsy: true })

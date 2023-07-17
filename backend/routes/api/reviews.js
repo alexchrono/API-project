@@ -25,7 +25,15 @@ res.status(403)
     message: "Forbidden"
   })
 }
-
+const authError = function (err, req, res, next) {
+    res.status(401);
+    res.setHeader('Content-Type','application/json')
+    res.json(
+        {
+            message: "Authentication required"
+          }
+    );
+  };
     const validateLogin = [
         check('review')
             .exists({ checkFalsy: true })
@@ -38,7 +46,7 @@ res.status(403)
         handleValidationErrors
     ]
 
-router.post('/:reviewId/images',requireAuth,async (req,res)=>{
+router.post('/:reviewId/images',requireAuth,authError,async (req,res)=>{
     let test2=await Review.findByPk(req.params.reviewId)
     if(!test2 ){
         res.status(404)
@@ -79,7 +87,7 @@ router.post('/:reviewId/images',requireAuth,async (req,res)=>{
 },catchAuthError)
 
 
-router.get('/current',requireAuth,async(req,res)=>{
+router.get('/current',requireAuth,authError,async(req,res)=>{
     let goal=await Review.findAll({
 
         where: {userId:req.user.id},
@@ -131,7 +139,7 @@ else  {
 
 
 })
-router.put('/:reviewId',requireAuth,validateLogin,middleware2,async(req,res)=>{
+router.put('/:reviewId',requireAuth,authError,validateLogin,middleware2,async(req,res)=>{
 let testReview=await Review.findByPk(req.params.reviewId)
 if(!testReview){
     res.status(404)
@@ -154,7 +162,7 @@ next(err)
 }
 },catchAuthError)
 
-router.delete('/:reviewId',requireAuth,async (req,res,next)=>{
+router.delete('/:reviewId',requireAuth,authError,async (req,res,next)=>{
     let test=await Review.findByPk(req.params.reviewId)
     if(!test){
         res.status(404)

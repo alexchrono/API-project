@@ -7,6 +7,15 @@ const { User } = require('../../db/models');
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 const router = express.Router();
+const authError = function (err, req, res, next) {
+  res.status(401);
+  res.setHeader('Content-Type','application/json')
+  res.json(
+      {
+          message: "Authentication required"
+        }
+  );
+};
 const noLoggedInUser=((err,req,res,next)=>{
 res.status(200)
 res.setHeader('Content-Type','application/json')

@@ -12,7 +12,15 @@ const booking = require('../../db/models/booking');
 const router = express.Router();
 
 
-
+const authError = function (err, req, res, next) {
+    res.status(401);
+    res.setHeader('Content-Type','application/json')
+    res.json(
+        {
+            message: "Authentication required"
+          }
+    );
+  };
 
 const validateLogin = [
     check('credential')
@@ -36,7 +44,7 @@ const catchAuthoError=(err,req,res,next)=>{
       };
 
 
-router.delete('/:imageId',requireAuth,async (req,res)=>{
+router.delete('/:imageId',requireAuth,authError,async (req,res)=>{
     let test=await SpotImage.findOne({
         where: {id:req.params.imageId},
         include: [
