@@ -314,7 +314,7 @@ router.post('/:spotId/images', requireAuth,authError, async (req, res) => {
         next(err)
     }
 },catchAuthoError)
-router.post('/:spotId/bookings',requireAuth,authError,validateLoginBooking,async (req,res)=>{
+router.post('/:spotId/bookings',requireAuth,authError,validateLoginBooking,displayValidationErrors,async (req,res)=>{
 let test= await Spot.findByPk(req.params.spotId)
 if(!test){
    return res.status(404)
