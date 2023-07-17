@@ -12,7 +12,7 @@ const booking = require('../../db/models/booking');
 const router = express.Router();
 
 
-const authError = function (err, req, res, next) {
+const authError= function (err, req, res, next) {
     res.status(401);
     res.setHeader('Content-Type','application/json')
     res.json(
@@ -23,7 +23,7 @@ const authError = function (err, req, res, next) {
   };
 let validateLoginBooking=[(req,res,next)=>{
     let startDate= new Date(req.body.startDate)
-    let endDate= new Date(req.body.endDate)
+    let endDate = new Date(req.body.endDate)
         if(startDate>endDate){
            res.status(400)
           .setHeader('Content-Type','application/json')
@@ -283,26 +283,51 @@ router.get('/:spotId/bookings',requireAuth,authError,async (req,res)=>{
 
 
 })
-router.post("/:spotId/images", requireAuth, async (req, res) => {
+
+router.post('/:spotId/images', requireAuth, authError, async (req, res) => {
     const { url, preview } = req.body;
     const spotId = req.params.spotId;
+    const spot = await Spot.findOne({ where: { id: spotId } });
 
-    const spot = await Spot.findOne({ where: { id: spotId} });
      if (!spot) {
-
-            return res.status(404).json({message: `Spot couldn't be found`})}
+        return res.status(404).json({ message: "Spot couldn't be found" });
+    } else if (spot && spot.ownerId !== req.user.id) {
+        next(err)
+    }
     else if (spot && spot.ownerId === req.user.id) {
-      const spotImage = await SpotImage.create({ spotId, url, preview });
-      const { updatedAt, createdAt, ...response } = spotImage.toJSON();
-      delete response.spotId;
-      return res.json(response);
+        const spotImage = await SpotImage.create({ spotId, url, preview });
 
+        const { updatedAt, createdAt, ...response } = spotImage.toJSON();
+        delete response.spotId;
+        return res.json(response);
     }
 
-     else if (spot && spot.ownerId !== req.user.id) {
-      return makeError(403, "Forbidden", {}, res);
-    }
-  });
+}, catchAuthoError);
+
+
+
+// router.post("/:spotId/images", requireAuth, authError,async (req, res) => {
+//     const { url, preview } = req.body;
+//     const spotId = req.params.spotId;
+
+//     const spot = await Spot.findOne({ where: { id: spotId} });
+
+//      if (spot && spot.ownerId === req.user.id) {
+//       const spotImage = await SpotImage.create({ spotId, url, preview });
+//       const { updatedAt, createdAt, ...response } = spotImage.toJSON();
+//       delete response.spotId;
+//       return res.json(response);
+
+//     }
+//    else if (!spot) {
+
+//         return res.status(404).json({message: `Spot couldn't be found`})}
+
+//      else if (spot && spot.ownerId !== req.user.id) {
+//     //   return makeError(403, "Forbidden", {}, res);
+//     next(err)
+//     }
+//   },catchAuthoError);
 router.post('/:spotId/bookings',requireAuth,authError,validateLoginBooking,displayValidationErrors,async (req,res)=>{
 let test= await Spot.findByPk(req.params.spotId)
 if(!test){
