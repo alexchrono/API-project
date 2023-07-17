@@ -511,18 +511,19 @@ router.put('/:spotId', requireAuth,authError, validateLogin2, displayValidationE
         }
     })
     if (targetSpot && targetSpot.ownerId===req.user.id) {
-        targetSpot.address = address,
-            targetSpot.city = city,
-            targetSpot.state = state,
-            targetSpot.country = country,
-            targetSpot.lat = lat,
-            targetSpot.lng = lng,
-            targetSpot.name = name,
-            targetSpot.description = description,
-            targetSpot.price = price,
-            targetSpot.createdAt = targetSpot.createdAt
-        targetSpot.updatedAt = Date.now();
-
+        await targetSpot.update({address,city,state,country,lat,lng,name,description,price})
+        // targetSpot.address = address,
+        //     targetSpot.city = city,
+        //     targetSpot.state = state,
+        //     targetSpot.country = country,
+        //     targetSpot.lat = lat,
+        //     targetSpot.lng = lng,
+        //     targetSpot.name = name,
+        //     targetSpot.description = description,
+        //     targetSpot.price = price,
+        //     targetSpot.createdAt = targetSpot.createdAt
+        // targetSpot.updatedAt = Date.now();
+        // await targetSpot.save()
         res.status(200)
         res.json(targetSpot)
     }
