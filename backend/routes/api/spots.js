@@ -289,6 +289,12 @@ router.post('/:spotId/images', requireAuth,authError, async (req, res) => {
             id: specId
         }
     })
+ if (!testToFind) {
+        res.status(404)
+        res.setHeader('Content-Type', 'application/json')
+        res.json({
+            message: "Spot couldn't be found"
+        })
     if (testToFind && testToFind.ownerId==owner) {
         let newBag = await SpotImage.create({
             spotId: specId,
@@ -303,12 +309,7 @@ router.post('/:spotId/images', requireAuth,authError, async (req, res) => {
         })
         res.json(thingToFind)
     }
-    else if (!test) {
-        res.status(404)
-        res.setHeader('Content-Type', 'application/json')
-        res.json({
-            message: "Spot couldn't be found"
-        })
+
     }
     else {
         next(err)
