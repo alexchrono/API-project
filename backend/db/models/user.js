@@ -27,8 +27,8 @@ module.exports = (sequelize, DataTypes) => {
     //     foreignKey: 'userId'
     //    }
     //    User.belongsToMany(models.Spot, columnMapping2);
-    // }
-    // }
+    }
+    }
 
 
 
