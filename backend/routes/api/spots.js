@@ -10,6 +10,7 @@ const e = require('express');
 const spot = require('../../db/models/spot');
 const booking = require('../../db/models/booking');
 const router = express.Router();
+
 let validateLoginBooking=[(req,res,next)=>{
     let startDate= new Date(req.body.startDate)
     let endDate= new Date(req.body.endDate)
