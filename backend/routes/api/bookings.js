@@ -8,7 +8,7 @@ const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 const e = require('express');
 const spot = require('../../db/models/spot');
-const router = express.Router();
+const router = express.Router(); 
 const authError = function (err, req, res, next) {
     res.status(401);
     res.setHeader('Content-Type','application/json')
