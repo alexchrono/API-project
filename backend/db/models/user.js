@@ -14,21 +14,21 @@ module.exports = (sequelize, DataTypes) => {
       User.hasMany(models.Spot, { foreignKey: 'ownerId',
       onDelete: 'CASCADE',
       hooks: true });
-      const columnMapping = {
-        through: 'Booking',
-        otherKey: 'spotId',
-        foreignKey: 'userId'
-       }
-       User.belongsToMany(models.Spot, columnMapping);
+    //   const columnMapping = {
+    //     through: 'Booking',
+    //     otherKey: 'spotId',
+    //     foreignKey: 'userId'
+    //    }
+    //    User.belongsToMany(models.Spot, columnMapping);
 
-       const columnMapping2 = {
-        through: 'Review',
-        otherKey: 'spotId',
-        foreignKey: 'userId'
-       }
-       User.belongsToMany(models.Spot, columnMapping2);
-    }
-    }
+    //    const columnMapping2 = {
+    //     through: 'Review',
+    //     otherKey: 'spotId',
+    //     foreignKey: 'userId'
+    //    }
+    //    User.belongsToMany(models.Spot, columnMapping2);
+    // }
+    // }
 
 
 
@@ -86,7 +86,7 @@ module.exports = (sequelize, DataTypes) => {
           exclude: ["firstName","lastName","hashedPassword", "email", "createdAt", "updatedAt"]
         }
       },
-    
+
 });
   return User;
 };
