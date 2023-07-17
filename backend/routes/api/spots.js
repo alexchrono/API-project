@@ -42,6 +42,9 @@ let validateLoginBooking=[(req,res,next)=>{
 
 
 ];
+const makeError = (status, message, res,data = {}) => {
+    return res.status(status).json({ message, ...data });
+  };
 const validateLoginLastOne = [
     check('page')
     .optional()
@@ -280,41 +283,26 @@ router.get('/:spotId/bookings',requireAuth,authError,async (req,res)=>{
 
 
 })
-router.post('/:spotId/images', requireAuth,authError, async (req, res) => {
-    let specId = req.params.spotId
-    let { url, preview } = req.body
-    let owner = req.user.id
-    let testToFind = await Spot.findOne({
-        where: {
-            id: specId
-        }
-    })
- if (!testToFind) {
-        res.status(404)
-        res.setHeader('Content-Type', 'application/json')
-        res.json({
-            message: "Spot couldn't be found"
-        })
-    if (testToFind && testToFind.ownerId==owner) {
-        let newBag = await SpotImage.create({
-            spotId: specId,
-            url,
-            preview
-        })
-        res.status(200)
-        res.setHeader('Content-Type', 'application/json')
-        let thingToFind = await SpotImage.findOne({
-            where: { url: url },
-            attributes: ['id', 'url', 'preview']
-        })
-        res.json(thingToFind)
-    }
+router.post("/:spotId/images", requireAuth, async (req, res) => {
+    const { url, preview } = req.body;
+    const spotId = req.params.spotId;
+
+    const spot = await Spot.findOne({ where: { id: spotId} });
+     if (!spot) {
+
+            return res.status(404).json({message: `Spot couldn't be found`})}
+    else if (spot && spot.ownerId === req.user.id) {
+      const spotImage = await SpotImage.create({ spotId, url, preview });
+      const { updatedAt, createdAt, ...response } = spotImage.toJSON();
+      delete response.spotId;
+      return res.json(response);
 
     }
-    else {
-        next(err)
+
+     else if (spot && spot.ownerId !== req.user.id) {
+      return makeError(403, "Forbidden", {}, res);
     }
-},catchAuthoError)
+  });
 router.post('/:spotId/bookings',requireAuth,authError,validateLoginBooking,displayValidationErrors,async (req,res)=>{
 let test= await Spot.findByPk(req.params.spotId)
 if(!test){
