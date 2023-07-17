@@ -98,18 +98,7 @@ module.exports = {
         description: 'really pretty',
         price: 20.00,
       },
-      {
-        ownerId: 1,
-        address: 'ownerIsId1spotIdis2',
-        city: 'Cleveland',
-        state: 'Ohio',
-        country: 'USA',
-        lat: 2.45,
-        lng: 7.30,
-        name: 'SpotAlsoBelongsToUser1SpotId2',
-        description: 'really pretty',
-        price: 17.34,
-      },
+
       {
         ownerId: 2,
         address: 'ownerIsId2andSpotIdis3',
