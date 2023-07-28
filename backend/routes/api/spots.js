@@ -497,7 +497,7 @@ router.get('/current', requireAuth,authError, async (req, res) => {
 
     res.status(200)
     res.setHeader('Content-Type', 'application/json')
-    res.json(newArray)
+    res.json({spots:newArray})
 })
 
 
@@ -541,8 +541,8 @@ router.put('/:spotId', requireAuth,authError, validateLogin2, displayValidationE
 },catchAuthoError)
 
 router.get('/:spotId', async (req, res) => {
-    let realId = req.params.spotId
-    let goal = await Spot.findByPk(realId, {
+    let spotId = req.params.spotId
+    let goal = await Spot.findByPk(spotId, {
         include: [
             { model: Review },
             {
@@ -551,7 +551,6 @@ router.get('/:spotId', async (req, res) => {
             },
             {
                 model: User,
-                where: { id: realId },
                 attributes: ['id', 'firstName', 'lastName']
             }
         ]
