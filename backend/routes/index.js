@@ -35,6 +35,6 @@ if (process.env.NODE_ENV !== 'production') {
     res.cookie('XSRF-TOKEN', req.csrfToken());
     res.status(201).json({});
   });
-}
+ }
 
 module.exports = router;
