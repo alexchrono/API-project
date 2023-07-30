@@ -50,7 +50,8 @@ function LoginFormModal() {
         {errors.credential && (
           <p>{errors.credential}</p>
         )}
-        <button type="submit">Log In</button>
+        <button type="submit"
+        disabled={Object.keys(errors).length>0}>Log In</button>
       </form>
     </>
   );
