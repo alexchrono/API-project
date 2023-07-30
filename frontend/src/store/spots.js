@@ -101,26 +101,24 @@ dispatch(actionLoadSpots(Spots))
   }
 }
 
-export async function ThunkLoadSingle(dispatch){
-  let {spotId}=useParams()
-  const res = await fetch(`/api/spots/${spotId}`);
+export async function ThunkLoadSingle(dispatch,spotId){
+  let realId=parseInt(spotId)
+  const res = await fetch(`/api/spots/${realId}`);
 
   if(res.ok) {
     const  {Spot}  = await res.json(); // { Spots: [] }
     // do the thing with this data
-dispatch(actionLoadSpot(Spot))
 
-  } else {
-    const errors = await res.json();
-    console.error('Error fetching data:', errors);
-  }
+ dispatch(actionLoadSpot(Spot))
+
+
 }
 
 // state = {
 //   allSpots: { 1: {}},
 //   singleSpot: {}
 // }
-
+}
 // 3. reducer - always return an object
 let initialState={allSpots:{},singleSpot:{}}
 export default function spotReducer(state=initialState, action) {
@@ -133,6 +131,13 @@ export default function spotReducer(state=initialState, action) {
       return {...state,
         allSpots: action.payload,}
     }
+    case LOAD_SPOT: {
+      return {...state,
+        singleSpot: action.payload}
+
+
+      // {...state,singleSpot: {...action.payload,Owner:{...action.payload.Owner}}}
+    }
     // case ADD_USER: {
     //   return state
     // }
@@ -144,9 +149,7 @@ export default function spotReducer(state=initialState, action) {
     //   delete newState.allSpots[action.id] // deleting id 1
     //   return newState
     // }
-    case LOAD_SPOT: {
-      return state
-    }
+
     default: {
       return state;
     }
