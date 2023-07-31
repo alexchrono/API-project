@@ -125,13 +125,14 @@ export default function spotReducer(state=initialState, action) {
       return state
     }
     case LOAD_SPOTS: {
-
-      return {...state,
+      let newState={...state,
         allSpots: action.payload,}
+      return newState
     }
     case LOAD_SPOT: {
-      return {...state,
+      let newState={...state,
         singleSpot: action.payload}
+      return newState
       }
 
       // {...state,singleSpot: {...action.payload,Owner:{...action.payload.Owner}}}

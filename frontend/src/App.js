@@ -6,6 +6,8 @@ import * as sessionActions from "./store/session";
 import Navigation from "./components/Navigation";
 import spots from "./components/Spots"
 import spot from "./components/Spot"
+import SignupFormModal from "./components/SignupFormModal";
+
 function App() {
   const dispatch = useDispatch();
   const [isLoaded, setIsLoaded] = useState(false);

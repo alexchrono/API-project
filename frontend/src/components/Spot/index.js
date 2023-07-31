@@ -25,8 +25,22 @@ export default function Spot() {
 
 console.log('this is single',thisSpot)
 return (
-    <div>
-      <h1>TESTING</h1>
+    <div className='daddyOfSingleDetail'>
+      <h2>{thisSpot.name}</h2>
+      <div className='cityAndStarsContainer'><span className='cityAndStars'>{`${thisSpot.city}, ${thisSpot.state}, ${thisSpot.country}`}</span>  </div>
+      <div className='detailsPictureBox'>
+      <div className="mainPic">
+        <img src={thisSpot.SpotImages[0].url}></img>
+      </div>
+      <div className="sidePics">
+        
+      </div>
+
+
+
+      </div>
+
+
     </div>
   );
 

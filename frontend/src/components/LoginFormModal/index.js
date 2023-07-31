@@ -19,8 +19,14 @@ function LoginFormModal() {
       .then(closeModal)
       .catch(async (res) => {
         const data = await res.json();
-        throw new Error("The provided credentials were invalid")
+        if (data && data.errors) {
+          setErrors(data.errors);
+          return setErrors({
+            Email: 'Email is invalid'
+          });
+        }
       });
+
   };
 
   return (
@@ -36,6 +42,7 @@ function LoginFormModal() {
             required
           />
         </label>
+        {errors.credential && <p>{errors.credential}</p>}
         <label>
           Password
           <input
