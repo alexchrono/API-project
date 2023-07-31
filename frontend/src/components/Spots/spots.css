@@ -1,0 +1,43 @@
+
+.pictureBox{
+    display:flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+
+    /* width:fit-content; */
+    }
+    .daddyOfPics{
+        display:flex;
+        flex-direction: column;
+        align-items:center;
+        width:300px;
+        margin-bottom:20px;
+    }
+    .image2{
+        width: 300px;
+        height: 300px;
+        }
+
+        .cityStateandStars {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-top: 10px; /* Add some spacing between city and stars and the price */
+          }
+
+          .cityState {
+            flex: 1;
+          }
+
+          .avgRating {
+            flex: 1;
+            text-align: right; /* Align the avgRating to the right */
+          }
+
+          .price {
+            width: 100%;
+          }
+
+          .inline {
+            display: inline-block;
+          }

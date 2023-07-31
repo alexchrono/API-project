@@ -5,7 +5,7 @@ import { NavLink,useHistory,Link } from 'react-router-dom';
 import { useSelector,useDispatch } from 'react-redux';
 // import { getInitialState } from '../../store/spots';
 import { ThunkLoad } from '../../store/spots';
-
+import './spots.css'
 
 
 
@@ -27,13 +27,14 @@ export default function Spots() {
     }
     else{
     return (
-      <>
+
+      <div className='pictureBox'>
       {allTheSpots.map((ele)=>
-        (<><Link exact to={`/spots/${ele.id}`}><div><img key={ele.id} src={ele.previewImage} alt={`Spot ${ele.id}`} />
-        <h4>{ele.name}</h4> {!isNaN(ele.avgRating)? (<p>{ele.avgRating}</p>) :  (<p>New</p>)} <p>{`${ele.price} night`}</p></div></Link></>))}
+        (<Link exact to={`/spots/${ele.id}`} key={ele.id}><div className='daddyOfPics'><div className='imgDiv'><img src={ele.previewImage} className='image2' alt={`Spot ${ele.id}`} /></div>
+        <div className='nameOfPlace'><h4>{ele.name}</h4></div> <div className="cityStateandStars"> <span className='inline'>{`${ele.city}, ${ele.state}`}</span>  {!isNaN(ele.avgRating)? (<span className='inline'><i class="fa-solid fa-star"></i>{ele.avgRating}</span>) :  (<span>New</span>)}</div><div className="price"> <p>{`$${ele.price} night`}</p></div> </div></Link>))}
+        </div>
 
 
-      </>
     );
 
 }

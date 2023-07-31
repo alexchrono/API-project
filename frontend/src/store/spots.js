@@ -1,6 +1,7 @@
 import { useDispatch } from "react-redux";
 import {useParams} from 'react-router-dom'
 import {useEffect, useState } from 'react';
+import {csrfFetch} from '../store/csrf'
 // 1. types -they must be UNIQUE
 //CRUD - Create, Read, Update, Delete
 
@@ -91,8 +92,8 @@ export async function ThunkLoad(dispatch){
   const res = await fetch("/api/spots");
 
   if(res.ok) {
-    const  {Spots}  = await res.json(); // { Spots: [] }
-    // do the thing with this data
+    const  {Spots}  = await res.json();
+    console.log('spots is',Spots)
 dispatch(actionLoadSpots(Spots))
 
   } else {
@@ -102,22 +103,19 @@ dispatch(actionLoadSpots(Spots))
 }
 
 export async function ThunkLoadSingle(dispatch,spotId){
-  let realId=parseInt(spotId)
-  const res = await fetch(`/api/spots/${realId}`);
-
+  // let realId=parseInt(spotId)
+  console.log(spotId)
+  const res = await fetch(`/api/spots/${spotId}`);
   if(res.ok) {
-    const  {Spot}  = await res.json(); // { Spots: [] }
+    const  Spot  = await res.json(); // { Spots: [] }
     // do the thing with this data
-
+    console.log('Spot is',Spot)
  dispatch(actionLoadSpot(Spot))
 
-
 }
-
-// state = {
-//   allSpots: { 1: {}},
-//   singleSpot: {}
-// }
+else {
+  dispatch(actionLoadSpot(`ffuuckk`))
+}
 }
 // 3. reducer - always return an object
 let initialState={allSpots:{},singleSpot:{}}
@@ -134,10 +132,10 @@ export default function spotReducer(state=initialState, action) {
     case LOAD_SPOT: {
       return {...state,
         singleSpot: action.payload}
-
+      }
 
       // {...state,singleSpot: {...action.payload,Owner:{...action.payload.Owner}}}
-    }
+
     // case ADD_USER: {
     //   return state
     // }
