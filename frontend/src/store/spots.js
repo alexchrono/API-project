@@ -7,7 +7,7 @@ import {csrfFetch} from '../store/csrf'
 
 const CREATE_SPOT = 'session/create_spot';
 const LOAD_SPOTS = 'session/load_spots'; //read. // GET spots/
-// const ADD_SPOT = 'session/add_spot'; //create
+const ADD_SPOT = 'session/add_spot'; //create
 const UPDATE_SPOT = 'session/update_spot';
 const DELETE_SPOT = 'session/delete_spot';
 const LOAD_SPOT = 'session/load_spot'; // GET spots/:spotId
@@ -68,9 +68,9 @@ export const loadSpots = (spots) => ({
   type: LOAD_SPOTS,
   payload:spots
 });
-// export const addSpot = () => ({
-//   type: ADD_SPOT,
-// });
+export const actionAddSpot = () => ({
+  type: ADD_SPOT,
+});
 export const updateSpot = () => ({
   type: UPDATE_SPOT,
 });
@@ -117,6 +117,27 @@ else {
   dispatch(actionLoadSpot(`ffuuckk`))
 }
 }
+
+// export const ThunkAddNewSpot=(dispatch,body)=>async dispatch =>{
+
+//   const res = await fetch("/api/spots",{
+//     method: 'POST',
+//     headers: {
+//       'Content-Type': 'application/json'
+//     },
+//     body: JSON.stringify(body)
+//   });
+
+//   if(res.ok) {
+//     const  {Spots}  = await res.json();
+//     console.log('spots is',Spots)
+// dispatch(actionLoadSpots(Spots))
+
+//   } else {
+//     const errors = await res.json();
+//     console.error('Error fetching data:', errors);
+//   }
+
 // 3. reducer - always return an object
 let initialState={allSpots:{},singleSpot:{}}
 export default function spotReducer(state=initialState, action) {
@@ -133,6 +154,10 @@ export default function spotReducer(state=initialState, action) {
       let newState={...state,
         singleSpot: action.payload}
       return newState
+      }
+      case ADD_SPOT: {
+        let newState={}
+        return newState
       }
 
       // {...state,singleSpot: {...action.payload,Owner:{...action.payload.Owner}}}
