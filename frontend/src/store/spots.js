@@ -120,7 +120,7 @@ else {
 }
 }
 
-export const ThunkAddSpot=(newSpot)=>async(dispatch)=>{
+export const ThunkAddSpot=(newSpot,arrayImages)=>async(dispatch)=>{
   // let realId=parseInt(spotId)
   try{
     console.log('this is newSpot in thunkAddSpot',newSpot)
@@ -142,6 +142,8 @@ export const ThunkAddSpot=(newSpot)=>async(dispatch)=>{
  catch (error) {
   console.log('thunkAddSpotFailed',error)
  }
+
+ 
 }
 // export const ThunkAddNewSpot=(dispatch,body)=>async dispatch =>{
 

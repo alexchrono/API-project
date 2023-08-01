@@ -28,6 +28,7 @@ const [errors, setErrors] = useState({});
 const dispatch = useDispatch();
 const history=useHistory()
 let thisSpot = useSelector((state) => state.spots)
+let arrayImages=[]
 useEffect(()=>{
 
 },[thisSpot])
@@ -35,7 +36,7 @@ useEffect(()=>{
   const fetchData = async (newSpot) => {
 
 
-    let spot=await dispatch(ThunkAddSpot(newSpot));
+    let spot=await dispatch(ThunkAddSpot(newSpot,arrayImages));
 
 
 
@@ -65,8 +66,15 @@ const handleSubmit = async(e) => {
         description,
         price
       }
+      let testImages=[pic1,pic2,pic3,pic4,pic5]
+      testImages.forEach((ele)=>{
+        if(ele!==""){
+          arrayImages.push(ele)
+        }
+      })
+
       console.log('newData',newData)
-      await fetchData(newData,dispatch)
+      await fetchData(newData,arrayImages,dispatch)
         .catch(async (res) => {
           console.log('ourCatchKickedInCreateSpotIndexLine60')
           // const data = await res.json();
