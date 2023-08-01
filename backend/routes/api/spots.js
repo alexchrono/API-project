@@ -633,7 +633,7 @@ router.delete('/:spotId', requireAuth,authError, async (req, res, next) => {
         next(err)
     }
 },catchAuthoError)
-router.post('/', requireAuth,authError, validateLogin2, displayValidationErrors, async (req, res, next) => {
+router.post('/', requireAuth, validateLogin2, async (req, res, next) => {
     let { address, city, state, country, lat, lng, name, description, price } = req.body
 
     let newBag = await Spot.create({

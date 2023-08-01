@@ -66,21 +66,46 @@ const handleSubmit = async(e) => {
         description,
         price
       }
-      let testImages=[pic1,pic2,pic3,pic4,pic5]
+      let firstImage=[]
+      if(pic1!==""){
+        firstImage.push({url:pic1,
+        preview: true,})
+      }
+      let secondArray=[]
+      let testImages=[pic2,pic3,pic4,pic5]
       testImages.forEach((ele)=>{
         if(ele!==""){
-          arrayImages.push(ele)
+          secondArray.push({url: ele,
+          preview: false,})
         }
       })
 
+     arrayImages=[...firstImage,...secondArray]
+
       console.log('newData',newData)
-      await fetchData(newData,arrayImages,dispatch)
+      await fetchData(newData,arrayImages)
         .catch(async (res) => {
           console.log('ourCatchKickedInCreateSpotIndexLine60')
+
+
           // const data = await res.json();
           // if (data && data.errors) {
           //   setErrors(data.errors);
           // }
+
+
+
+
+          //this code from loginformModal
+          // return dispatch(sessionActions.login({ credential, password }))
+      //     .then(closeModal)
+      // .catch(async (res) => {
+      //   const data = await res.json();
+      //   if (data && data.errors) {
+      //     setErrors(data.errors);
+      //     return setErrors({
+      //       Email: 'Email is invalid'
+      //     });
         });
 
 
@@ -97,16 +122,21 @@ const handleSubmit = async(e) => {
       <div>
         <h4>Where's your place located?</h4>
         <p>Guests will only get your exact address once they booked a reservation.</p>
+        <label htmlFor="Country">Country</label>
         <input
+        id="Country"
           type='text'
           onChange={(e) => setCountry(e.target.value)}
           value={country}
           placeholder='Country'
         //   name='title'
         />
+
         </div>
         <div>
+        <label htmlFor="streetAddy">Address</label>
         <input
+         id="streetAddy"
           type='text'
           onChange={(e) => setStreetAddress(e.target.value)}
           value={streetAddress}
@@ -115,14 +145,18 @@ const handleSubmit = async(e) => {
         />
         </div>
         <div>
+        <label htmlFor="city">City</label>
         <input
+         id="city"
           type='text'
           onChange={(e) => setCity(e.target.value)}
           value={city}
           placeholder='City'
         //   name='imageUrl'
         />
+        <label htmlFor="state">State</label>
            <input
+            id="state"
           type='text'
           onChange={(e) => setState(e.target.value)}
           value={state}
@@ -135,35 +169,40 @@ const handleSubmit = async(e) => {
 
 
         <div>
+        <label htmlFor="lat"> Latitude</label>
           <input
+           id="lat"
           type='text'
           onChange={(e) => setLatitude(e.target.value)}
           value={latitude}
           placeholder='LATITUDE'
         //   name='imageUrl'
         />
+        <label htmlFor="long">Longitude</label>
           <input
+           id="long"
           type='text'
           onChange={(e) => setLongitude(e.target.value)}
           value={longitude}
           placeholder='LONGITUDE'
         //   name='imageUrl'
         />
+
         </div>
         <div>
         <h4>Describe your place to guests</h4>
-        <p>Please highlight the best features of your place.  This is your chance to show others what they are missing</p></div>
+        <p>Mention the best features of your space, any special amentities like fast wifi or parking, and what you love about the neighborhood		</p></div>
         <div>
         <textarea
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          placeholder='Please write atleast 30 characters'
+          placeholder="Please write at least 30 characters"
           rows='10'
         ></textarea>
         </div>
         <div>
-        <h4>Create a Name for your spot</h4>
-        <p>Be creative!  Good names get the best attention.</p>
+        <h4>Create a title for your spot</h4>
+        <p>Catch guests' attention with a spot title that highlights what makes your place special.</p>
           <input
           type='text'
           onChange={(e) => setName(e.target.value)}
@@ -174,23 +213,26 @@ const handleSubmit = async(e) => {
         </div>
         <div>
             <h4>Set a base price for your spot</h4>
-            <p>How much do you think your place is worth per night?</p>
+            <p>Competitive pricing can help your listing stand out and rank higher in search results</p>
           <input
           type='number'
           step="0.01"
           min="0"
           onChange={(e) => setPrice(e.target.value)}
           value={price}
-          placeholder='Price per night $USD'
+          placeholder='Price per night (USD)'
         //   name='imageUrl'
         />
+        {errors.price && <p>{errors.price}</p>}
         </div>
         <div>
+          <h4>Liven up your spot with photos</h4>
+          <p>Submit a link to at least one photo to publish your spot</p>
           <input
           type='text'
           onChange={(e) => setPic1(e.target.value)}
           value={pic1}
-          placeholder='Preview Image Url'
+          placeholder='Preview Image URL'
 
         />
 </div>
@@ -231,7 +273,7 @@ const handleSubmit = async(e) => {
         />
         </div>
         <div>
-        <button type='submit'>Submit</button>
+        <button type='submit'>Create Spot</button>
         </div>
 
       </form>
