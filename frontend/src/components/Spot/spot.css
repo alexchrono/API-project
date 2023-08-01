@@ -85,7 +85,7 @@ height:50%;
 .daddyOfSingleDetail {
     display: flex;
     flex-direction: column;
-    align-items: center;
+   
 }
 
 .detailsPictureBox{
