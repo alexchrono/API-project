@@ -76,39 +76,40 @@ export default function Spot() {
 
 
   return (
+    <>
     <div className='daddyOfSingleDetail'>
       <h2>{thisSpot.name}</h2>
-      <div className='cityAndStarsContainer'><span className='cityAndStars'>{`${thisSpot.city}, ${thisSpot.state}, ${thisSpot.country}`}</span>  </div>
-      <div className='detailsPictureBox'>
+      <div className='cityAndStarsContainer'><span className='cityAndStars'>{`${thisSpot.city}, ${thisSpot.state}, ${thisSpot.country}`}</span>  </div></div>
+
+        <div className="mainPicAndDaddyBelowWrapper">
+        <div className='detailsPictureBox'>
       <div className="mainPic">
-         <img className="respond" src={SpotImages &&(SpotImages[0].url)}></img>
-      </div>
-     <div className="sidePicsContainer">
+         <img className="respond" src={SpotImages && SpotImages.length>0 && (SpotImages[0].url)}></img>
+      </div><div className="sidePicsContainer">
 
 
-     {SpotImages && SpotImages.length > 1 && SpotImages.map((ele) => {
-   if (ele.id !==SpotImages[0].id) {
+{SpotImages && SpotImages.length > 1 && SpotImages.map((ele) => {
+if (ele.id !==SpotImages[0].id) {
 
-    return <div className="sidePieceHolder"><img key={ele.id} src={ele.url} className="respond" alt={`Image ${ele.id}`} /> </div>;
-  }
-  return null; // Return null for elements that don't meet the condition
-  })}
-      </div>
-
-
-
-      </div>
+return <div className="sidePieceHolder"><img key={ele.id} src={ele.url} className="respond" alt={`Image ${ele.id}`} /> </div>;
+}
+return null; // Return null for elements that don't meet the condition
+})}
+ </div></div>
       <div className="daddyBelow">
-      <div className='below'>Hosted by, <p>{thisSpot.Owner &&(thisSpot.Owner.firstName)} {thisSpot.Owner &&(thisSpot.Owner.lastName)}</p></div>
-      <div className="borderBox"><h2>{`$${thisSpot.price} night`}</h2>
-      <p>STAR  {thisSpot.avgStarRating}</p>
-      <p>{thisSpot.numReviews} Reviews </p>
-      <button type="button">Register</button></div>
+      <div className='below'>Hosted by, <span>{thisSpot.Owner &&(thisSpot.Owner.firstName)} {thisSpot.Owner &&(thisSpot.Owner.lastName)}</span></div></div>
+
+
+
+
       </div>
 
 
+</>
 
-    </div>
+
+
+
   );
 
 }

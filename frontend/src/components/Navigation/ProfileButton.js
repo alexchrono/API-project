@@ -75,6 +75,18 @@ function ProfileButton({ user }) {
                 modalComponent={<SignupFormModal />}
               />
             </li>
+            <li>
+              <button type="button" onClick={(e)=>{
+                const credential="Demo-lition"
+                const password='password'
+                return dispatch(sessionActions.login({ credential, password }))}}
+                >Demo User</button>
+            {/* <OpenModalButton
+                buttonText="Demo User"
+                onButtonClick={closeMenu}
+                modalComponent={<SignupFormModal />}
+              /> */}
+            </li>
           </>
         )}
       </ul>

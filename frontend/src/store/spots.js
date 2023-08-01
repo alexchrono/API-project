@@ -2,6 +2,7 @@ import { useDispatch } from "react-redux";
 import {useParams} from 'react-router-dom'
 import {useEffect, useState } from 'react';
 import {csrfFetch} from '../store/csrf'
+
 // 1. types -they must be UNIQUE
 //CRUD - Create, Read, Update, Delete
 
@@ -68,8 +69,9 @@ export const loadSpots = (spots) => ({
   type: LOAD_SPOTS,
   payload:spots
 });
-export const actionAddSpot = () => ({
+export const actionAddSpot = (newSpot) => ({
   type: ADD_SPOT,
+  payload: newSpot
 });
 export const updateSpot = () => ({
   type: UPDATE_SPOT,
@@ -109,7 +111,7 @@ export async function ThunkLoadSingle(dispatch,spotId){
   if(res.ok) {
     const  Spot  = await res.json(); // { Spots: [] }
     // do the thing with this data
-    console.log('Spot is',Spot)
+    console.log('single Spot loaded is',Spot)
  dispatch(actionLoadSpot(Spot))
 
 }
@@ -118,6 +120,29 @@ else {
 }
 }
 
+export const ThunkAddSpot=(newSpot)=>async(dispatch)=>{
+  // let realId=parseInt(spotId)
+  try{
+    console.log('this is newSpot in thunkAddSpot',newSpot)
+  const res = await csrfFetch(`/api/spots`,{
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'},
+      body: JSON.stringify(newSpot)
+  });
+  if(res.ok) {
+    const  Spot  = await res.json(); // { Spots: [] }
+    // do the thing with this data
+    console.log('Spot added is',Spot)
+    return Spot
+
+
+}
+  }
+ catch (error) {
+  console.log('thunkAddSpotFailed',error)
+ }
+}
 // export const ThunkAddNewSpot=(dispatch,body)=>async dispatch =>{
 
 //   const res = await fetch("/api/spots",{
@@ -156,7 +181,10 @@ export default function spotReducer(state=initialState, action) {
       return newState
       }
       case ADD_SPOT: {
-        let newState={}
+        let allPrevSpots=state.allSpots
+        let ourId=action.payload.id
+        let newState={...state,
+        allSpots: {...allPrevSpots,[ourId]:action.payload}}
         return newState
       }
 

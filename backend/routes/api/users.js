@@ -23,9 +23,9 @@ const validateSignup= [
       .withMessage('Invalid email'),
 
     check('username')
-      .exists({ checkFalsy: true })
       .isLength({ min: 2 })
-      .withMessage('Username is required'),
+      .withMessage('Username has to be two characters or more'),
+
 
       check('firstName')
     .exists({ checkFalsy: true })
@@ -37,21 +37,21 @@ const validateSignup= [
 
     handleValidationErrors
   ];
-const middleware2=((err,req,res,next)=>{
-res.json({
-  message: "Bad Request",
-  errors: err.errors
-})
-})
+// const middleware2=((err,req,res,next)=>{
+// res.json({
+//   message: "Bad Request",
+//   errors: err.errors
+// })
+// })
   router.post(
     '/',
-    validateSignup,middleware2,
+    validateSignup,
     async (req, res,next) => {
       const { email, password, username,firstName,lastName } = req.body;
-      const errors2=validationResult(req);
-      if(!errors2.isEmpty()){
-      next(err)
-        }
+      // const errors2=validationResult(req);
+      // if(!errors2.isEmpty()){
+      // next(errors2)
+      //   }
 
 
 

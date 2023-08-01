@@ -4,6 +4,7 @@ import { NavLink,useHistory,Link,useParams } from 'react-router-dom';
 import { useSelector,useDispatch } from 'react-redux';
 import {useState} from 'react'
 import './createSpot.css'
+import { ThunkAddSpot } from '../../store/spots';
 
 
 
@@ -25,27 +26,53 @@ const [pic4,setPic4]=useState("")
 const [pic5,setPic5]=useState("")
 const [errors, setErrors] = useState({});
 const dispatch = useDispatch();
+const history=useHistory()
+let thisSpot = useSelector((state) => state.spots)
+useEffect(()=>{
+
+},[thisSpot])
+
+  const fetchData = async (newSpot) => {
 
 
-const handleSubmit = (e) => {
+    let spot=await dispatch(ThunkAddSpot(newSpot));
+
+
+
+
+    history.push(`/spots/${spot.id}`)
+    return spot
+  };
+
+
+
+
+
+// let { SpotImages } = thisSpot
+
+const handleSubmit = async(e) => {
     e.preventDefault();
 
       setErrors({});
-      return dispatch(
-        sessionActions.signup({
-          email,
-          username,
-          firstName,
-          lastName,
-          password,
-        })
-      )
-        .then(closeModal)
+      let newData={
+        address:streetAddress,
+        city,
+        state,
+        country,
+        lat: latitude,
+        lng: longitude,
+        name,
+        description,
+        price
+      }
+      console.log('newData',newData)
+      await fetchData(newData,dispatch)
         .catch(async (res) => {
-          const data = await res.json();
-          if (data && data.errors) {
-            setErrors(data.errors);
-          }
+          console.log('ourCatchKickedInCreateSpotIndexLine60')
+          // const data = await res.json();
+          // if (data && data.errors) {
+          //   setErrors(data.errors);
+          // }
         });
 
 

@@ -76,9 +76,17 @@ height:50%;
 } */
  */
 
+ .mainPicAndDaddyBelowWrapper {
+    display: flex;
+    align-items: flex-start; /* Align child elements at the top */
+    justify-content: center; /* Center the child elements horizontally */
+  }
 
-
-
+.daddyOfSingleDetail {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 
 .detailsPictureBox{
     width: 100%
@@ -86,7 +94,7 @@ height:50%;
 }
 
 .mainPic{
-    width:48%;
+    width:50%;
     padding-top:36%;
     display:inline-block;
 
@@ -94,10 +102,13 @@ height:50%;
     overflow: hidden;
 }
 .sidePicsContainer{
-    display:inline-flex;
-    width:48%;
-    flex-direction: row;
+    display:inline-block;
+    width:49.6%;
+    gap: 5px;
     flex-wrap: wrap;
+    /* justify-content: flex-start; */
+
+
     /* position: relative;
     overflow: hidden; */
 }
@@ -109,6 +120,7 @@ height:50%;
     width:100%;
     height:100%;
     object-fit: cover;
+    padding: 5px;
 }
 .sidePieceHolder{
     width:50%;
@@ -118,6 +130,7 @@ height:50%;
     position: relative;
     overflow: hidden;
 }
+
 .sidePiece{
 
 width:50%;
