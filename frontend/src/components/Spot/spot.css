@@ -106,7 +106,7 @@ height:50%;
     width:49.6%;
     gap: 5px;
     flex-wrap: wrap;
-   
+
 }
 
 .respond{
@@ -141,4 +141,36 @@ height:50%;
 .borderBox{
     width:20%;
     text-align: right;
+}
+
+.below70percent{
+    display: inline-block;
+    width: 67%;
+    vertical-align: top;
+
+}
+
+.borderBoxRight{
+    display: inline-block;
+    width: 25%;
+}
+
+.inline{
+    display: inline-block;
+}
+
+.bigRed{
+
+}
+
+.priceStarReview{
+    display:flex;
+    justify-content: space-evenly;
+    align-items:end;
+}
+
+.hrLine{
+    border: none;
+    border-top: 3px solid rgba(0, 0, 0, 0.573);
+    margin: 20px 0;
 }

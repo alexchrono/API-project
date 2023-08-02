@@ -77,40 +77,59 @@ export default function Spot() {
 
   return (
     <>
-    <div className='daddyOfSingleDetail'>
-      <h2>{thisSpot.name}</h2>
-      <div className='cityAndStarsContainer'><span className='cityAndStars'>{`${thisSpot.city}, ${thisSpot.state}, ${thisSpot.country}`}</span>  </div></div>
+      <div className='daddyOfSingleDetail'>
+        <h2>{thisSpot.name}</h2>
+        <div className='cityAndStarsContainer'><span className='cityAndStars'>{`${thisSpot.city}, ${thisSpot.state}, ${thisSpot.country}`}</span>  </div></div>
 
-        <div className="mainPicAndDaddyBelowWrapper">
+      <div className="mainPicAndDaddyBelowWrapper">
         <div className='detailsPictureBox'>
-      <div className="mainPic">
-         <img className="respond" src={SpotImages && SpotImages.length>0 && (SpotImages[0].url)}></img>
-      </div><div className="sidePicsContainer">
+          <div className="mainPic">
+          {SpotImages && SpotImages.map((ele) => {
+                if (ele.preview === true) {
+                return(<img key={ele.id} src={ele.url} className="respond" alt={`Image ${ele.id}`} />)}})}
+          </div><div className="sidePicsContainer">
 
-      <div className="sidePicsAndDaddyBelowWrapper">
-{SpotImages && SpotImages.length > 1 && SpotImages.map((ele) => {
-if (ele.id !==SpotImages[0].id) {
+            <div className="sidePicsAndDaddyBelowWrapper">
+              {SpotImages && SpotImages.length > 1 && SpotImages.map((ele) => {
+                if (ele.preview ===false) {
 
-return <div className="sidePieceHolder"><img key={ele.id} src={ele.url} className="respond" alt={`Image ${ele.id}`} /> </div>;
-}
-return null; // Return null for elements that don't meet the condition
-})}
+                  return <div className="sidePieceHolder"><img key={ele.id} src={ele.url} className="respond" alt={`Image ${ele.id}`} /> </div>;
+                }
+                return null; // Return null for elements that don't meet the condition
+              })}
 
- </div></div></div>
-      <div className="daddyBelow">
-      <div className='below'><h2>Hosted by,{thisSpot.Owner &&(thisSpot.Owner.firstName)} {thisSpot.Owner &&(thisSpot.Owner.lastName)}</h2></div>
-      <div className="borderBoxRight">
-     <h2>{`$${thisSpot.price} night`}</h2> <p>STAR  {thisSpot.avgStarRating}</p>
-      <p>{thisSpot.numReviews} Reviews </p>
-      <button type="button">Register</button></div></div>
-
-
-
-
+            </div></div></div>
+        <div className="below70percent">
+          <div className='below'><h2>Hosted by,{thisSpot.Owner && (thisSpot.Owner.firstName)} {thisSpot.Owner && (thisSpot.Owner.lastName)}</h2></div><div className="descriptionz">
+            {thisSpot.description}</div> </div>
+        <div className="borderBoxRight">
+          <div class="priceStarReview"> <h2 class="inline">{`$${thisSpot.price} night`}</h2> <p class="inline">STAR  {thisSpot.avgStarRating}</p>
+            <p class="inline">{thisSpot.numReviews} Reviews </p></div>
+          <button type="button" class="bigRed">Register</button></div>
       </div>
+      <hr class="hrLine"></hr>
+      <div className="starAndReviewsForReviews">
+        {
+          thisSpot.numReviews === 0 ? (
+            <span>{`STAR  NEW`}</span>
+          ) : thisSpot.avgStarRating && Number.isInteger(thisSpot.avgStarRating) ? (
+            <span>{`STAR  ${thisSpot.avgStarRating}.0`}</span>
+          ) : (
+            <span>{`STAR  ${thisSpot.avgStarRating}`}</span>
+          )
+        }
+        <span>   CNTR DOT</span>  <span>{`${thisSpot.numReviews} reviews`}</span></div>
+        
+        <div className="eachReview">
+        <div className="nameOfReviewer">
+
+        </div>
 
 
-</>
+        </div>
+
+
+    </>
 
 
 
