@@ -36,6 +36,7 @@ useEffect(()=>{
   const fetchData = async (newSpot) => {
 
 
+
     let spot=await dispatch(ThunkAddSpot(newSpot,arrayImages));
 
 
@@ -83,9 +84,13 @@ const handleSubmit = async(e) => {
      arrayImages=[...firstImage,...secondArray]
 
       console.log('newData',newData)
-      await fetchData(newData,arrayImages)
-        .catch(async (res) => {
-          console.log('ourCatchKickedInCreateSpotIndexLine60')
+      try {let spot=await fetchData(newData, arrayImages);
+        history.push(`/spots/${spot.id}`);
+      } catch (error) {
+        let realErrors=await error.json()
+        await setErrors(realErrors.errors);
+        console.log('errors state is now',errors)
+      }
 
 
           // const data = await res.json();
@@ -106,12 +111,9 @@ const handleSubmit = async(e) => {
       //     return setErrors({
       //       Email: 'Email is invalid'
       //     });
-        });
 
 
-    return setErrors({
-      confirmPassword: "Confirm Password field must be the same as the Password field"
-    });
+
   };
 
   return (
@@ -131,7 +133,7 @@ const handleSubmit = async(e) => {
           placeholder='Country'
         //   name='title'
         />
-
+        {errors.country &&(<p>{errors.country}</p>)}
         </div>
         <div>
         <label htmlFor="streetAddy">Address</label>
@@ -154,6 +156,7 @@ const handleSubmit = async(e) => {
           placeholder='City'
         //   name='imageUrl'
         />
+        {errors.city &&(<p>{errors.city}</p>)}
         <label htmlFor="state">State</label>
            <input
             id="state"
@@ -163,6 +166,7 @@ const handleSubmit = async(e) => {
           placeholder='STATE'
         //   name='imageUrl'
         />
+        {errors.state &&(<p>{errors.state}</p>)}
 </div>
 
 
@@ -178,6 +182,7 @@ const handleSubmit = async(e) => {
           placeholder='LATITUDE'
         //   name='imageUrl'
         />
+        {errors.lat &&(<p>{errors.lat}</p>)}
         <label htmlFor="long">Longitude</label>
           <input
            id="long"
@@ -187,6 +192,7 @@ const handleSubmit = async(e) => {
           placeholder='LONGITUDE'
         //   name='imageUrl'
         />
+        {errors.lng &&(<p>{errors.lng}</p>)}
 
         </div>
         <div>
@@ -199,6 +205,7 @@ const handleSubmit = async(e) => {
           placeholder="Please write at least 30 characters"
           rows='10'
         ></textarea>
+        {errors.description &&(<p>{errors.description}</p>)}
         </div>
         <div>
         <h4>Create a title for your spot</h4>
@@ -210,6 +217,7 @@ const handleSubmit = async(e) => {
           placeholder='Name of your spot'
         //   name='imageUrl'
         />
+        {errors.name &&(<p>{errors.name}</p>)}
         </div>
         <div>
             <h4>Set a base price for your spot</h4>

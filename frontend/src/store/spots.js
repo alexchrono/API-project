@@ -164,7 +164,7 @@ export const  ThunkAddSpot= (newSpot,arrayImages)=>async(dispatch)=>{
 
   }
  catch (error) {
-  console.log('thunkAddSpotFailed',error)
+  throw error;
  }
 
 

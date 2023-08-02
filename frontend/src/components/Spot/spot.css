@@ -78,14 +78,14 @@ height:50%;
 
  .mainPicAndDaddyBelowWrapper {
     display: flex;
-    align-items: flex-start; /* Align child elements at the top */
-    justify-content: center; /* Center the child elements horizontally */
+    align-items: flex-start;
+    justify-content: center;
   }
 
 .daddyOfSingleDetail {
     display: flex;
     flex-direction: column;
-   
+
 }
 
 .detailsPictureBox{
@@ -106,11 +106,7 @@ height:50%;
     width:49.6%;
     gap: 5px;
     flex-wrap: wrap;
-    /* justify-content: flex-start; */
-
-
-    /* position: relative;
-    overflow: hidden; */
+   
 }
 
 .respond{
