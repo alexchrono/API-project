@@ -88,7 +88,11 @@ const handleSubmit = async(e) => {
         history.push(`/spots/${spot.id}`);
       } catch (error) {
         let realErrors=await error.json()
-        await setErrors(realErrors.errors);
+        if(pic1 !==""){
+        await setErrors(realErrors.errors)}
+        else if(pic1===""){
+          await setErrors({...realErrors.errors,prevImage:"A preview Image is required."})
+        }
         console.log('errors state is now',errors)
       }
 
@@ -133,7 +137,7 @@ const handleSubmit = async(e) => {
           placeholder='Country'
         //   name='title'
         />
-        {errors.country &&(<p>{errors.country}</p>)}
+        {errors.country &&(<p class="error">{errors.country}</p>)}
         </div>
         <div>
         <label htmlFor="streetAddy">Address</label>
@@ -145,6 +149,7 @@ const handleSubmit = async(e) => {
           placeholder='Address'
         //   name='imageUrl'
         />
+        {errors.address && <p class="error">{errors.address}</p>}
         </div>
         <div>
         <label htmlFor="city">City</label>
@@ -156,7 +161,7 @@ const handleSubmit = async(e) => {
           placeholder='City'
         //   name='imageUrl'
         />
-        {errors.city &&(<p>{errors.city}</p>)}
+        {errors.city &&(<p class="error">{errors.city}</p>)}
         <label htmlFor="state">State</label>
            <input
             id="state"
@@ -166,7 +171,7 @@ const handleSubmit = async(e) => {
           placeholder='STATE'
         //   name='imageUrl'
         />
-        {errors.state &&(<p>{errors.state}</p>)}
+        {errors.state &&(<p class="error">{errors.state}</p>)}
 </div>
 
 
@@ -182,7 +187,7 @@ const handleSubmit = async(e) => {
           placeholder='LATITUDE'
         //   name='imageUrl'
         />
-        {errors.lat &&(<p>{errors.lat}</p>)}
+        {errors.lat &&(<p class="error">{errors.lat}</p>)}
         <label htmlFor="long">Longitude</label>
           <input
            id="long"
@@ -192,7 +197,7 @@ const handleSubmit = async(e) => {
           placeholder='LONGITUDE'
         //   name='imageUrl'
         />
-        {errors.lng &&(<p>{errors.lng}</p>)}
+        {errors.lng &&(<p class="error">{errors.lng}</p>)}
 
         </div>
         <div>
@@ -205,7 +210,7 @@ const handleSubmit = async(e) => {
           placeholder="Please write at least 30 characters"
           rows='10'
         ></textarea>
-        {errors.description &&(<p>{errors.description}</p>)}
+        {errors.description &&(<p class="error">{errors.description}</p>)}
         </div>
         <div>
         <h4>Create a title for your spot</h4>
@@ -217,7 +222,7 @@ const handleSubmit = async(e) => {
           placeholder='Name of your spot'
         //   name='imageUrl'
         />
-        {errors.name &&(<p>{errors.name}</p>)}
+        {errors.name &&(<p class="error">{errors.name}</p>)}
         </div>
         <div>
             <h4>Set a base price for your spot</h4>
@@ -231,7 +236,7 @@ const handleSubmit = async(e) => {
           placeholder='Price per night (USD)'
         //   name='imageUrl'
         />
-        {errors.price && <p>{errors.price}</p>}
+        {errors.price && <p class="error">{errors.price}</p>}
         </div>
         <div>
           <h4>Liven up your spot with photos</h4>
@@ -243,6 +248,7 @@ const handleSubmit = async(e) => {
           placeholder='Preview Image URL'
 
         />
+        {errors.prevImage && <p class="error">{errors.prevImage}</p>}
 </div>
 <div>
          <input
