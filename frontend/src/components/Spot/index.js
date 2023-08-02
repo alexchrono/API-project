@@ -3,6 +3,7 @@ import { useEffect } from 'react'
 import { NavLink, useHistory, Link, useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { ThunkLoadSingle } from '../../store/spots';
+import { ThunkLoadReviewsBySpotId } from '../../store/reviews';
 import './spot.css'
 
 
@@ -11,9 +12,12 @@ export default function Spot() {
   let { spotId } = useParams()
   const dispatch = useDispatch();
   let thisSpot = useSelector((state) => state.spots.singleSpot)
+  let thisSpotsReviews= useSelector((state) => state.reviews.spot)
+  let thisUser= useSelector((state)=>state.session)
   useEffect(() => {
     const fetchData = async () => {
       await ThunkLoadSingle(dispatch, spotId);
+      await ThunkLoadReviewsBySpotId(dispatch,spotId)
     };
 
     fetchData();
@@ -73,8 +77,10 @@ export default function Spot() {
   // );
 
 
+console.log('THESE ARE ALL THE REVIEWS',thisSpotsReviews)
+console.log('THIS IS THE STATEUSER DATA',thisUser)
 
-
+//thisUser.id will give me id
   return (
     <>
       <div className='daddyOfSingleDetail'>
@@ -103,7 +109,15 @@ export default function Spot() {
           <div className='below'><h2>Hosted by,{thisSpot.Owner && (thisSpot.Owner.firstName)} {thisSpot.Owner && (thisSpot.Owner.lastName)}</h2></div><div className="descriptionz">
             {thisSpot.description}</div> </div>
         <div className="borderBoxRight">
-          <div class="priceStarReview"> <h2 class="inline">{`$${thisSpot.price} night`}</h2> <p class="inline">STAR  {thisSpot.avgStarRating}</p>
+          <div class="priceStarReview"> <h2 class="inline">{`$${thisSpot.price} night`}</h2> <p class="inline">  {
+          thisSpot.numReviews === 0 ? (
+            <span>{`STAR  NEW`}</span>
+          ) : thisSpot.avgStarRating && Number.isInteger(thisSpot.avgStarRating) ? (
+            <span>{`STAR  ${thisSpot.avgStarRating}.0`}</span>
+          ) : (
+            <span>{`STAR  ${thisSpot.avgStarRating}`}</span>
+          )
+        }</p>
             <p class="inline">{thisSpot.numReviews} Reviews </p></div>
           <button type="button" class="bigRed">Register</button></div>
       </div>
@@ -119,14 +133,26 @@ export default function Spot() {
           )
         }
         <span>   CNTR DOT</span>  <span>{`${thisSpot.numReviews} reviews`}</span></div>
-        
+
+        {thisUser.user && Array.isArray(thisSpotsReviews) && !thisSpotsReviews.find((ele)=>ele.userId===thisUser.user.id) && thisSpot.ownerId!==thisUser.user.id && (<h1>
+          <button type="button">Post Your Review</button>
+        </h1>) }
+
+
+        {thisSpotsReviews.length>=1 && thisSpotsReviews.map((ele)=>(
+
         <div className="eachReview">
         <div className="nameOfReviewer">
-
+          <h2>{ele.User.firstName}</h2>
         </div>
-
-
+        <div className="monthAndDate">
+          <h3>{`${ele.createdAt.slice(5,7)} ${ele.createdAt.slice(0,4)} `}</h3>
+          <p>
+            {ele.review}
+          </p>
         </div>
+        </div>
+        ))}
 
 
     </>

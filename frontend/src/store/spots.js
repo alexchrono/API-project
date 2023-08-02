@@ -106,6 +106,7 @@ dispatch(actionLoadSpots(Spots))
 
 export async function ThunkLoadSingle(dispatch,spotId){
   // let realId=parseInt(spotId)
+  
   console.log(spotId)
   const res = await fetch(`/api/spots/${spotId}`);
   if(res.ok) {
