@@ -4,7 +4,9 @@ import { NavLink, useHistory, Link, useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { ThunkLoadSingle } from '../../store/spots';
 import { ThunkLoadReviewsBySpotId } from '../../store/reviews';
+import OpenModalButton from '../OpenModalButton';
 import './spot.css'
+import SubmitReviewModal from '../SubmitReviewModal';
 
 
 
@@ -135,7 +137,11 @@ console.log('THIS IS THE STATEUSER DATA',thisUser)
         <span>   CNTR DOT</span>  <span>{`${thisSpot.numReviews} reviews`}</span></div>
 
         {thisUser.user && Array.isArray(thisSpotsReviews) && !thisSpotsReviews.find((ele)=>ele.userId===thisUser.user.id) && thisSpot.ownerId!==thisUser.user.id && (<h1>
-          <button type="button">Post Your Review</button>
+          <OpenModalButton
+                buttonText="Post Your Review"
+                // onButtonClick={closeMenu}
+                modalComponent={<SubmitReviewModal />}
+              />
         </h1>) }
 
 
