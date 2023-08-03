@@ -50,7 +50,7 @@ export default function SpotsCurrentUser() {
             </div>
 
             <div className="price"> <p>{`$${ele.price} night`}</p></div></div></Link>
-            <div className="buttons"> <Link exact to="/spots/updateAspot"><button type="button" className="updateDelete">Update</button></Link><button type="button" className="updateDelete">Delete</button> </div>
+            <div className="buttons"> <Link exact to={`/spots/updateAspot/${ele.id}`}><button type="button" className="updateDelete">Update</button></Link><button type="button" className="updateDelete">Delete</button> </div>
             </>
 
         ))}

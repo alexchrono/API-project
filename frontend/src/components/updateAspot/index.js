@@ -5,11 +5,12 @@ import { useSelector,useDispatch } from 'react-redux';
 import {useState} from 'react'
 import './updateASpot.css'
 import { ThunkAddSpot } from '../../store/spots';
+import { ThunkLoadSingle } from '../../store/spots';
 
 
 
 export default function UpdateASpot() {
-
+let {spotId}=useParams()
 const [country,setCountry]=useState("")
 const [streetAddress,setStreetAddress]=useState("")
 const [city,setCity]=useState("")
@@ -27,24 +28,29 @@ const [pic5,setPic5]=useState("")
 const [errors, setErrors] = useState({});
 const dispatch = useDispatch();
 const history=useHistory()
-let thisSpot = useSelector((state) => state.spots)
+let thisSpot = useSelector((state) => state.spots.singleSpot)
 let arrayImages=[]
+
 useEffect(()=>{
+    const fetchData = async () => {
+        await ThunkLoadSingle(dispatch, spotId);
+        // await ThunkLoadReviewsBySpotId(dispatch,spotId)
+      };
+      fetchData()
+},[dispatch,spotId])
 
-},[thisSpot])
-
-  const fetchData = async (newSpot) => {
-
-
-
-    let spot=await dispatch(ThunkAddSpot(newSpot,arrayImages));
-
-
+//   const fetchData = async (newSpot) => {
 
 
-    history.push(`/spots/${spot.id}`)
-    return spot
-  };
+
+//     let spot=await dispatch(ThunkLoadSingle(newSpot,arrayImages));
+
+
+
+
+//     history.push(`/spots/${spot.id}`)
+//     return spot
+//   };
 
 
 
@@ -84,17 +90,17 @@ const handleSubmit = async(e) => {
      arrayImages=[...firstImage,...secondArray]
 
       console.log('newData',newData)
-      try {let spot=await fetchData(newData, arrayImages);
-        history.push(`/spots/${spot.id}`);
-      } catch (error) {
-        let realErrors=await error.json()
-        if(pic1 !==""){
-        await setErrors(realErrors.errors)}
-        else if(pic1===""){
-          await setErrors({...realErrors.errors,prevImage:"A preview Image is required."})
-        }
-        console.log('errors state is now',errors)
-      }
+    //   try {let spot=await fetchData(newData, arrayImages);
+    //     history.push(`/spots/${spot.id}`);
+    //   } catch (error) {
+    //     let realErrors=await error.json()
+    //     if(pic1 !==""){
+    //     await setErrors(realErrors.errors)}
+    //     else if(pic1===""){
+    //       await setErrors({...realErrors.errors,prevImage:"A preview Image is required."})
+    //     }
+    //     console.log('errors state is now',errors)
+    //   }
 
 
           // const data = await res.json();
@@ -119,11 +125,12 @@ const handleSubmit = async(e) => {
 
 
   };
+  console.log('thisSpotIs',thisSpot)
 
   return (
     <div className='inputBox'>
 
-      <h1 className="title">THIS IS EDIT A SPOT</h1>
+      <h1 className="title">Update your Spot</h1>
       <form onSubmit={handleSubmit}>
       <div>
         <h4>Where's your place located?</h4>
@@ -133,7 +140,7 @@ const handleSubmit = async(e) => {
         id="Country"
           type='text'
           onChange={(e) => setCountry(e.target.value)}
-          value={country}
+          value={thisSpot.country}
           placeholder='Country'
         //   name='title'
         />
@@ -145,7 +152,7 @@ const handleSubmit = async(e) => {
          id="streetAddy"
           type='text'
           onChange={(e) => setStreetAddress(e.target.value)}
-          value={streetAddress}
+          value={thisSpot.streetAddress}
           placeholder='Address'
         //   name='imageUrl'
         />
@@ -157,7 +164,7 @@ const handleSubmit = async(e) => {
          id="city"
           type='text'
           onChange={(e) => setCity(e.target.value)}
-          value={city}
+          value={thisSpot.city}
           placeholder='City'
         //   name='imageUrl'
         />
@@ -167,7 +174,7 @@ const handleSubmit = async(e) => {
             id="state"
           type='text'
           onChange={(e) => setState(e.target.value)}
-          value={state}
+          value={thisSpot.state}
           placeholder='STATE'
         //   name='imageUrl'
         />
@@ -183,7 +190,7 @@ const handleSubmit = async(e) => {
            id="lat"
           type='text'
           onChange={(e) => setLatitude(e.target.value)}
-          value={latitude}
+          value={thisSpot.lat}
           placeholder='LATITUDE'
         //   name='imageUrl'
         />
@@ -193,7 +200,7 @@ const handleSubmit = async(e) => {
            id="long"
           type='text'
           onChange={(e) => setLongitude(e.target.value)}
-          value={longitude}
+          value={thisSpot.lng}
           placeholder='LONGITUDE'
         //   name='imageUrl'
         />
@@ -205,7 +212,7 @@ const handleSubmit = async(e) => {
         <p>Mention the best features of your space, any special amentities like fast wifi or parking, and what you love about the neighborhood		</p></div>
         <div>
         <textarea
-          value={description}
+          value={thisSpot.description}
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Please write at least 30 characters"
           rows='10'
@@ -218,7 +225,7 @@ const handleSubmit = async(e) => {
           <input
           type='text'
           onChange={(e) => setName(e.target.value)}
-          value={name}
+          value={thisSpot.name}
           placeholder='Name of your spot'
         //   name='imageUrl'
         />
@@ -232,7 +239,7 @@ const handleSubmit = async(e) => {
           step="0.01"
           min="0"
           onChange={(e) => setPrice(e.target.value)}
-          value={price}
+          value={thisSpot.price}
           placeholder='Price per night (USD)'
         //   name='imageUrl'
         />
@@ -244,7 +251,7 @@ const handleSubmit = async(e) => {
           <input
           type='text'
           onChange={(e) => setPic1(e.target.value)}
-          value={pic1}
+          value={thisSpot.SpotImages && thisSpot.SpotImages[thisSpot.SpotImages.length-1] && thisSpot.SpotImages[thisSpot.SpotImages.length-1].preview===true && (thisSpot.SpotImages[0].url)}
           placeholder='Preview Image URL'
 
         />
@@ -254,7 +261,7 @@ const handleSubmit = async(e) => {
          <input
           type='text'
           onChange={(e) => setPic2(e.target.value)}
-          value={pic2}
+          value={thisSpot.SpotImages && thisSpot.SpotImages[thisSpot.SpotImages.length-2]  && (thisSpot.SpotImages[thisSpot.SpotImages.length-2].url)}
           placeholder='Image URL'
         //   name='imageUrl'
         />
@@ -263,7 +270,7 @@ const handleSubmit = async(e) => {
          <input
           type='text'
           onChange={(e) => setPic3(e.target.value)}
-          value={pic3}
+          value={thisSpot.SpotImages && thisSpot.SpotImages[thisSpot.SpotImages.length-3]  && (thisSpot.SpotImages[thisSpot.SpotImages.length-3].url)}
           placeholder='Image URL'
         //   name='imageUrl'
         />
@@ -272,7 +279,7 @@ const handleSubmit = async(e) => {
          <input
           type='text'
           onChange={(e) => setPic4(e.target.value)}
-          value={pic4}
+          value={thisSpot.SpotImages && thisSpot.SpotImages[thisSpot.SpotImages.length-4]  && (thisSpot.SpotImages[thisSpot.SpotImages.length-4].url)}
           placeholder='Image URL'
         //   name='imageUrl'
         />
@@ -280,14 +287,14 @@ const handleSubmit = async(e) => {
 <div>
          <input
           type='text'
-          onChange={(e) => setPic5(e.target.value)}
-          value={pic5}
+          onChange={thisSpot.SpotImages && thisSpot.SpotImages[thisSpot.SpotImages.length-5]  && (thisSpot.SpotImages[thisSpot.SpotImages.length-5].url)}
+          value={thisSpot.pic5}
           placeholder='Image URL'
         //   name='imageUrl'
         />
         </div>
         <div>
-        <button type='submit'>Create Spot</button>
+        <button type='submit'>Update your Spot</button>
         </div>
 
       </form>
