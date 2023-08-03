@@ -3,7 +3,7 @@ import {useEffect} from 'react'
 import { NavLink,useHistory,Link,useParams } from 'react-router-dom';
 import { useSelector,useDispatch } from 'react-redux';
 import {useState} from 'react'
-import './createSpot.css'
+import './updateASpot.css'
 import { ThunkAddSpot } from '../../store/spots';
 
 
