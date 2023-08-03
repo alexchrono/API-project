@@ -6,7 +6,7 @@ import { useModal } from "../../context/Modal";
 import "./submitReview.css";
 import { ThunkAddReview } from "../../store/reviews";
 
-function SubmitReviewModal() {
+function SubmitReviewModal({spotId,userId,arrayReviews},) {
   const dispatch = useDispatch();
   const [review, setReview] = useState("");
   const [stars, setStars] = useState("");
@@ -16,17 +16,18 @@ function SubmitReviewModal() {
   const handleSubmit = (e) => {
     e.preventDefault();
     setErrors({});
-    return dispatch(ThunkAddReview({ credential, password }))
+    return dispatch(ThunkAddReview({ review, stars },{spotId,userId,arrayReviews}))
       .then(closeModal)
-      .catch(async (res) => {
-        const data = await res.json();
-        if (data && data.errors) {
-          setErrors(data.errors);
-          return setErrors({
-            Email: 'Email is invalid'
-          });
-        }
-      });
+      // .catch(async (res) => {
+      //   const data = await res.json();
+      //   if (data && data.errors) {
+      //     console.log('we hit the error in submitreviewmodal line 24')
+      //     // setErrors(data.errors);
+      //     // return setErrors({
+      //     //   Email: 'Email is invalid'
+      //     // });
+      //   }
+      // });
 
   };
 

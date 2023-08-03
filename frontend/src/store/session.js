@@ -1,5 +1,6 @@
 // frontend/src/store/session.js
 import { csrfFetch } from "./csrf";
+import {useHistory} from 'react-router-dom'
 //types
 const SET_USER = "session/setUser";
 const REMOVE_USER = "session/removeUser";
@@ -18,10 +19,11 @@ const removeUser = () => {
 };
 //thunks
 export const logout = () => async (dispatch) => {
+    
     const response = await csrfFetch('/api/session', {
       method: 'DELETE',
     });
-    dispatch(removeUser());
+    await dispatch(removeUser());
     return response;
   };
 export const signup = (user) => async (dispatch) => {

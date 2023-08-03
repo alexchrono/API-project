@@ -12,6 +12,8 @@ const ADD_SPOT = 'session/add_spot'; //create
 const UPDATE_SPOT = 'session/update_spot';
 const DELETE_SPOT = 'session/delete_spot';
 const LOAD_SPOT = 'session/load_spot'; // GET spots/:spotId
+const LOAD_SPOTS_CURRENT_USER = 'session/load_spots/current_user';
+
 
 // export const getInitialState = async () => {
 //   try {
@@ -87,7 +89,45 @@ export const actionLoadSpots = (spotsFromDB) => ({
   type: LOAD_SPOTS,
   payload: spotsFromDB
 })
+export const actionLoadSpotsCurrentUser = (spots) => ({
+  type: LOAD_SPOTS_CURRENT_USER,
+  payload: spots
+})
+
 //thunks
+
+export async function ThunkLoadSpotsCurrentUser(dispatch){
+
+  const res = await csrfFetch("/api/spots/current");
+  console.log('this is current res',res)
+  if(res.ok) {
+    const  ourJam  = await res.json();
+    console.log('ourJamis',ourJam)
+dispatch(actionLoadSpotsCurrentUser(ourJam))
+
+  } else {
+    const errors = await res.json();
+    console.error('Error fetching data:', errors);
+  }
+}
+
+export async function ThunkLoadSingle(dispatch,spotId){
+  // let realId=parseInt(spotId)
+
+  console.log(spotId)
+  const res = await fetch(`/api/spots/${spotId}`);
+  if(res.ok) {
+    const  Spot  = await res.json(); // { Spots: [] }
+    // do the thing with this data
+    console.log('single Spot loaded is',Spot)
+ dispatch(actionLoadSpot(Spot))
+
+}
+else {
+  dispatch(actionLoadSpot(`ffuuckk`))
+}
+}
+
 
 export async function ThunkLoad(dispatch){
 
@@ -104,22 +144,23 @@ dispatch(actionLoadSpots(Spots))
   }
 }
 
-export async function ThunkLoadSingle(dispatch,spotId){
-  // let realId=parseInt(spotId)
-  
-  console.log(spotId)
-  const res = await fetch(`/api/spots/${spotId}`);
-  if(res.ok) {
-    const  Spot  = await res.json(); // { Spots: [] }
-    // do the thing with this data
-    console.log('single Spot loaded is',Spot)
- dispatch(actionLoadSpot(Spot))
+//i JUST COMMENTED BELOW ONE OUT LEMME KNOW IF PROBLEM
+// export async function ThunkLoadSingle(dispatch,spotId){
+//   // let realId=parseInt(spotId)
 
-}
-else {
-  dispatch(actionLoadSpot(`ffuuckk`))
-}
-}
+//   console.log(spotId)
+//   const res = await fetch(`/api/spots/${spotId}`);
+//   if(res.ok) {
+//     const  Spot  = await res.json(); // { Spots: [] }
+//     // do the thing with this data
+//     console.log('single Spot loaded is',Spot)
+//  dispatch(actionLoadSpot(Spot))
+
+// }
+// else {
+//   dispatch(actionLoadSpot(`ffuuckk`))
+// }
+// }
 
 export const  ThunkAddSpot= (newSpot,arrayImages)=>async(dispatch)=>{
   // let realId=parseInt(spotId)
@@ -196,6 +237,11 @@ export default function spotReducer(state=initialState, action) {
   switch (action.type) {
     case CREATE_SPOT: {
       return state
+    }
+    case LOAD_SPOTS_CURRENT_USER: {
+      let newState={...state,
+        allSpots: action.payload.spots,}
+      return newState
     }
     case LOAD_SPOTS: {
       let newState={...state,

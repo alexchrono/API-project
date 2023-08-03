@@ -12,8 +12,10 @@ import SubmitReviewModal from '../SubmitReviewModal';
 
 export default function Spot() {
   let { spotId } = useParams()
+
   const dispatch = useDispatch();
   let thisSpot = useSelector((state) => state.spots.singleSpot)
+  let allReviews= useSelector((state)=>state.reviews)
   let thisSpotsReviews= useSelector((state) => state.reviews.spot)
   let thisUser= useSelector((state)=>state.session)
   useEffect(() => {
@@ -78,7 +80,7 @@ export default function Spot() {
   //   </div>
   // );
 
-
+console.log(console.log('this is all of reviews State',allReviews))
 console.log('THESE ARE ALL THE REVIEWS',thisSpotsReviews)
 console.log('THIS IS THE STATEUSER DATA',thisUser)
 
@@ -137,10 +139,12 @@ console.log('THIS IS THE STATEUSER DATA',thisUser)
         <span>   CNTR DOT</span>  <span>{`${thisSpot.numReviews} reviews`}</span></div>
 
         {thisUser.user && Array.isArray(thisSpotsReviews) && !thisSpotsReviews.find((ele)=>ele.userId===thisUser.user.id) && thisSpot.ownerId!==thisUser.user.id && (<h1>
+
           <OpenModalButton
                 buttonText="Post Your Review"
                 // onButtonClick={closeMenu}
-                modalComponent={<SubmitReviewModal />}
+
+                modalComponent={<SubmitReviewModal spotId={spotId} userId={thisUser.user.userId} arrayReviews={thisSpotsReviews}/>}
               />
         </h1>) }
 
@@ -149,7 +153,7 @@ console.log('THIS IS THE STATEUSER DATA',thisUser)
 
         <div className="eachReview">
         <div className="nameOfReviewer">
-          <h2>{ele.User.firstName}</h2>
+          {ele.User && (<h2>{ele.User.firstName}</h2>)}
         </div>
         <div className="monthAndDate">
           <h3>{`${ele.createdAt.slice(5,7)} ${ele.createdAt.slice(0,4)} `}</h3>

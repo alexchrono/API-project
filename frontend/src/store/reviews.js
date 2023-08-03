@@ -6,7 +6,7 @@ import {csrfFetch} from '../store/csrf'
 // 1. types -they must be UNIQUE
 //CRUD - Create, Read, Update, Delete
 
-const CREATE_REVIEW = 'session/create_review';
+const ADD_REVIEW_BY_SPOT_ID = 'session/create_review_by_spotId';
 const LOAD_REVIEWS_BY_SPOTID = 'session/load_reviewsBySpotId'; //read. // GET spots/
 // const ADD_SPOT = 'session/add_spot'; //create
 // const UPDATE_SPOT = 'session/update_spot';
@@ -69,10 +69,10 @@ const LOAD_REVIEWS_BY_SPOTID = 'session/load_reviewsBySpotId'; //read. // GET sp
 //   type: LOAD_SPOTS,
 //   payload:spots
 // });
-// export const actionAddSpot = (newSpot) => ({
-//   type: ADD_SPOT,
-//   payload: newSpot
-// });
+export const actionAddReviewBySpotId = (Review) => ({
+  type: ADD_REVIEW_BY_SPOT_ID,
+  payload: Review
+});
 // export const updateSpot = () => ({
 //   type: UPDATE_SPOT,
 // });
@@ -121,40 +121,27 @@ dispatch(actionLoadReviewsBySpotId(Reviews))
 // }
 // }
 
-export const  ThunkAddReview= (newSpot,arrayImages)=>async(dispatch)=>{
+export const  ThunkAddReview= (review,spotAndUserId)=>async(dispatch)=>{
   // let realId=parseInt(spotId)
   try{
-    console.log('this is newReview in thunkAddSpot',newSpot)
+    let {spotId,userId,arrayReviews}=spotAndUserId
+    console.log('this is newReview in thunkAddSpot',review)
   const res = await csrfFetch(`/api/spots/${spotId}/reviews`,{
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'},
-      body: JSON.stringify(newSpot)
+      body: JSON.stringify(review)
   });
   if(res.ok) {
-    const  Spot  = await res.json(); // { Spots: [] }
+    const  Review  = await res.json(); // { Spots: [] }
     // do the thing with this data
-    console.log('Spot added is',Spot)
-    console.log('this is arrayImages',arrayImages)
-    for (let ele of arrayImages){
-      console.log('this is ele of arrayImages',ele)
-    let res2 = await csrfFetch(`/api/spots/${Spot.id}/images`,{
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'},
-        body: JSON.stringify(ele)
-    });
-    if(!res2.ok){
-      console.log('problem adding pics dawg line 150 spots.js')
-    }
+    console.log('Review added is',Review)
+    dispatch(actionAddReviewBySpotId({Review,arrayReviews}))
 
 
 
-  }
 
-
-
-    return Spot
+    return Review
 
 
 
@@ -196,6 +183,12 @@ export default function reviewsReducer(state=initialState, action) {
   switch (action.type) {
     case LOAD_REVIEWS_BY_SPOTID: {
         let newState={...state,spot:action.payload}
+      return newState
+    }
+    case ADD_REVIEW_BY_SPOT_ID: {
+      let {Review,arrayReviews}=action.payload
+      let newSpot=[Review,...arrayReviews]
+      let newState={...state,spot: newSpot}
       return newState
     }
     // case LOAD_SPOTS: {
