@@ -12,6 +12,7 @@ import { ThunkEditASpot } from '../../store/spots';
 
 export default function UpdateASpot() {
 let {spotId}=useParams()
+console.log('this is spotId in updateAspot')
 let thisSpot = useSelector((state) => state.spots.singleSpot)
 const [country,setCountry]=useState(thisSpot.country)
 const [streetAddress,setStreetAddress]=useState(thisSpot.address)
@@ -104,16 +105,16 @@ const handleSubmit = async(e) => {
 
 
       try {let spot=await fetchData2(newData, firstImage,spotId);
-        history.push(`/spots/${spot.id}`);
+        history.push(`/spots/${spotId}`);
       } catch (error) {
         console.log('our fetch didnt work')
-        // let realErrors=await error.json()
-        // if(pic1 !==""){
-        // await setErrors(realErrors.errors)}
-        // else if(pic1===""){
-        //   await setErrors({...realErrors.errors,prevImage:"A preview Image is required."})
-        // }
-        // console.log('errors state is now',errors)
+        let realErrors=await error.json()
+        if(pic1 !==""){
+        await setErrors(realErrors.errors)}
+        else if(pic1===""){
+          await setErrors({...realErrors.errors,prevImage:"A preview Image is required."})
+        }
+        console.log('errors state is now',errors)
       }
 
 

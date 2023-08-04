@@ -5,6 +5,8 @@ import { NavLink, useHistory, Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 // import { getInitialState } from '../../store/spots';
 import { ThunkLoadSpotsCurrentUser } from '../../store/spots';
+import OpenModalButton from '../OpenModalButton';
+import DeleteSpotModal from '../DeleteSpotModal';
 import './currentUser.css'
 
 
@@ -50,7 +52,10 @@ export default function SpotsCurrentUser() {
             </div>
 
             <div className="price"> <p>{`$${ele.price} night`}</p></div></div></Link>
-            <div className="buttons"> <Link exact to={`/spots/updateAspot/${ele.id}`}><button type="button" className="updateDelete">Update</button></Link><button type="button" className="updateDelete">Delete</button> </div>
+            <div className="buttons"> <Link exact to={`/spots/updateAspot/${ele.id}`}><button type="button" className="updateDelete">Update</button></Link>  <OpenModalButton
+                buttonText="Delete"
+                modalComponent={<DeleteSpotModal />}
+              /> </div>
             </>
 
         ))}

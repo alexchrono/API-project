@@ -79,7 +79,7 @@ export const actionUpdateSpot = (editedSpot,arrayImages) => ({
   type: UPDATE_SPOT,
   payload: {editedSpot,arrayImages}
 });
-export const deleteSpot = () => ({
+export const actionDeleteSpot = () => ({
   type: DELETE_SPOT,
 });
 export const actionLoadSpot = (spot) => ({
@@ -348,7 +348,7 @@ export default function spotReducer(state=initialState, action) {
       let newState={...state,
         singleSpot: editedSpot}
         return newState
-     
+
     }
     // case DELETE_SPOT: {
     //   const newState = { ...state, allSpots:{ ...state.allSpots } }; // -> {allSpots: { 1: {}}, singleSpot: {} }
