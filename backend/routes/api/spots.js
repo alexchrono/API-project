@@ -430,7 +430,7 @@ router.get('/:spotId/reviews',async (req,res)=>{
             attributes: ['id','url']}
         ],
     })
-    if(test.length>0){
+    if(test){
     res.status(200)
     .setHeader('Content-Type','application/json')
     .json({Reviews: test})

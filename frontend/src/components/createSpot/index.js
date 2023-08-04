@@ -27,11 +27,11 @@ const [pic5,setPic5]=useState("")
 const [errors, setErrors] = useState({});
 const dispatch = useDispatch();
 const history=useHistory()
-let thisSpot = useSelector((state) => state.spots)
-let arrayImages=[]
-useEffect(()=>{
+// let thisSpot = useSelector((state) => state.spots)
+// let arrayImages=[]
+// useEffect(()=>{
 
-},[thisSpot])
+// },[thisSpot])
 
   const fetchData = async (newSpot,firstImage) => {
 

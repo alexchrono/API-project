@@ -90,12 +90,13 @@ export const actionLoadReviewsBySpotId = (Reviews) => ({
 //thunks
 
 export async function ThunkLoadReviewsBySpotId(dispatch,spotId){
-
+  console.log('hit my thunk with spotId value of',spotId)
   const res = await fetch(`/api/spots/${spotId}/reviews`);
 
   if(res.ok) {
     const  {Reviews}  = await res.json();
     console.log('reviews is',Reviews)
+
 dispatch(actionLoadReviewsBySpotId(Reviews))
 
   } else {
@@ -136,6 +137,8 @@ export const  ThunkAddReview= (review,spotAndUserId)=>async(dispatch)=>{
     const  Review  = await res.json(); // { Spots: [] }
     // do the thing with this data
     console.log('Review added is',Review)
+
+
     dispatch(actionAddReviewBySpotId({Review,arrayReviews}))
 
 
@@ -182,6 +185,7 @@ let initialState={spot:{},user:{}}
 export default function reviewsReducer(state=initialState, action) {
   switch (action.type) {
     case LOAD_REVIEWS_BY_SPOTID: {
+      
         let newState={...state,spot:action.payload}
       return newState
     }

@@ -15,13 +15,14 @@ export default function Spot() {
 
   const dispatch = useDispatch();
   let thisSpot = useSelector((state) => state.spots.singleSpot)
-  let allReviews= useSelector((state)=>state.reviews)
-  let thisSpotsReviews= useSelector((state) => state.reviews.spot)
-  let thisUser= useSelector((state)=>state.session)
+  let allReviews = useSelector((state) => state.reviews)
+  let thisSpotsReviews = useSelector((state) => state.reviews.spot)
+  let thisUser = useSelector((state) => state.session)
   useEffect(() => {
     const fetchData = async () => {
       await ThunkLoadSingle(dispatch, spotId);
-      await ThunkLoadReviewsBySpotId(dispatch,spotId)
+      console.log('aboveTHunkLoadReviews with spotId value of', spotId)
+      await ThunkLoadReviewsBySpotId(dispatch, spotId)
     };
 
     fetchData();
@@ -80,11 +81,11 @@ export default function Spot() {
   //   </div>
   // );
 
-console.log(console.log('this is all of reviews State',allReviews))
-console.log('THESE ARE ALL THE REVIEWS',thisSpotsReviews)
-console.log('THIS IS THE STATEUSER DATA',thisUser)
-console.log('THIS IS THIS SPOT',thisSpot)
-//thisUser.id will give me id
+  console.log(console.log('this is all of reviews State', allReviews))
+  console.log('THESE ARE ALL THE REVIEWS', thisSpotsReviews)
+  console.log('THIS IS THE STATEUSER DATA', thisUser)
+  console.log('THIS IS THIS SPOT', thisSpot)
+  //thisUser.id will give me id
   return (
     <>
       <div className='daddyOfSingleDetail'>
@@ -94,14 +95,16 @@ console.log('THIS IS THIS SPOT',thisSpot)
       <div className="mainPicAndDaddyBelowWrapper">
         <div className='detailsPictureBox'>
           <div className="mainPic">
-          {SpotImages && SpotImages.map((ele) => {
-                if (ele.preview === true) {
-                return(<img key={ele.id} src={ele.url} className="respond" alt={`Image ${ele.id}`} />)}})}
+            {SpotImages && SpotImages.map((ele) => {
+              if (ele.preview === true) {
+                return (<img key={ele.id} src={ele.url} className="respond" alt={`Image ${ele.id}`} />)
+              }
+            })}
           </div><div className="sidePicsContainer">
 
             <div className="sidePicsAndDaddyBelowWrapper">
               {SpotImages && SpotImages.length > 1 && SpotImages.map((ele) => {
-                if (ele.preview ===false) {
+                if (ele.preview === false) {
 
                   return <div className="sidePieceHolder"><img key={ele.id} src={ele.url} className="respond" alt={`Image ${ele.id}`} /> </div>;
                 }
@@ -114,14 +117,14 @@ console.log('THIS IS THIS SPOT',thisSpot)
             {thisSpot.description}</div> </div>
         <div className="borderBoxRight">
           <div class="priceStarReview"> <h2 class="inline">{`$${thisSpot.price} night`}</h2> <p class="inline">  {
-          thisSpot.numReviews === 0 ? (
-            <span>{`STAR  NEW`}</span>
-          ) : thisSpot.avgStarRating && Number.isInteger(thisSpot.avgStarRating) ? (
-            <span>{`STAR  ${thisSpot.avgStarRating}.0`}</span>
-          ) : (
-            <span>{`STAR  ${thisSpot.avgStarRating}`}</span>
-          )
-        }</p>
+            thisSpot.numReviews === 0 ? (
+              <span>{`STAR  NEW`}</span>
+            ) : thisSpot.avgStarRating && Number.isInteger(thisSpot.avgStarRating) ? (
+              <span>{`STAR  ${thisSpot.avgStarRating}.0`}</span>
+            ) : (
+              <span>{`STAR  ${thisSpot.avgStarRating}`}</span>
+            )
+          }</p>
             <p class="inline">{thisSpot.numReviews} Reviews </p></div>
           <button type="button" class="bigRed">Register</button></div>
       </div>
@@ -139,31 +142,31 @@ console.log('THIS IS THIS SPOT',thisSpot)
         }
         <span>   CNTR DOT</span>  <span>{`${thisSpot.numReviews} reviews`}</span></div>
 
-        {thisUser.user && Array.isArray(thisSpotsReviews) && !thisSpotsReviews.find((ele)=>ele.userId===thisUser.user.id) && thisSpot.ownerId!==thisUser.user.id && (<h1>
+      {thisUser.user && Array.isArray(thisSpotsReviews) && !thisSpotsReviews.find((ele) => ele.userId === thisUser.user.id) && thisSpot.ownerId !== thisUser.user.id && (<h1>
 
-          <OpenModalButton
-                buttonText="Post Your Review"
-                // onButtonClick={closeMenu}
+        <OpenModalButton
+          buttonText="Post Your Review"
+          // onButtonClick={closeMenu}
 
-                modalComponent={<SubmitReviewModal spotId={spotId} userId={thisUser.user.userId} arrayReviews={thisSpotsReviews}/>}
-              />
-        </h1>) }
+          modalComponent={<SubmitReviewModal spotId={spotId} userId={thisUser.user.userId} arrayReviews={thisSpotsReviews} />}
+        />
+      </h1>)}
 
 
-        {thisSpotsReviews.length>=1 && thisSpotsReviews.map((ele)=>(
+      {thisSpotsReviews && thisSpotsReviews.length >= 1 && thisSpotsReviews.map((ele) => (
 
         <div className="eachReview">
-        <div className="nameOfReviewer">
-          {ele.User && (<h2>{ele.User.firstName}</h2>)}
+          <div className="nameOfReviewer">
+            {ele.User && (<h2>{ele.User.firstName}</h2>)}
+          </div>
+          <div className="monthAndDate">
+            <h3>{`${ele.createdAt.slice(5, 7)} ${ele.createdAt.slice(0, 4)} `}</h3>
+            <p>
+              {ele.review}
+            </p>
+          </div>
         </div>
-        <div className="monthAndDate">
-          <h3>{`${ele.createdAt.slice(5,7)} ${ele.createdAt.slice(0,4)} `}</h3>
-          <p>
-            {ele.review}
-          </p>
-        </div>
-        </div>
-        ))}
+      ))}
 
 
     </>
@@ -173,4 +176,20 @@ console.log('THIS IS THIS SPOT',thisSpot)
 
   );
 
+}
+
+
+
+
+spot: {
+  [
+    {
+      reviewId: {
+        reviewData
+        User: {
+          userData,
+        }
+      }
+    }
+]
 }
