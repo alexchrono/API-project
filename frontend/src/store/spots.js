@@ -79,8 +79,9 @@ export const actionUpdateSpot = (editedSpot,arrayImages) => ({
   type: UPDATE_SPOT,
   payload: {editedSpot,arrayImages}
 });
-export const actionDeleteSpot = () => ({
+export const actionDeleteSpot = (ourArray) => ({
   type: DELETE_SPOT,
+  payload: ourArray
 });
 export const actionLoadSpot = (spot) => ({
   type: LOAD_SPOT,
@@ -226,11 +227,21 @@ export const  ThunkEditASpot= (newSpot,arrayImages,spotId)=>async(dispatch)=>{
 
 
 
-export const ThunkDeleteAspot= (spotId)=>async(dispatch)=>{
-  const res = await csrfFetch(`/api/spots/${spotId}`,{
+export const ThunkDeleteAspot= (dispatch,spotsId,ourArray)=>async(dispatch)=>{
+  console.log('am I even in my thunk')
+  const res = await csrfFetch(`/api/spots/${spotsId}`,{
     method: 'DELETE'});
-}
+  if(res.ok) {
+    let newArray=ourArray.filter((ele)=>ele.id!==spotsId)
+    
+dispatch(actionDeleteSpot(newArray))
 
+
+} else {
+  const errors = await res.json();
+  console.error('Error fetching data:', errors);
+}
+}
 
 export const  ThunkAddSpot= (newSpot,arrayImages)=>async(dispatch)=>{
   // let realId=parseInt(spotId)
@@ -353,11 +364,12 @@ export default function spotReducer(state=initialState, action) {
         return newState
 
     }
-    // case DELETE_SPOT: {
-    //   const newState = { ...state, allSpots:{ ...state.allSpots } }; // -> {allSpots: { 1: {}}, singleSpot: {} }
-    //   delete newState.allSpots[action.id] // deleting id 1
-    //   return newState
-    // }
+    case DELETE_SPOT: {
+      let newState={...state,
+        allSpots: action.payload,}
+      return newState
+
+    }
 
     default: {
       return state;

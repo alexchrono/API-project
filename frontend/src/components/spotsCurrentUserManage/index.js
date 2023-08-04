@@ -54,7 +54,7 @@ export default function SpotsCurrentUser() {
             <div className="price"> <p>{`$${ele.price} night`}</p></div></div></Link>
             <div className="buttons"> <Link exact to={`/spots/updateAspot/${ele.id}`}><button type="button" className="updateDelete">Update</button></Link>  <OpenModalButton
                 buttonText="Delete"
-                modalComponent={<DeleteSpotModal spotsId={ele.id}/>}
+                modalComponent={<DeleteSpotModal spotsId={ele.id} ourArray={allTheSpots}/>}
               /> </div>
             </>
 

@@ -7,9 +7,11 @@ import { useModal } from "../../context/Modal";
 import "./deleteSpot.css";
 import { ThunkDeleteAspot } from "../../store/spots";
 
-function DeleteSpotModal({spotsId}) {
+function DeleteSpotModal({spotsId,ourArray}) {
     const { closeModal } = useModal();
   const dispatch = useDispatch();
+  console.log('array is',ourArray)
+  console.log('spotId is',spotsId)
 //   const [credential, setCredential] = useState("");
 //   const [password, setPassword] = useState("");
 //   const [errors, setErrors] = useState({});
@@ -60,18 +62,15 @@ function DeleteSpotModal({spotsId}) {
           <p>{errors.credential}</p>
         )} */}
 
-        <button type="button"
-onClick={(e)=>{
-
-    // return dispatch(sessionActions.login({ credential, password }))
-    console.log(spotsId)
-    closeModal()
+        <button type="button" onClick={async (e)=>{
+   dispatch(ThunkDeleteAspot(dispatch,spotsId,ourArray))
+   closeModal()
 }}
 
 
         >Yes</button>
         <button type="button" onClick={async (e)=>{
-          console.log(spotsId)
+
           closeModal()
 
 // return await ThunkDeleteAspot();
