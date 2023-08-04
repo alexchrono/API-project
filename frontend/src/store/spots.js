@@ -75,8 +75,9 @@ export const actionAddSpot = (newSpot) => ({
   type: ADD_SPOT,
   payload: newSpot
 });
-export const updateSpot = () => ({
+export const actionUpdateSpot = (editedSpot,arrayImages) => ({
   type: UPDATE_SPOT,
+  payload: {editedSpot,arrayImages}
 });
 export const deleteSpot = () => ({
   type: DELETE_SPOT,
@@ -85,6 +86,8 @@ export const actionLoadSpot = (spot) => ({
   type: LOAD_SPOT,
   payload: spot
 });
+
+
 export const actionLoadSpots = (spotsFromDB) => ({
   type: LOAD_SPOTS,
   payload: spotsFromDB
@@ -163,10 +166,10 @@ dispatch(actionLoadSpots(Spots))
 // }
 
 
-export const  ThunkEditASpot= (newSpot,arrayImages)=>async(dispatch)=>{
+export const  ThunkEditASpot= (newSpot,arrayImages,spotId)=>async(dispatch)=>{
   // let realId=parseInt(spotId)
   try{
-  const res = await csrfFetch(`/api/spots/`,{
+  const res = await csrfFetch(`/api/spots/${spotId}`,{
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json'},
@@ -201,7 +204,7 @@ export const  ThunkEditASpot= (newSpot,arrayImages)=>async(dispatch)=>{
 
 
 
-    return Spot
+    return actionUpdateSpot(Spot,arrayImages)
 
 
 
@@ -340,7 +343,12 @@ export default function spotReducer(state=initialState, action) {
     //   return state
     // }
     case UPDATE_SPOT: {
-      return state
+      let {editedSpot,arrayImages}=action.payload
+      editedSpot.SpotImages=arrayImages
+      let newState={...state,
+        singleSpot: editedSpot}
+        return newState
+     
     }
     // case DELETE_SPOT: {
     //   const newState = { ...state, allSpots:{ ...state.allSpots } }; // -> {allSpots: { 1: {}}, singleSpot: {} }

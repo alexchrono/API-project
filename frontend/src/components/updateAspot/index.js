@@ -12,15 +12,16 @@ import { ThunkEditASpot } from '../../store/spots';
 
 export default function UpdateASpot() {
 let {spotId}=useParams()
-const [country,setCountry]=useState("")
-const [streetAddress,setStreetAddress]=useState("")
-const [city,setCity]=useState("")
-const [state,setState]=useState("")
-const [latitude,setLatitude]=useState("")
-const [longitude,setLongitude]=useState("")
-const [description,setDescription]=useState("")
-const [name,setName]=useState("")
-const [price,setPrice]=useState("")
+let thisSpot = useSelector((state) => state.spots.singleSpot)
+const [country,setCountry]=useState(thisSpot.country)
+const [streetAddress,setStreetAddress]=useState(thisSpot.address)
+const [city,setCity]=useState(thisSpot.city)
+const [state,setState]=useState(thisSpot.state)
+const [latitude,setLatitude]=useState(thisSpot.lat)
+const [longitude,setLongitude]=useState(thisSpot.lng)
+const [description,setDescription]=useState(thisSpot.description)
+const [name,setName]=useState(thisSpot.name)
+const [price,setPrice]=useState(thisSpot.price)
 const [pic1,setPic1]=useState("")
 const [pic2,setPic2]=useState("")
 const [pic3,setPic3]=useState("")
@@ -29,10 +30,11 @@ const [pic5,setPic5]=useState("")
 const [errors, setErrors] = useState({});
 const dispatch = useDispatch();
 const history=useHistory()
-let thisSpot = useSelector((state) => state.spots.singleSpot)
+
 let arrayImages=[]
-const fetchData2= async() =>{
-    let spot=await dispatch(ThunkEditASpot(newSpot,firstImage));
+const fetchData2= async(newSpot,firstImage,spotId) =>{
+    let spot=await dispatch(ThunkEditASpot(newSpot,firstImage,spotId));
+    return spot
 }
 useEffect(()=>{
     const fetchData = async () => {
@@ -101,16 +103,17 @@ const handleSubmit = async(e) => {
 
 
 
-      try {let spot=await fetchData2(newData, firstImage);
+      try {let spot=await fetchData2(newData, firstImage,spotId);
         history.push(`/spots/${spot.id}`);
       } catch (error) {
-        let realErrors=await error.json()
-        if(pic1 !==""){
-        await setErrors(realErrors.errors)}
-        else if(pic1===""){
-          await setErrors({...realErrors.errors,prevImage:"A preview Image is required."})
-        }
-        console.log('errors state is now',errors)
+        console.log('our fetch didnt work')
+        // let realErrors=await error.json()
+        // if(pic1 !==""){
+        // await setErrors(realErrors.errors)}
+        // else if(pic1===""){
+        //   await setErrors({...realErrors.errors,prevImage:"A preview Image is required."})
+        // }
+        // console.log('errors state is now',errors)
       }
 
 
@@ -152,7 +155,7 @@ const handleSubmit = async(e) => {
         id="Country"
           type='text'
           onChange={(e) => setCountry(e.target.value)}
-          value={thisSpot.country}
+          value={country}
           placeholder='Country'
         //   name='title'
         />
@@ -164,7 +167,7 @@ const handleSubmit = async(e) => {
          id="streetAddy"
           type='text'
           onChange={(e) => setStreetAddress(e.target.value)}
-          value={thisSpot.address}
+          value={streetAddress}
           placeholder='Address'
         //   name='imageUrl'
         />
@@ -176,7 +179,7 @@ const handleSubmit = async(e) => {
          id="city"
           type='text'
           onChange={(e) => setCity(e.target.value)}
-          value={thisSpot.city}
+          value={city}
           placeholder='City'
         //   name='imageUrl'
         />
@@ -186,7 +189,7 @@ const handleSubmit = async(e) => {
             id="state"
           type='text'
           onChange={(e) => setState(e.target.value)}
-          value={thisSpot.state}
+          value={state}
           placeholder='STATE'
         //   name='imageUrl'
         />
@@ -202,7 +205,7 @@ const handleSubmit = async(e) => {
            id="lat"
           type='text'
           onChange={(e) => setLatitude(e.target.value)}
-          value={thisSpot.lat}
+          value={latitude}
           placeholder='LATITUDE'
         //   name='imageUrl'
         />
@@ -212,7 +215,7 @@ const handleSubmit = async(e) => {
            id="long"
           type='text'
           onChange={(e) => setLongitude(e.target.value)}
-          value={thisSpot.lng}
+          value={longitude}
           placeholder='LONGITUDE'
         //   name='imageUrl'
         />
@@ -224,7 +227,7 @@ const handleSubmit = async(e) => {
         <p>Mention the best features of your space, any special amentities like fast wifi or parking, and what you love about the neighborhood		</p></div>
         <div>
         <textarea
-          value={thisSpot.description}
+          value={description}
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Please write at least 30 characters"
           rows='10'
@@ -237,7 +240,7 @@ const handleSubmit = async(e) => {
           <input
           type='text'
           onChange={(e) => setName(e.target.value)}
-          value={thisSpot.name}
+          value={name}
           placeholder='Name of your spot'
         //   name='imageUrl'
         />
@@ -251,7 +254,7 @@ const handleSubmit = async(e) => {
           step="0.01"
           min="0"
           onChange={(e) => setPrice(e.target.value)}
-          value={thisSpot.price}
+          value={price}
           placeholder='Price per night (USD)'
         //   name='imageUrl'
         />
