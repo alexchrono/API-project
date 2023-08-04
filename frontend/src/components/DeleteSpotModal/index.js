@@ -5,8 +5,9 @@ import { useDispatch } from "react-redux";
 import { useModal } from "../../context/Modal";
 
 import "./deleteSpot.css";
+import { ThunkDeleteAspot } from "../../store/spots";
 
-function DeleteSpotModal() {
+function DeleteSpotModal({spotsId}) {
     const { closeModal } = useModal();
   const dispatch = useDispatch();
 //   const [credential, setCredential] = useState("");
@@ -63,17 +64,20 @@ function DeleteSpotModal() {
 onClick={(e)=>{
 
     // return dispatch(sessionActions.login({ credential, password }))
-   console.log('success')
+    console.log(spotsId)
     closeModal()
 }}
 
 
         >Yes</button>
-        <button type="button" onClick={(e)=>{
+        <button type="button" onClick={async (e)=>{
+          console.log(spotsId)
+          closeModal()
 
+// return await ThunkDeleteAspot();
+// return dispatch(sessionActions.login({ credential, password }))
+// .then(closeModal)
 
-console.log('success')
-closeModal()
 }}>No</button>
 
       {/* </form> */}

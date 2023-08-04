@@ -226,7 +226,10 @@ export const  ThunkEditASpot= (newSpot,arrayImages,spotId)=>async(dispatch)=>{
 
 
 
-
+export const ThunkDeleteAspot= (spotId)=>async(dispatch)=>{
+  const res = await csrfFetch(`/api/spots/${spotId}`,{
+    method: 'DELETE'});
+}
 
 
 export const  ThunkAddSpot= (newSpot,arrayImages)=>async(dispatch)=>{
