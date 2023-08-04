@@ -33,11 +33,11 @@ useEffect(()=>{
 
 },[thisSpot])
 
-  const fetchData = async (newSpot) => {
+  const fetchData = async (newSpot,firstImage) => {
 
 
 
-    let spot=await dispatch(ThunkAddSpot(newSpot,arrayImages));
+    let spot=await dispatch(ThunkAddSpot(newSpot,firstImage));
 
 
 
@@ -72,19 +72,27 @@ const handleSubmit = async(e) => {
         firstImage.push({url:pic1,
         preview: true,})
       }
-      let secondArray=[]
-      let testImages=[pic2,pic3,pic4,pic5]
-      testImages.forEach((ele)=>{
-        if(ele!==""){
-          secondArray.push({url: ele,
-          preview: false,})
-        }
-      })
+      if(pic2!==""){
+        firstImage.push({url:pic2,
+        preview: false,})
+      }
+      if(pic3!==""){
+        firstImage.push({url:pic3,
+        preview: false,})
+      }
+      if(pic4!==""){
+        firstImage.push({url:pic4,
+        preview: false,})
+      }
+      if(pic5!==""){
+        firstImage.push({url:pic5,
+        preview: false,})
+      }
+      console.log('this is firstImage',firstImage)
 
-     arrayImages=[...firstImage,...secondArray]
 
-      console.log('newData',newData)
-      try {let spot=await fetchData(newData, arrayImages);
+
+      try {let spot=await fetchData(newData, firstImage);
         history.push(`/spots/${spot.id}`);
       } catch (error) {
         let realErrors=await error.json()

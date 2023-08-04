@@ -162,6 +162,70 @@ dispatch(actionLoadSpots(Spots))
 // }
 // }
 
+
+export const  ThunkEditASpot= (newSpot,arrayImages)=>async(dispatch)=>{
+  // let realId=parseInt(spotId)
+  try{
+  const res = await csrfFetch(`/api/spots/`,{
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json'},
+      body: JSON.stringify(newSpot)
+  });
+  if(res.ok) {
+    const  Spot  = await res.json(); // { Spots: [] }
+    // do the thing with this data
+    console.log('Spot added is',Spot)
+    console.log('this is arrayImages',arrayImages)
+    let newArray=[]
+
+    // for (let i=0;i<arrayImages.length;i++){
+    //   let newObj={}
+
+    // }
+    for (let ele of arrayImages){
+      console.log('this is ele of arrayImages',ele)
+    let res2 = await csrfFetch(`/api/spots/${Spot.id}/images`,{
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'},
+        body: JSON.stringify(ele)
+    });
+    if(!res2.ok){
+      console.log('problem adding pics dawg line 150 spots.js')
+    }
+
+
+
+  }
+
+
+
+    return Spot
+
+
+
+}
+
+
+
+
+  }
+ catch (error) {
+  throw error;
+ }
+
+
+}
+
+
+
+
+
+
+
+
+
 export const  ThunkAddSpot= (newSpot,arrayImages)=>async(dispatch)=>{
   // let realId=parseInt(spotId)
   try{
@@ -177,6 +241,12 @@ export const  ThunkAddSpot= (newSpot,arrayImages)=>async(dispatch)=>{
     // do the thing with this data
     console.log('Spot added is',Spot)
     console.log('this is arrayImages',arrayImages)
+    let newArray=[]
+
+    // for (let i=0;i<arrayImages.length;i++){
+    //   let newObj={}
+
+    // }
     for (let ele of arrayImages){
       console.log('this is ele of arrayImages',ele)
     let res2 = await csrfFetch(`/api/spots/${Spot.id}/images`,{
@@ -256,8 +326,11 @@ export default function spotReducer(state=initialState, action) {
       case ADD_SPOT: {
         let allPrevSpots=state.allSpots
         let ourId=action.payload.id
+        let {newSpot,arrayImages}=action.payload
+        newSpot.SpotImages=arrayImages
+
         let newState={...state,
-        allSpots: {...allPrevSpots,[ourId]:action.payload}}
+        singleSpot: newSpot}
         return newState
       }
 

@@ -83,7 +83,7 @@ export default function Spot() {
 console.log(console.log('this is all of reviews State',allReviews))
 console.log('THESE ARE ALL THE REVIEWS',thisSpotsReviews)
 console.log('THIS IS THE STATEUSER DATA',thisUser)
-
+console.log('THIS IS THIS SPOT',thisSpot)
 //thisUser.id will give me id
   return (
     <>
@@ -127,6 +127,7 @@ console.log('THIS IS THE STATEUSER DATA',thisUser)
       </div>
       <hr class="hrLine"></hr>
       <div className="starAndReviewsForReviews">
+
         {
           thisSpot.numReviews === 0 ? (
             <span>{`STAR  NEW`}</span>

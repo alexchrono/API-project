@@ -6,6 +6,7 @@ import {useState} from 'react'
 import './updateASpot.css'
 import { ThunkAddSpot } from '../../store/spots';
 import { ThunkLoadSingle } from '../../store/spots';
+import { ThunkEditASpot } from '../../store/spots';
 
 
 
@@ -30,7 +31,9 @@ const dispatch = useDispatch();
 const history=useHistory()
 let thisSpot = useSelector((state) => state.spots.singleSpot)
 let arrayImages=[]
-
+const fetchData2= async() =>{
+    let spot=await dispatch(ThunkEditASpot(newSpot,firstImage));
+}
 useEffect(()=>{
     const fetchData = async () => {
         await ThunkLoadSingle(dispatch, spotId);
@@ -78,29 +81,37 @@ const handleSubmit = async(e) => {
         firstImage.push({url:pic1,
         preview: true,})
       }
-      let secondArray=[]
-      let testImages=[pic2,pic3,pic4,pic5]
-      testImages.forEach((ele)=>{
-        if(ele!==""){
-          secondArray.push({url: ele,
-          preview: false,})
+      if(pic2!==""){
+        firstImage.push({url:pic2,
+        preview: false,})
+      }
+      if(pic3!==""){
+        firstImage.push({url:pic3,
+        preview: false,})
+      }
+      if(pic4!==""){
+        firstImage.push({url:pic4,
+        preview: false,})
+      }
+      if(pic5!==""){
+        firstImage.push({url:pic5,
+        preview: false,})
+      }
+      console.log('this is firstImage',firstImage)
+
+
+
+      try {let spot=await fetchData2(newData, firstImage);
+        history.push(`/spots/${spot.id}`);
+      } catch (error) {
+        let realErrors=await error.json()
+        if(pic1 !==""){
+        await setErrors(realErrors.errors)}
+        else if(pic1===""){
+          await setErrors({...realErrors.errors,prevImage:"A preview Image is required."})
         }
-      })
-
-     arrayImages=[...firstImage,...secondArray]
-
-      console.log('newData',newData)
-    //   try {let spot=await fetchData(newData, arrayImages);
-    //     history.push(`/spots/${spot.id}`);
-    //   } catch (error) {
-    //     let realErrors=await error.json()
-    //     if(pic1 !==""){
-    //     await setErrors(realErrors.errors)}
-    //     else if(pic1===""){
-    //       await setErrors({...realErrors.errors,prevImage:"A preview Image is required."})
-    //     }
-    //     console.log('errors state is now',errors)
-    //   }
+        console.log('errors state is now',errors)
+      }
 
 
           // const data = await res.json();
@@ -128,6 +139,7 @@ const handleSubmit = async(e) => {
   console.log('thisSpotIs',thisSpot)
 
   return (
+    <>
     <div className='inputBox'>
 
       <h1 className="title">Update your Spot</h1>
@@ -152,7 +164,7 @@ const handleSubmit = async(e) => {
          id="streetAddy"
           type='text'
           onChange={(e) => setStreetAddress(e.target.value)}
-          value={thisSpot.streetAddress}
+          value={thisSpot.address}
           placeholder='Address'
         //   name='imageUrl'
         />
@@ -300,6 +312,11 @@ const handleSubmit = async(e) => {
       </form>
 
     </div>
+<hr></hr>
+
+<Link exact to='/spots/new'><button type="button">Create A Spot</button></Link>
+    </>
+
   );
 
 }
