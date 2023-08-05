@@ -1,7 +1,9 @@
 
+
 const express = require('express');
 const { Op } = require('sequelize');
 const bcrypt = require('bcryptjs');
+
 
 const { setTokenCookie, restoreUser,requireAuth } = require('../../utils/auth');
 const { Spot,SpotImage,Review, User,ReviewImage } = require('../../db/models');
@@ -46,6 +48,7 @@ const authError = function (err, req, res, next) {
         handleValidationErrors
     ]
 
+
 router.post('/:reviewId/images',requireAuth,authError,async (req,res)=>{
     let test2=await Review.findByPk(req.params.reviewId)
     if(!test2 ){
@@ -57,10 +60,12 @@ router.post('/:reviewId/images',requireAuth,authError,async (req,res)=>{
     }
     else if(test2 && test2.userId===req.user.id){
 
+
     let count=await ReviewImage.count({
         where: {
            reviewId:req.params.reviewId
         }
+
 
     })
     if (count>=10){
@@ -70,6 +75,7 @@ router.post('/:reviewId/images',requireAuth,authError,async (req,res)=>{
             "message": "Maximum number of images for this resource was reached"
           })
     }
+
 
        let goal= await ReviewImage.create({
             reviewId:req.params.reviewId,
@@ -87,8 +93,11 @@ router.post('/:reviewId/images',requireAuth,authError,async (req,res)=>{
 },catchAuthError)
 
 
+
+
 router.get('/current',requireAuth,authError,async(req,res)=>{
     let goal=await Review.findAll({
+
 
         where: {userId:req.user.id},
         include: [{model:User,
@@ -103,6 +112,7 @@ router.get('/current',requireAuth,authError,async(req,res)=>{
             {model:ReviewImage,
             attributes: ['id','url']}
 
+
              ]
     })
     if(goal){
@@ -110,7 +120,9 @@ router.get('/current',requireAuth,authError,async(req,res)=>{
     goal.forEach((ele)=>{
         newArray.push(ele.toJSON())
 
+
     })
+
 
      newArray.forEach((ele2)=>{
        ele2.Spot.previewImage=ele2.Spot.SpotImages[0].url
@@ -120,11 +132,14 @@ router.get('/current',requireAuth,authError,async(req,res)=>{
     //  goal=ele2.SpotImages.url}
     //     console.log(goal)
 
+
     // }) //comment this back in
+
 
     // goal.forEach((ele)=>{
     //     let temp1=ele.
     })
+
 
     res.status(200)
     .setHeader('Content-Type','application/json')
@@ -135,6 +150,9 @@ else  {
     .setHeader('Content-Type','application/json')
     .json({message: 'You do not own any properties'})
 }
+
+
+
 
 
 
@@ -162,6 +180,7 @@ next(err)
 }
 },catchAuthError)
 
+
 router.delete('/:reviewId',requireAuth,authError,async (req,res,next)=>{
     let test=await Review.findByPk(req.params.reviewId)
     if(!test){
@@ -173,6 +192,7 @@ router.delete('/:reviewId',requireAuth,authError,async (req,res,next)=>{
               }
         )
     }
+
 
     else if(test && test.userId==req.user.id){
         Review.destroy({
@@ -191,7 +211,12 @@ router.delete('/:reviewId',requireAuth,authError,async (req,res,next)=>{
     }
 
 
+
+
 },catchAuthError)
+
+
+
 
 
 

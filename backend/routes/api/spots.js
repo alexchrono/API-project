@@ -2,6 +2,7 @@ const express = require('express');
 const { Op } = require('sequelize');
 const bcrypt = require('bcryptjs');
 
+
 const { setTokenCookie, restoreUser, requireAuth } = require('../../utils/auth');
 const { Spot, SpotImage, Review, ReviewImage,User,Booking } = require('../../db/models');
 const { check } = require('express-validator');
@@ -10,6 +11,8 @@ const e = require('express');
 const spot = require('../../db/models/spot');
 const booking = require('../../db/models/booking');
 const router = express.Router();
+
+
 
 
 const authError= function (err, req, res, next) {
@@ -39,6 +42,8 @@ let validateLoginBooking=[(req,res,next)=>{
             next()
         }
     }
+
+
 
 
 ];
@@ -101,6 +106,8 @@ const validateLoginLastOne = [
 ];
 
 
+
+
 const validateLogin = [
     check('credential')
         .exists({ checkFalsy: true })
@@ -155,8 +162,10 @@ const validateLogin2 = [
         .notEmpty()
         .withMessage("Price per day is required"),
 
+
     handleValidationErrors
 ];
+
 
 const validateLogin3 = [
     check('review')
@@ -170,7 +179,9 @@ const validateLogin3 = [
     handleValidationErrors
 ];
 
+
 const displayValidationErrors = (err, req, res, next) => {
+
 
     res.status(400)
     res.setHeader('Content-Type', 'application/json')
@@ -181,6 +192,7 @@ const displayValidationErrors = (err, req, res, next) => {
 }
 const displayValidationErrors2 = (err, req, res, next) => {
 
+
     res.status(404)
     res.setHeader('Content-Type', 'application/json')
     res.json({
@@ -188,7 +200,7 @@ const displayValidationErrors2 = (err, req, res, next) => {
         errors: err.errors
     })
 }
-router.post('/:spotId/reviews', requireAuth,authError, validateLogin3, displayValidationErrors, async (req, res) => {
+router.post('/:spotId/reviews', requireAuth, validateLogin3, async (req, res) => {
     let { review, stars } = req.body
     if (! await Spot.findByPk(req.params.spotId)) {
          res.status(404)
@@ -208,15 +220,19 @@ router.post('/:spotId/reviews', requireAuth,authError, validateLogin3, displayVa
             userId: req.user.id,
             spotId: req.params.spotId,
 
+
             review,
             stars,
 
+
         })
+
 
         res.status(201)
             .setHeader('Content-Type', 'application/json')
         res.json(test2)
     }
+
 
     else {
         res.status(500)
@@ -225,6 +241,7 @@ router.post('/:spotId/reviews', requireAuth,authError, validateLogin3, displayVa
                 message: "User already has a review for this spot"
             })
     }
+
 
 })
 router.get('/:spotId/bookings',requireAuth,authError,async (req,res)=>{
@@ -244,10 +261,12 @@ router.get('/:spotId/bookings',requireAuth,authError,async (req,res)=>{
             attributes: ['spotId','startDate','endDate']
         })
 
+
         res.status(200)
         .setHeader('Content-Type','application/json')
         .json({Bookings:result})
     }
+
 
     else if(realTest.ownerId===req.user.id){
     let test= await Booking.findAll({
@@ -257,9 +276,11 @@ router.get('/:spotId/bookings',requireAuth,authError,async (req,res)=>{
         include: {model:User,
         attributes: ['id','firstName','lastName']}
 
+
     })
     let newArray=[]
     test.forEach((ele) => {
+
 
         newArray.push(ele.toJSON())
     })
@@ -282,12 +303,16 @@ router.get('/:spotId/bookings',requireAuth,authError,async (req,res)=>{
     }
 
 
+
+
 })
+
 
 router.post('/:spotId/images', requireAuth, authError, async (req, res) => {
     const { url, preview } = req.body;
     const spotId = req.params.spotId;
     const spot = await Spot.findOne({ where: { id: spotId } });
+
 
      if (!spot) {
         return res.status(404).json({ message: "Spot couldn't be found" });
@@ -297,12 +322,17 @@ router.post('/:spotId/images', requireAuth, authError, async (req, res) => {
     else if (spot && spot.ownerId === req.user.id) {
         const spotImage = await SpotImage.create({ spotId, url, preview });
 
+
         const { updatedAt, createdAt, ...response } = spotImage.toJSON();
         delete response.spotId;
         return res.json(response);
     }
 
+
 }, catchAuthoError);
+
+
+
 
 
 
@@ -310,7 +340,9 @@ router.post('/:spotId/images', requireAuth, authError, async (req, res) => {
 //     const { url, preview } = req.body;
 //     const spotId = req.params.spotId;
 
+
 //     const spot = await Spot.findOne({ where: { id: spotId} });
+
 
 //      if (spot && spot.ownerId === req.user.id) {
 //       const spotImage = await SpotImage.create({ spotId, url, preview });
@@ -318,10 +350,13 @@ router.post('/:spotId/images', requireAuth, authError, async (req, res) => {
 //       delete response.spotId;
 //       return res.json(response);
 
+
 //     }
 //    else if (!spot) {
 
+
 //         return res.status(404).json({message: `Spot couldn't be found`})}
+
 
 //      else if (spot && spot.ownerId !== req.user.id) {
 //     //   return makeError(403, "Forbidden", {}, res);
@@ -338,7 +373,9 @@ if(!test){
       })
 }
 
+
 let {startDate,endDate}=req.body
+
 
 startDate=new Date(startDate)
 endDate=new Date(endDate)
@@ -350,6 +387,7 @@ if(test && test.ownerId===req.user.id){
         where: {
             spotId:req.params.spotId,
 
+
             startDate: {
                 [Op.between]: [startDate,endDate]
             }}})
@@ -357,9 +395,12 @@ if(test && test.ownerId===req.user.id){
         where: {
             spotId:req.params.spotId,
 
+
             endDate: {
                 [Op.between]: [startDate,endDate]
             }}})
+
+
 
 
     if (datesToCheckStart.length===0 && datesToCheckEnd.length===0){
@@ -382,6 +423,7 @@ if(test && test.ownerId===req.user.id){
             }
           })
 
+
     }
     else if(datesToCheckEnd.length>0 && datesToCheckStart.length===0){
         res.status(403)
@@ -389,10 +431,13 @@ if(test && test.ownerId===req.user.id){
         res.json({message: "Sorry, this spot is already booked for the specified dates",
             errors: {
 
+
                 startDate: "Start date conflicts with an existing booking",
+
 
             }
           })
+
 
     }
     else{
@@ -405,7 +450,9 @@ if(test && test.ownerId===req.user.id){
             }
           })
 
+
     }
+
 
 }
 
@@ -415,8 +462,16 @@ if(test && test.ownerId===req.user.id){
 
 
 
+
+
+
+
+
+
+
 },catchAuthoError)
 router.get('/:spotId/reviews',async (req,res)=>{
+
 
     let test=await Review.findAll({
         where: {
@@ -445,6 +500,7 @@ router.get('/:spotId/reviews',async (req,res)=>{
 })
 router.get('/current', requireAuth,authError, async (req, res) => {
 
+
     let allSpots = await Spot.findAll({
         where: { ownerId: req.user.id },
         include: [
@@ -458,9 +514,11 @@ router.get('/current', requireAuth,authError, async (req, res) => {
             }]
     })
 
+
     // allSpots.toJson()
     let newArray = []
     allSpots.forEach((ele) => {
+
 
         newArray.push(ele.toJSON())
     })
@@ -468,6 +526,7 @@ router.get('/current', requireAuth,authError, async (req, res) => {
         let starsAmount = 0
         let starsCount = 0
         ele.Reviews.forEach((review) => {
+
 
             if (review.stars) {
                 starsAmount += review.stars
@@ -491,9 +550,11 @@ router.get('/current', requireAuth,authError, async (req, res) => {
                 ele.previewImage = 'no image for this spot'
             }
 
+
         });
         delete ele.SpotImages
     })
+
 
     res.status(200)
     res.setHeader('Content-Type', 'application/json')
@@ -502,10 +563,14 @@ router.get('/current', requireAuth,authError, async (req, res) => {
 
 
 
+
+
+
 router.put('/:spotId', requireAuth,authError, validateLogin2, displayValidationErrors, async (req, res) => {
     let { address, city, state, country, lat, lng, name, description, price } = req.body
     let targetSpot = await Spot.findOne({
         where: {
+
 
             id: req.params.spotId
         }
@@ -528,6 +593,7 @@ router.put('/:spotId', requireAuth,authError, validateLogin2, displayValidationE
         res.json(targetSpot)
     }
 
+
     else if(!targetSpot){
         res.status(404)
             .setHeader('Content-Type', 'application/json')
@@ -539,6 +605,7 @@ router.put('/:spotId', requireAuth,authError, validateLogin2, displayValidationE
         next(err)
     }
 },catchAuthoError)
+
 
 router.get('/:spotId', async (req, res) => {
     let spotId = req.params.spotId
@@ -559,7 +626,9 @@ router.get('/:spotId', async (req, res) => {
         let goal2 = [goal]
         let newArray = []
 
+
         goal2.forEach((ele) => {
+
 
             newArray.push(ele.toJSON())
         })
@@ -568,6 +637,7 @@ router.get('/:spotId', async (req, res) => {
             let starsAmount = 0
             let starsCount = 0
             ele.Reviews.forEach((review) => {
+
 
                 if (review.stars) {
                     starsAmount += review.stars
@@ -590,6 +660,7 @@ router.get('/:spotId', async (req, res) => {
             ele.SpotImages = temporary
             ele.Owner = temporary2
 
+
         })
         let [stripped] = newArray
         res.status(200)
@@ -606,6 +677,8 @@ router.get('/:spotId', async (req, res) => {
 })
 
 
+
+
 router.delete('/:spotId', requireAuth,authError, async (req, res, next) => {
     let check= await Spot.findByPk(req.params.spotId)
     let testing = await Spot.destroy({
@@ -615,12 +688,14 @@ router.delete('/:spotId', requireAuth,authError, async (req, res, next) => {
         }
     })
 
+
     if(!check){
         res.status(404)
             .setHeader('Content-Type', 'application/json')
             .json({
                 message: "Spot couldn't be found"})}
    else if (testing) {
+
 
         res.status(200)
             .setHeader('Content-Type', 'application/json')
@@ -629,12 +704,14 @@ router.delete('/:spotId', requireAuth,authError, async (req, res, next) => {
             })
     }
 
+
     else if(check&& check.ownerId!==req.user.id){
         next(err)
     }
 },catchAuthoError)
 router.post('/', requireAuth, validateLogin2, async (req, res, next) => {
     let { address, city, state, country, lat, lng, name, description, price } = req.body
+
 
     let newBag = await Spot.create({
         ownerId: req.user.id,
@@ -665,6 +742,7 @@ router.get('/', validateLoginLastOne,displayValidationErrors,async (req, res) =>
     let pagination= {limit: size,
     offset: (page-1)}
     let where= {
+
 
     }
     if(maxLat && minLat){
@@ -707,6 +785,7 @@ if(minPrice && maxPrice){
     where.price={[Op.lte]:maxPrice}
 }
 
+
     let allSpots = await Spot.findAll({
         ...pagination,
         where,
@@ -721,9 +800,11 @@ if(minPrice && maxPrice){
             }]
     })
 
+
     // allSpots.toJson()
     let newArray = []
     allSpots.forEach((ele) => {
+
 
         newArray.push(ele.toJSON())
     })
@@ -731,6 +812,7 @@ if(minPrice && maxPrice){
         let starsAmount = 0
         let starsCount = 0
         ele.Reviews.forEach((review) => {
+
 
             if (review.stars) {
                 starsAmount += review.stars
@@ -744,6 +826,7 @@ if(minPrice && maxPrice){
             ele.avgRating = 'This spot has no ratings'
         }
 
+
         delete ele.Reviews
     })
     newArray.forEach((ele) => {
@@ -755,14 +838,19 @@ if(minPrice && maxPrice){
                 ele.previewImage = 'no image for this spot'
             }
 
+
         })
         delete ele.SpotImages
     })
+
 
     res.status(200)
     res.setHeader('Content-Type', 'application/json')
     res.json({Spots:newArray,page:page,size:size})
 })
+
+
+
 
 
 

@@ -181,15 +181,3 @@ export default function Spot() {
 
 
 
-spot: {
-  [
-    {
-      reviewId: {
-        reviewData
-        User: {
-          userData,
-        }
-      }
-    }
-]
-}
