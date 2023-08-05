@@ -6,10 +6,11 @@ import { useModal } from "../../context/Modal";
 
 import "./deleteSpot.css";
 import { ThunkDeleteAspot } from "../../store/spots";
-
-function DeleteSpotModal({spotsId,ourArray,actionType}) {
+import { ThunkDeleteAreview } from "../../store/reviews";
+function DeleteSpotModal({spotsId,ourArray,actionType,keysToReviews2}) {
     const { closeModal } = useModal();
   const dispatch = useDispatch();
+  console.log('INSIDE OF OUR MODAL keysToReview2 is',keysToReviews2)
   console.log('array is',ourArray)
   console.log('spotId is',spotsId)
 //   const [credential, setCredential] = useState("");
@@ -64,7 +65,7 @@ function DeleteSpotModal({spotsId,ourArray,actionType}) {
         )} */}
 
         {actionType==='DELETEASPOT' &&(<div><button type="button" onClick={async (e)=>{
-   dispatch(ThunkDeleteAspot(dispatch,spotsId,ourArray))
+   await dispatch(ThunkDeleteAspot(dispatch,spotsId,ourArray))
    closeModal()
 }}
 
@@ -79,7 +80,7 @@ function DeleteSpotModal({spotsId,ourArray,actionType}) {
 
 }}>No</button> </div>)}
 {actionType==='DELETEAREVIEW' &&(<div><button type="button" onClick={async (e)=>{
-   dispatch(ThunkDeleteAspot(dispatch,spotsId,ourArray))
+   dispatch(ThunkDeleteAreview(dispatch,spotsId,ourArray,keysToReviews2))
    closeModal()
 }}
 

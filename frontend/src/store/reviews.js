@@ -8,6 +8,7 @@ import {csrfFetch} from '../store/csrf'
 
 const ADD_REVIEW_BY_SPOT_ID = 'session/create_review_by_spotId';
 const LOAD_REVIEWS_BY_SPOTID = 'session/load_reviewsBySpotId'; //read. // GET spots/
+const DELETE_REVIEW_BY_ID = 'session/delete_review_by_id'
 // const ADD_SPOT = 'session/add_spot'; //create
 // const UPDATE_SPOT = 'session/update_spot';
 // const DELETE_SPOT = 'session/delete_spot';
@@ -59,7 +60,10 @@ const LOAD_REVIEWS_BY_SPOTID = 'session/load_reviewsBySpotId'; //read. // GET sp
 // };
 
 
-
+export const actionDeleteReviewById=(newObject)=>({
+  type: DELETE_REVIEW_BY_ID,
+  payload: newObject
+})
 
 // 2. action creator
 // export const createSpot = () => ({
@@ -88,7 +92,32 @@ export const actionLoadReviewsBySpotId = (Reviews) => ({
   payload: Reviews
 })
 //thunks
+export const ThunkDeleteAreview= (dispatch,reviewsId,reviewsObj,keysToReviews2)=>async(dispatch)=>{
+  console.log('am I even in my thunk')
+  const res = await csrfFetch(`/api/reviews/${reviewsId}`,{
+    method: 'DELETE'});
+  if(res.ok) {
 
+//     let newArray=ourArray.filter((ele)=>ele.id!==spotsId)
+console.log('newList is',keysToReviews2)
+// return(actionDeleteSpot(newArray))
+let newReviewsId=reviewsId.toString()
+let newList=keysToReviews2.filter((ele)=>ele!==newReviewsId)
+let newObject={}
+newList.forEach((ele)=>{
+  let nestedUser=reviewsObj[ele]["User"]
+  let nestedReviewImages=reviewsObj[ele]["ReviewImages"]
+  newObject[ele]=reviewsObj[ele]
+  newObject[ele]["User"]={...nestedUser}
+  newObject[ele]["ReviewImages"]=[...nestedReviewImages]
+})
+
+return actionDeleteReviewById(newObject)
+} else {
+  const errors = await res.json();
+  console.error('Error fetching data:', errors);
+}
+}
 export async function ThunkLoadReviewsBySpotId(dispatch,spotId){
   console.log('hit my thunk with spotId value of',spotId)
   const res = await fetch(`/api/spots/${spotId}/reviews`);
@@ -221,6 +250,10 @@ export default function reviewsReducer(state=initialState, action) {
 
 
         // let newState={...state,spot:action.payload}
+      return newState
+    }
+    case DELETE_REVIEW_BY_ID: {
+      let newState={...state,spot: action.payload}
       return newState
     }
     case ADD_REVIEW_BY_SPOT_ID: {

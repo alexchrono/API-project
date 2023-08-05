@@ -51,6 +51,7 @@ export default function Spot() {
   // console.log('STATE.REVIEWS aka allReviews LOOKS LIKE',allReviews)
   // console.log('STATE.REVIEWS.SPOT aka thisSpotsReviews LOOKS LIKE',thisSpotsReviews)
   let keysToReviews=Object.keys(thisSpotsReviews)
+  let keysToReviews2=[...keysToReviews]
   // console.log('KEYS TO REVIEWS LOOKS LIKE ',keysToReviews)
   function checkNoReviewAndCheckNotOwner(){
   for(let ele of keysToReviews){
@@ -232,7 +233,8 @@ export default function Spot() {
               {thisSpotsReviews[ele]["review"]}
             </p>
             </div>
-            {thisUser.user && typeof thisSpotsReviews==="object" &&  thisSpotsReviews[ele]['User']['id']===thisUser.user.id && (<h1>
+            {thisUser.user && typeof thisSpotsReviews==="object" &&  thisSpotsReviews[ele]['User']['id']===thisUser.user.id && (<><h1>
+              {JSON.stringify(thisSpotsReviews)}</h1>
         {/* !thisSpotsReviews.find((ele) => ele.userId === thisUser.user.id) && thisSpot.ownerId !== thisUser.user.id */}
 
 
@@ -241,15 +243,15 @@ export default function Spot() {
           // onButtonClick={closeMenu}
 
 
-          modalComponent={<DeleteSpotModal onClose={handleModalClose} spotsId={ele} ourArray={thisSpotsReviews} actionType={actionType}
+          modalComponent={<DeleteSpotModal  spotsId={ele} ourArray={thisSpotsReviews} actionType={actionType} keysToReviews2={keysToReviews2} onClose={handleModalClose}
           />
         }
         onClick={handleModalOpen}
         />
-      </h1>)}
+     </> )}
           </div>
 
-      ))}
+))}
 
 
 
