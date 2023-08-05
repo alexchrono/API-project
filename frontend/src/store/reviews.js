@@ -92,7 +92,7 @@ export const actionLoadReviewsBySpotId = (Reviews) => ({
   payload: Reviews
 })
 //thunks
-export const ThunkDeleteAreview= (dispatch,reviewsId,reviewsObj,keysToReviews2)=>async(dispatch)=>{
+export const ThunkDeleteAreview=(dispatch,reviewsId,reviewsObj,keysToReviews2)=>async(dispatch)=>{
   console.log('am I even in my thunk')
   const res = await csrfFetch(`/api/reviews/${reviewsId}`,{
     method: 'DELETE'});
@@ -112,7 +112,7 @@ newList.forEach((ele)=>{
   newObject[ele]["ReviewImages"]=[...nestedReviewImages]
 })
 
-return actionDeleteReviewById(newObject)
+dispatch(actionDeleteReviewById(newObject))
 } else {
   const errors = await res.json();
   console.error('Error fetching data:', errors);

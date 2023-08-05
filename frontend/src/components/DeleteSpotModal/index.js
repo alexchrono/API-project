@@ -80,7 +80,7 @@ function DeleteSpotModal({spotsId,ourArray,actionType,keysToReviews2}) {
 
 }}>No</button> </div>)}
 {actionType==='DELETEAREVIEW' &&(<div><button type="button" onClick={async (e)=>{
-   dispatch(ThunkDeleteAreview(dispatch,spotsId,ourArray,keysToReviews2))
+   await dispatch(ThunkDeleteAreview(dispatch,spotsId,ourArray,keysToReviews2))
    closeModal()
 }}
 
