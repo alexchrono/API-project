@@ -144,7 +144,7 @@ export const  ThunkAddReviewBySpotId= (reviewReq,spotId,userId,objReviews)=>asyn
 
 
 
-    dispatch(actionAddReviewBySpotId(Review,objReviews))
+    await dispatch(actionAddReviewBySpotId(Review,objReviews))
 
 
 

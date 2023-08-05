@@ -6,7 +6,7 @@ import { useModal } from "../../context/Modal";
 import "./submitReview.css";
 import { ThunkAddReviewBySpotId } from "../../store/reviews";
 
-function SubmitReviewModal({spotId,userId,arrayReviews},) {
+function SubmitReviewModal({spotId,userId,objReviews},) {
   const dispatch = useDispatch();
   const [review, setReview] = useState("");
   const [stars, setStars] = useState("");
@@ -14,11 +14,11 @@ function SubmitReviewModal({spotId,userId,arrayReviews},) {
   const { closeModal } = useModal();
 
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
     setErrors({});
-    return dispatch(ThunkAddReviewBySpotId({ review, stars },{spotId,userId,arrayReviews}))
-      .then(closeModal)
+    return dispatch(ThunkAddReviewBySpotId({ review, stars },spotId,userId,objReviews))
+      closeModal()
       // .catch(async (res) => {
       //   const data = await res.json();
       //   if (data && data.errors) {
