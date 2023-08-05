@@ -4,7 +4,7 @@ import * as sessionActions from "../../store/session";
 import { useDispatch } from "react-redux";
 import { useModal } from "../../context/Modal";
 import "./submitReview.css";
-import { ThunkAddReview } from "../../store/reviews";
+import { ThunkAddReviewBySpotId } from "../../store/reviews";
 
 function SubmitReviewModal({spotId,userId,arrayReviews},) {
   const dispatch = useDispatch();
@@ -13,10 +13,11 @@ function SubmitReviewModal({spotId,userId,arrayReviews},) {
   const [errors, setErrors] = useState({});
   const { closeModal } = useModal();
 
+
   const handleSubmit = (e) => {
     e.preventDefault();
     setErrors({});
-    return dispatch(ThunkAddReview({ review, stars },{spotId,userId,arrayReviews}))
+    return dispatch(ThunkAddReviewBySpotId({ review, stars },{spotId,userId,arrayReviews}))
       .then(closeModal)
       // .catch(async (res) => {
       //   const data = await res.json();

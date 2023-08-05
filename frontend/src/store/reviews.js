@@ -1,4 +1,4 @@
-import { useDispatch } from "react-redux";
+import { useDispatch } from 'react-redux';
 import {useParams} from 'react-router-dom'
 import {useEffect, useState } from 'react';
 import {csrfFetch} from '../store/csrf'
@@ -69,9 +69,9 @@ const LOAD_REVIEWS_BY_SPOTID = 'session/load_reviewsBySpotId'; //read. // GET sp
 //   type: LOAD_SPOTS,
 //   payload:spots
 // });
-export const actionAddReviewBySpotId = (Review) => ({
+export const actionAddReviewBySpotId = (Review,objReviews) => ({
   type: ADD_REVIEW_BY_SPOT_ID,
-  payload: Review
+  payload: {Review,objReviews}
 });
 // export const updateSpot = () => ({
 //   type: UPDATE_SPOT,
@@ -122,16 +122,19 @@ dispatch(actionLoadReviewsBySpotId(Reviews))
 // }
 // }
 
-export const  ThunkAddReview= (review,spotAndUserId)=>async(dispatch)=>{
+export const  ThunkAddReviewBySpotId= (reviewReq,spotId,userId,objReviews)=>async(dispatch)=>{
   // let realId=parseInt(spotId)
   try{
-    let {spotId,userId,arrayReviews}=spotAndUserId
-    console.log('this is newReview in thunkAddSpot',review)
+
+
+    console.log('this is newReview in thunkAddSpot',reviewReq)
+    console.log('this is our spotId',spotId)
+    console.log('this is objReviewsInOurThunk',objReviews)
   const res = await csrfFetch(`/api/spots/${spotId}/reviews`,{
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'},
-      body: JSON.stringify(review)
+      body: JSON.stringify(reviewReq)
   });
   if(res.ok) {
     const  Review  = await res.json(); // { Spots: [] }
@@ -139,7 +142,13 @@ export const  ThunkAddReview= (review,spotAndUserId)=>async(dispatch)=>{
     console.log('Review added is',Review)
 
 
-    dispatch(actionAddReviewBySpotId({Review,arrayReviews}))
+
+
+    dispatch(actionAddReviewBySpotId(Review,objReviews))
+
+
+
+
 
 
 
@@ -148,7 +157,14 @@ export const  ThunkAddReview= (review,spotAndUserId)=>async(dispatch)=>{
 
 
 
+
+
+
 }
+
+
+
+
 
 
 
@@ -159,7 +175,10 @@ export const  ThunkAddReview= (review,spotAndUserId)=>async(dispatch)=>{
  }
 
 
+
+
 }
+
 // export const ThunkAddNewSpot=(dispatch,body)=>async dispatch =>{
 
 //   const res = await fetch("/api/spots",{
@@ -185,14 +204,55 @@ let initialState={spot:{},user:{}}
 export default function reviewsReducer(state=initialState, action) {
   switch (action.type) {
     case LOAD_REVIEWS_BY_SPOTID: {
-      
-        let newState={...state,spot:action.payload}
+      let returnObj={}
+      action.payload.forEach((ele)=>{
+
+
+        returnObj[ele.id]={
+          userId:ele.userId,
+          spotId:ele.spotId,
+          review:ele.review,
+          stars:ele.stars,
+          createdAt:ele.createdAt,
+          updatedAt:ele.updatedAt,
+          User: ele.User,
+          ReviewImages:ele.ReviewImages,
+        }
+      })
+      let newState={...state,spot:returnObj}
+
+
+        // let newState={...state,spot:action.payload}
       return newState
     }
     case ADD_REVIEW_BY_SPOT_ID: {
-      let {Review,arrayReviews}=action.payload
-      let newSpot=[Review,...arrayReviews]
-      let newState={...state,spot: newSpot}
+
+
+      let {Review,objReviews}=action.payload
+      console.log('inside of our reducer')
+      console.log('review is just ',Review)
+      console.log('objReviews is',objReviews)
+      let returnObj={}
+      let review=objReviews
+      let keysToThis=Object.keys(objReviews)
+      let UserObject={...returnObj[review.id]["User"]}
+      let ReviewImagesArray=[...returnObj[review.id]["ReviewImages"]]
+        returnObj[review.id]={
+          userId:review.userId,
+          spotId:review.spotId,
+          review:review.review,
+          stars:review.stars,
+          createdAt:review.createdAt,
+          updatedAt:review.updatedAt,
+          User: UserObject,
+          ReviewImages:ReviewImagesArray,
+
+
+      }
+      let newVar=JSON.stringify(objReviews)
+      let newVar2=JSON.parse(newVar)
+      let newState={...state,spot: {...newVar2,returnObj}}
+      console.log('NEWSTATE IN OUR REVIEW THUNK IS',newState)
       return newState
     }
     // case LOAD_SPOTS: {
@@ -213,7 +273,9 @@ export default function reviewsReducer(state=initialState, action) {
     //     return newState
     //   }
 
+
     //   // {...state,singleSpot: {...action.payload,Owner:{...action.payload.Owner}}}
+
 
     // // case ADD_USER: {
     // //   return state
@@ -227,9 +289,12 @@ export default function reviewsReducer(state=initialState, action) {
     // //   return newState
     // // }
 
+
     default: {
       return state;
     }
 
+
   }
+
 }
