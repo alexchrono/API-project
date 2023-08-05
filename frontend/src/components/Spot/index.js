@@ -8,6 +8,7 @@ import { ThunkLoadReviewsBySpotId } from '../../store/reviews';
 import OpenModalButton from '../OpenModalButton';
 import './spot.css'
 import SubmitReviewModal from '../SubmitReviewModal';
+import DeleteSpotModal from '../DeleteSpotModal';
 
 
 
@@ -22,6 +23,8 @@ export default function Spot() {
   let allReviews = useSelector((state) => state.reviews)
   let thisSpotsReviews = useSelector((state) => state.reviews.spot)
   let thisUser = useSelector((state) => state.session)
+  let actionType="DELETEAREVIEW"
+
   useEffect(() => {
     const fetchData = async () => {
       await ThunkLoadSingle(dispatch, spotId);
@@ -56,6 +59,8 @@ export default function Spot() {
     return true
   }
 }
+
+
 
 
 
@@ -221,12 +226,29 @@ export default function Spot() {
             {thisSpotsReviews[ele] && (<h2>{thisSpotsReviews[ele]['User']["firstName"]}</h2>)}
           </div>
           <div className="monthAndDate">
-            <h3>{`${thisSpotsReviews[ele]["createdAt"].slice(5, 7)} ${thisSpotsReviews[ele]["createdAt"].slice(0, 4)} `}</h3>
+            <h3>{`${thisSpotsReviews[ele]["createdAt"].slice(5, 7)} ${thisSpotsReviews[ele]["createdAt"].slice(0, 4)} `}</h3></div>
+            <div className="reviewOfUser">
             <p>
               {thisSpotsReviews[ele]["review"]}
             </p>
+            </div>
+            {thisUser.user && typeof thisSpotsReviews==="object" &&  thisSpotsReviews[ele]['User']['id']===thisUser.user.id && (<h1>
+        {/* !thisSpotsReviews.find((ele) => ele.userId === thisUser.user.id) && thisSpot.ownerId !== thisUser.user.id */}
+
+
+        <OpenModalButton
+          buttonText="Delete"
+          // onButtonClick={closeMenu}
+
+
+          modalComponent={<DeleteSpotModal onClose={handleModalClose} spotsId={ele} ourArray={thisSpotsReviews} actionType={actionType}
+          />
+        }
+        onClick={handleModalOpen}
+        />
+      </h1>)}
           </div>
-        </div>
+
       ))}
 
 

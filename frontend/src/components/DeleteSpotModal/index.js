@@ -7,7 +7,7 @@ import { useModal } from "../../context/Modal";
 import "./deleteSpot.css";
 import { ThunkDeleteAspot } from "../../store/spots";
 
-function DeleteSpotModal({spotsId,ourArray}) {
+function DeleteSpotModal({spotsId,ourArray,actionType}) {
     const { closeModal } = useModal();
   const dispatch = useDispatch();
   console.log('array is',ourArray)
@@ -37,7 +37,8 @@ function DeleteSpotModal({spotsId,ourArray}) {
   return (
     <>
       <h1>Confirm Delete</h1>
-      <p>Are you sure you want to remove this spot?</p>
+      {actionType==='DELETEASPOT' && (<p>Are you sure you want to remove this spot?</p>)}
+      {actionType==='DELETEAREVIEW' && (<p>Are you sure you want to delete this review?</p>)}
       {/* <form onSubmit={handleSubmit}> */}
         {/* <label>
           Username or Email */}
@@ -62,13 +63,29 @@ function DeleteSpotModal({spotsId,ourArray}) {
           <p>{errors.credential}</p>
         )} */}
 
-        <button type="button" onClick={async (e)=>{
+        {actionType==='DELETEASPOT' &&(<div><button type="button" onClick={async (e)=>{
    dispatch(ThunkDeleteAspot(dispatch,spotsId,ourArray))
    closeModal()
 }}
 
 
-        >Yes</button>
+        >Yes</button>     <button type="button" onClick={async (e)=>{
+
+          closeModal()
+
+// return await ThunkDeleteAspot();
+// return dispatch(sessionActions.login({ credential, password }))
+// .then(closeModal)
+
+}}>No</button> </div>)}
+{actionType==='DELETEAREVIEW' &&(<div><button type="button" onClick={async (e)=>{
+   dispatch(ThunkDeleteAspot(dispatch,spotsId,ourArray))
+   closeModal()
+}}
+
+
+        >Yes (Delete Review)</button>
+
         <button type="button" onClick={async (e)=>{
 
           closeModal()
@@ -77,7 +94,7 @@ function DeleteSpotModal({spotsId,ourArray}) {
 // return dispatch(sessionActions.login({ credential, password }))
 // .then(closeModal)
 
-}}>No</button>
+}}>No (Keep Review)</button> </div>)}
 
       {/* </form> */}
     </>
