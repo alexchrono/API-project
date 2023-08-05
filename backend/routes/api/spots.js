@@ -202,13 +202,15 @@ const displayValidationErrors2 = (err, req, res, next) => {
 }
 router.post('/:spotId/reviews', requireAuth, validateLogin3, async (req, res) => {
     let { review, stars } = req.body
-    if (! await Spot.findByPk(req.params.spotId)) {
+    let firstTest=await Spot.findByPk(req.params.spotId)
+    if (!firstTest ) {
          res.status(404)
             .setHeader('Content-Type', 'application/json')
             .json({
                 message: `Spot couldn't be found`
             })
     }
+    
     let test = await Review.findOne({
         where: {
             userId: req.user.id,

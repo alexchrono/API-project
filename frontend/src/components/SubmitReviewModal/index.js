@@ -17,8 +17,10 @@ function SubmitReviewModal({spotId,userId,objReviews},) {
   const handleSubmit = async(e) => {
     e.preventDefault();
     setErrors({});
-    return dispatch(ThunkAddReviewBySpotId({ review, stars },spotId,userId,objReviews))
-      closeModal()
+    let realStars=parseInt(stars)
+  await dispatch(ThunkAddReviewBySpotId({ review, stars:realStars },spotId,userId,objReviews,dispatch))
+  
+  closeModal()
       // .catch(async (res) => {
       //   const data = await res.json();
       //   if (data && data.errors) {

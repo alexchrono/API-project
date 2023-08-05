@@ -122,14 +122,14 @@ dispatch(actionLoadReviewsBySpotId(Reviews))
 // }
 // }
 
-export const  ThunkAddReviewBySpotId= (reviewReq,spotId,userId,objReviews)=>async(dispatch)=>{
+export const  ThunkAddReviewBySpotId= (reviewReq,spotId,userId,objReviews,dispatch)=>async(dispatch)=>{
   // let realId=parseInt(spotId)
   try{
 
-
-    console.log('this is newReview in thunkAddSpot',reviewReq)
-    console.log('this is our spotId',spotId)
-    console.log('this is objReviewsInOurThunk',objReviews)
+      console.log('************IM IN MY THUNK')
+    // console.log('this is newReview in thunkAddSpot',reviewReq)
+    // console.log('this is our spotId',spotId)
+    // console.log('this is objReviewsInOurThunk',objReviews)
   const res = await csrfFetch(`/api/spots/${spotId}/reviews`,{
     method: 'POST',
     headers: {
@@ -144,16 +144,13 @@ export const  ThunkAddReviewBySpotId= (reviewReq,spotId,userId,objReviews)=>asyn
 
 
 
-    await dispatch(actionAddReviewBySpotId(Review,objReviews))
+    return actionAddReviewBySpotId(Review,objReviews)
 
 
 
 
 
 
-
-
-    return Review
 
 
 
@@ -171,6 +168,7 @@ export const  ThunkAddReviewBySpotId= (reviewReq,spotId,userId,objReviews)=>asyn
 
   }
  catch (error) {
+  console.log(error)
   throw error;
  }
 
@@ -234,16 +232,17 @@ export default function reviewsReducer(state=initialState, action) {
       console.log('objReviews is',objReviews)
       let returnObj={}
       let review=objReviews
+      let ourId=Review.id
       let keysToThis=Object.keys(objReviews)
-      let UserObject={...returnObj[review.id]["User"]}
-      let ReviewImagesArray=[...returnObj[review.id]["ReviewImages"]]
-        returnObj[review.id]={
-          userId:review.userId,
-          spotId:review.spotId,
-          review:review.review,
-          stars:review.stars,
-          createdAt:review.createdAt,
-          updatedAt:review.updatedAt,
+      let UserObject=Review.User
+      let ReviewImagesArray=Review["ReviewImages"]
+        returnObj={
+          userId: Review.userId,
+          spotId: Review.spotId,
+          review: Review.review,
+          stars: Review.stars,
+          createdAt: Review.createdAt,
+          updatedAt: Review.updatedAt,
           User: UserObject,
           ReviewImages:ReviewImagesArray,
 
@@ -251,7 +250,7 @@ export default function reviewsReducer(state=initialState, action) {
       }
       let newVar=JSON.stringify(objReviews)
       let newVar2=JSON.parse(newVar)
-      let newState={...state,spot: {...newVar2,returnObj}}
+      let newState={...state,spot: {ourId:returnObj,...objReviews}}
       console.log('NEWSTATE IN OUR REVIEW THUNK IS',newState)
       return newState
     }

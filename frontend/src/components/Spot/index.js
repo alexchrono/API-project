@@ -25,13 +25,13 @@ export default function Spot() {
   useEffect(() => {
     const fetchData = async () => {
       await ThunkLoadSingle(dispatch, spotId);
-      console.log('aboveTHunkLoadReviews with spotId value of', spotId)
+      // console.log('aboveTHunkLoadReviews with spotId value of', spotId)
       await ThunkLoadReviewsBySpotId(dispatch, spotId)
     };
 
 
     fetchData();
-  }, [dispatch, spotId,isModalOpen]);
+  }, [dispatch, spotId]);
   const handleModalOpen = () => {
     setIsModalOpen(true);
   };
@@ -45,10 +45,10 @@ export default function Spot() {
   let { SpotImages } = thisSpot
 
 
-  console.log('STATE.REVIEWS aka allReviews LOOKS LIKE',allReviews)
-  console.log('STATE.REVIEWS.SPOT aka thisSpotsReviews LOOKS LIKE',thisSpotsReviews)
+  // console.log('STATE.REVIEWS aka allReviews LOOKS LIKE',allReviews)
+  // console.log('STATE.REVIEWS.SPOT aka thisSpotsReviews LOOKS LIKE',thisSpotsReviews)
   let keysToReviews=Object.keys(thisSpotsReviews)
-  console.log('KEYS TO REVIEWS LOOKS LIKE ',keysToReviews)
+  // console.log('KEYS TO REVIEWS LOOKS LIKE ',keysToReviews)
   function checkNoReviewAndCheckNotOwner(){
   for(let ele of keysToReviews){
     if(thisSpotsReviews[ele]['userId']===thisUser.user.id || thisSpot.ownerId===thisUser.user.id)
@@ -124,16 +124,16 @@ export default function Spot() {
   // );
 
 
-  console.log(console.log('this is all of reviews State', allReviews))
-  console.log('THESE ARE ALL THE REVIEWS', thisSpotsReviews)
-  console.log('THIS IS THE STATEUSER DATA', thisUser)
-  console.log('THIS IS THIS SPOT', thisSpot)
+  // console.log(console.log('this is all of reviews State', allReviews))
+  // console.log('THESE ARE ALL THE REVIEWS', thisSpotsReviews)
+  // console.log('THIS IS THE STATEUSER DATA', thisUser)
+  // console.log('THIS IS THIS SPOT', thisSpot)
   //thisUser.id will give me id
 
 
-  console.log('************** THIS ALL OF REVIEWS NOW',allReviews)
-  console.log('********************* THIS SPOTS REVIEWSNOW',thisSpotsReviews)
-  console.log('*******************this spot reviews index 0 user now',thisSpotsReviews.User)
+  // console.log('************** THIS ALL OF REVIEWS NOW',allReviews)
+  // console.log('********************* THIS SPOTS REVIEWSNOW',thisSpotsReviews)
+  // console.log('*******************this spot reviews index 0 user now',thisSpotsReviews.User)
   return (
     <>
       <div className='daddyOfSingleDetail'>
@@ -203,7 +203,7 @@ export default function Spot() {
           // onButtonClick={closeMenu}
 
 
-          modalComponent={<SubmitReviewModal spotId={spotId} userId={thisUser.user.userId} objReviews={thisSpotsReviews} onClose={handleModalClose}
+          modalComponent={<SubmitReviewModal onClose={handleModalClose} spotId={spotId} userId={thisUser.user.userId} objReviews={thisSpotsReviews}
           />
         }
         onClick={handleModalOpen}
@@ -245,4 +245,3 @@ export default function Spot() {
 
 
 }
-
