@@ -63,6 +63,11 @@ function ProfileButton({ user }) {
               }}>Manage Spots</button>
             </li>
             <li>
+              <button type="button" onClick={(e)=>{
+                history.push('/reviews/current')
+              }}>Manage Reviews</button>
+            </li>
+            <li>
               <button onClick={(e)=>{
                 e.preventDefault();
                 dispatch(sessionActions.logout());
