@@ -2,11 +2,11 @@
 import React, { useState } from "react";
 import * as sessionActions from "../../store/session";
 import { useDispatch } from "react-redux";
-import { useModal } from "../../context/Modal";
+import { useModal,setTest } from "../../context/Modal";
 import "./submitReview.css";
 import { ThunkAddReviewBySpotId } from "../../store/reviews";
 
-function SubmitReviewModal({spotId,userId,objReviews,setTest},) {
+function SubmitReviewModal({spotId,userId,objReviews,setReloadData},) {
   const dispatch = useDispatch();
   const [review, setReview] = useState("");
   const [stars, setStars] = useState("");
@@ -18,7 +18,7 @@ function SubmitReviewModal({spotId,userId,objReviews,setTest},) {
     e.preventDefault();
     setErrors({});
     let realStars=parseInt(stars)
-return dispatch(ThunkAddReviewBySpotId({ review, stars:realStars },spotId,userId,objReviews,dispatch)).then(closeModal())
+return dispatch(ThunkAddReviewBySpotId({ review, stars:realStars },spotId,userId,objReviews,dispatch)).then(setReloadData(true)).then(closeModal())
 
       // .catch(async (res) => {
       //   const data = await res.json();

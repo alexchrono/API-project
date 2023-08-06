@@ -9,7 +9,7 @@ import OpenModalButton from '../OpenModalButton';
 import './spot.css'
 import SubmitReviewModal from '../SubmitReviewModal';
 import DeleteSpotModal from '../DeleteSpotModal';
-
+import { useModal,setTest,test } from "../../context/Modal";
 
 
 
@@ -18,12 +18,13 @@ import DeleteSpotModal from '../DeleteSpotModal';
 export default function Spot() {
   let { spotId } = useParams()
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [test,setTest] = useState('')
+
   const dispatch = useDispatch();
   let thisSpot = useSelector((state) => state.spots.singleSpot)
   let allReviews = useSelector((state) => state.reviews)
   let thisSpotsReviews = useSelector((state) => state.reviews.spot)
   let thisUser = useSelector((state) => state.session)
+  const [reloadData, setReloadData] = useState(false);
   let actionType="DELETEAREVIEW"
 
   useEffect(() => {
@@ -35,7 +36,7 @@ export default function Spot() {
 
 
     fetchData();
-  }, [dispatch, spotId]);
+  }, [dispatch, spotId,reloadData]);
   const handleModalOpen = () => {
     setIsModalOpen(true);
   };
@@ -210,7 +211,7 @@ export default function Spot() {
           // onButtonClick={closeMenu}
 
 
-          modalComponent={<SubmitReviewModal onClose={handleModalClose} spotId={spotId} userId={thisUser.user.userId} objReviews={thisSpotsReviews} handleModal={handleModalClose}
+          modalComponent={<SubmitReviewModal onClose={handleModalClose} spotId={spotId} userId={thisUser.user.userId} objReviews={thisSpotsReviews} setReloadData={setReloadData}
           />
         }
         onClick={handleModalOpen}

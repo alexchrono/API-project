@@ -9,6 +9,7 @@ export function ModalProvider({ children }) {
   const [modalContent, setModalContent] = useState(null);
   // callback function that will be called when modal is closing
   const [onModalClose, setOnModalClose] = useState(null);
+  const [test,setTest]=useState(1)
 
   const closeModal = () => {
     setModalContent(null); // clear the modal contents
