@@ -158,7 +158,7 @@ else  {
 
 
 })
-router.put('/:reviewId',requireAuth,authError,validateLogin,middleware2,async(req,res)=>{
+router.put('/:reviewId',authError,validateLogin,async(req,res)=>{
 let testReview=await Review.findByPk(req.params.reviewId)
 if(!testReview){
     res.status(404)

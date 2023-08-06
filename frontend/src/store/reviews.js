@@ -99,9 +99,9 @@ export const actionLoadReviewsBySpotId = (Reviews) => ({
   payload: Reviews
 })
 
-export const actionEditReviewByReviewId = (Reviews) => ({
+export const actionEditReviewByReviewId = (Review,objReviews) => ({
   type: EDIT_REVIEWS_BY_REVIEW_ID,
-  payload: Reviews
+  payload: {Review,objReviews}
 })
 
 
@@ -183,12 +183,12 @@ dispatch(actionLoadReviewsByUserId(Reviews))
 export const  ThunkEditReviewByReviewId= (reviewReq,spotId,reviewId,objReviews,dispatch)=>async(dispatch)=>{
 
   try{
-
+    console.log('firstReviewIdis',reviewId)
     console.log('************IM IN MY EDIT REVIEWS THUNK THUNK')
   // console.log('this is newReview in thunkAddSpot',reviewReq)
   // console.log('this is our spotId',spotId)
   // console.log('this is objReviewsInOurThunk',objReviews)
-const res = await csrfFetch(`/api/reviews/${reviewId}`,{
+const res = await csrfFetch(`/api/reviews/${spotId}`,{
   method: 'PUT',
   headers: {
     'Content-Type': 'application/json'},
@@ -199,14 +199,14 @@ if(res.ok) {
   // do the thing with this data
   console.log('Review added is',Review)
 
-  return actionEditReviewByReviewId(Review,objReviews)
+  dispatch(actionEditReviewByReviewId(Review,objReviews))
 
 }
 
 }
 catch (error) {
-console.log(error)
-throw error;
+console.log('WE HIT AN ERROR WHILE TRYING TO EDIT DAWG')
+
 }
 
 }
@@ -312,7 +312,35 @@ export default function reviewsReducer(state=initialState, action) {
       return newState
     }
     case EDIT_REVIEWS_BY_REVIEW_ID: {
-      
+
+
+      let {Review,objReviews}=action.payload
+      console.log('inside of our reducer')
+      console.log('review is just ',Review)
+      console.log('objReviews is',objReviews)
+      let returnObj={}
+      let review=objReviews
+      let ourId=Review.id
+      let keysToThis=Object.keys(objReviews)
+      let UserObject=Review.User
+      let ReviewImagesArray=Review["ReviewImages"]
+        returnObj={
+          userId: Review.userId,
+          spotId: Review.spotId,
+          review: Review.review,
+          stars: Review.stars,
+          createdAt: Review.createdAt,
+          updatedAt: Review.updatedAt,
+          User: UserObject,
+          ReviewImages:ReviewImagesArray,
+
+
+      }
+      let newVar=JSON.stringify(objReviews)
+      let newVar2=JSON.parse(newVar)
+      let newState={...state,user: {...objReviews,ourId:returnObj}}
+      console.log('NEWSTATE IN OUR REVIEW THUNK IS',newState)
+      return newState
     }
     case LOAD_REVIEWS_BY_USERID: {
       let returnObj={}

@@ -5,12 +5,13 @@ import { useDispatch } from "react-redux";
 import { useModal,setTest } from "../../context/Modal";
 import "./submitReview.css";
 import { ThunkAddReviewBySpotId } from "../../store/reviews";
+import { ThunkEditReviewByReviewId } from "../../store/reviews";
 
 function SubmitReviewModal({spotId,userId,objReviews,setReloadData,actionType},) {
   const dispatch = useDispatch();
 
   const [review, setReview] = useState(actionType === 'EDITAREVIEW' ? 'ALEX YOU ARE A GENIUS' : '');
-  const [stars, setStars] = useState(actionType === 'EDITAREVIEW' ? 'ALEX YOU ARE A GENIUS' : '');
+  const [stars, setStars] = useState(actionType === 'EDITAREVIEW' ? 3 : '');
   const [errors, setErrors] = useState({});
   const { closeModal,setOnModalClose } = useModal();
 
@@ -19,8 +20,16 @@ function SubmitReviewModal({spotId,userId,objReviews,setReloadData,actionType},)
     e.preventDefault();
     setErrors({});
     let realStars=parseInt(stars)
+if(actionType==='EDITAREVIEW'){
+  let counter=0
+  await dispatch(ThunkEditReviewByReviewId({ review, stars: realStars }, spotId, userId, objReviews, dispatch))
+  setReloadData(counter--)
+  // history.push(`/api/spots/${something}`)
+  closeModal()
+}
 
-return dispatch(ThunkAddReviewBySpotId({ review, stars:realStars },spotId,userId,objReviews,dispatch)).then(setReloadData(true)).then(closeModal())
+    else{
+return dispatch(ThunkAddReviewBySpotId({ review, stars:realStars },spotId,userId,objReviews,dispatch)).then(setReloadData(true)).then(closeModal())}
 
 
       // .catch(async (res) => {

@@ -21,11 +21,11 @@ export default function SpotsCurrentUser() {
   let ourGuy=thisUser.user.id
   useEffect(() => {
     const fetchData = async () => {
-     await ThunkLoadSpotsCurrentUser(dispatch);
+      await ThunkLoadSpotsCurrentUser(dispatch);
     };
 
     fetchData();
-  }, [thisUser.user.id]);
+  }, [dispatch]);
 
 
   if (!Array.isArray(allTheSpots)) {
