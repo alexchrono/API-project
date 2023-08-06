@@ -62,8 +62,8 @@ let data1=JSON.stringify(allReviews)
 let data2=JSON.stringify(thisUsersReviews)
   return (
     <>
-    <h1>{data1}</h1>
-    <h3>{data2}</h3>
+    {/* <h1>{data1}</h1>
+    <h3>{data2}</h3> */}
 
 
 
@@ -74,7 +74,7 @@ let data2=JSON.stringify(thisUsersReviews)
 
         <div className="eachReview">
           <div className="nameOfReviewer">
-            <h1>{JSON.stringify(thisUsersReviews)}</h1>
+          
             {thisUsersReviews[ele] && (<h2>{thisUsersReviews[ele]['User']["firstName"]}</h2>)}
           </div>
           <div className="monthAndDate">
