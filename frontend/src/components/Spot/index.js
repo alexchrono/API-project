@@ -18,6 +18,7 @@ import DeleteSpotModal from '../DeleteSpotModal';
 export default function Spot() {
   let { spotId } = useParams()
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [test,setTest] = useState('')
   const dispatch = useDispatch();
   let thisSpot = useSelector((state) => state.spots.singleSpot)
   let allReviews = useSelector((state) => state.reviews)

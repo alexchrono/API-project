@@ -6,21 +6,19 @@ import { useModal } from "../../context/Modal";
 import "./submitReview.css";
 import { ThunkAddReviewBySpotId } from "../../store/reviews";
 
-function SubmitReviewModal({spotId,userId,objReviews},) {
+function SubmitReviewModal({spotId,userId,objReviews,setTest},) {
   const dispatch = useDispatch();
   const [review, setReview] = useState("");
   const [stars, setStars] = useState("");
   const [errors, setErrors] = useState({});
-  const { closeModal } = useModal();
+  const { closeModal,setOnModalClose } = useModal();
 
 
   const handleSubmit = async(e) => {
     e.preventDefault();
     setErrors({});
     let realStars=parseInt(stars)
-return dispatch(ThunkAddReviewBySpotId({ review, stars:realStars },spotId,userId,objReviews,dispatch)).then(()=>{
-  closeModal()
- })
+return dispatch(ThunkAddReviewBySpotId({ review, stars:realStars },spotId,userId,objReviews,dispatch)).then(closeModal())
 
       // .catch(async (res) => {
       //   const data = await res.json();
@@ -62,7 +60,7 @@ return dispatch(ThunkAddReviewBySpotId({ review, stars:realStars },spotId,userId
         {errors.credential && (
           <p>{errors.credential}</p>
         )}
-        <button type="submit" 
+        <button type="submit"
         disabled={Object.keys(errors).length>0}>Submit Your Review</button>
 
       </form>
