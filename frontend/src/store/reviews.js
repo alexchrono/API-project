@@ -9,6 +9,7 @@ import {csrfFetch} from '../store/csrf'
 const ADD_REVIEW_BY_SPOT_ID = 'session/create_review_by_spotId';
 const LOAD_REVIEWS_BY_SPOTID = 'session/load_reviewsBySpotId'; //read. // GET spots/
 const DELETE_REVIEW_BY_ID = 'session/delete_review_by_id'
+const LOAD_REVIEWS_BY_USERID = 'session/load_reviewsByuserId/user'
 // const ADD_SPOT = 'session/add_spot'; //create
 // const UPDATE_SPOT = 'session/update_spot';
 // const DELETE_SPOT = 'session/delete_spot';
@@ -87,6 +88,11 @@ export const actionAddReviewBySpotId = (Review,objReviews) => ({
 //   type: LOAD_SPOT,
 //   payload: spot
 // });
+
+export const actionLoadReviewsByUserId = (Reviews) => ({
+  type: LOAD_REVIEWS_BY_USERID,
+  payload: Reviews
+})
 export const actionLoadReviewsBySpotId = (Reviews) => ({
   type: LOAD_REVIEWS_BY_SPOTID,
   payload: Reviews
@@ -134,6 +140,21 @@ dispatch(actionLoadReviewsBySpotId(Reviews))
   }
 }
 
+export const ThunkLoadReviewsByUserId=(dispatch,spotId)=>async(dispatch)=>{
+  console.log('hit my thunk with spotId value of',spotId)
+  const res = await csrfFetch(`/api/reviews/current`)
+
+  if(res.ok) {
+    const  {Reviews}  = await res.json();
+    console.log('reviews is',Reviews)
+
+return(actionLoadReviewsByUserId(Reviews))
+
+  } else {
+    const errors = await res.json();
+    console.error('Error fetching data:', errors);
+  }
+}
 // export async function ThunkLoadSingle(dispatch,spotId){
 //   // let realId=parseInt(spotId)
 
@@ -247,6 +268,28 @@ export default function reviewsReducer(state=initialState, action) {
         }
       })
       let newState={...state,spot:returnObj}
+
+
+        // let newState={...state,spot:action.payload}
+      return newState
+    }
+    case LOAD_REVIEWS_BY_USERID: {
+      let returnObj={}
+      action.payload.forEach((ele)=>{
+
+
+        returnObj[ele.id]={
+          userId:ele.userId,
+          spotId:ele.spotId,
+          review:ele.review,
+          stars:ele.stars,
+          createdAt:ele.createdAt,
+          updatedAt:ele.updatedAt,
+          User: ele.User,
+          ReviewImages:ele.ReviewImages,
+        }
+      })
+      let newState={...state,user:returnObj}
 
 
         // let newState={...state,spot:action.payload}

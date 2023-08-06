@@ -209,7 +209,7 @@ export default function Spot() {
           // onButtonClick={closeMenu}
 
 
-          modalComponent={<SubmitReviewModal onClose={handleModalClose} spotId={spotId} userId={thisUser.user.userId} objReviews={thisSpotsReviews}
+          modalComponent={<SubmitReviewModal onClose={handleModalClose} spotId={spotId} userId={thisUser.user.userId} objReviews={thisSpotsReviews} handleModal={handleModalClose}
           />
         }
         onClick={handleModalOpen}
