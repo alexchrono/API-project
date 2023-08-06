@@ -10,6 +10,7 @@ const ADD_REVIEW_BY_SPOT_ID = 'session/create_review_by_spotId';
 const LOAD_REVIEWS_BY_SPOTID = 'session/load_reviewsBySpotId'; //read. // GET spots/
 const DELETE_REVIEW_BY_ID = 'session/delete_review_by_id'
 const LOAD_REVIEWS_BY_USERID = 'session/load_reviewsByuserId/user'
+const EDIT_REVIEWS_BY_REVIEW_ID='whateverYouWANTmanIjustNeedaWorkOnCss'
 // const ADD_SPOT = 'session/add_spot'; //create
 // const UPDATE_SPOT = 'session/update_spot';
 // const DELETE_SPOT = 'session/delete_spot';
@@ -97,6 +98,13 @@ export const actionLoadReviewsBySpotId = (Reviews) => ({
   type: LOAD_REVIEWS_BY_SPOTID,
   payload: Reviews
 })
+
+export const actionEditReviewByReviewId = (Reviews) => ({
+  type: EDIT_REVIEWS_BY_REVIEW_ID,
+  payload: Reviews
+})
+
+
 //thunks
 export const ThunkDeleteAreview=(dispatch,reviewsId,reviewsObj,keysToReviews2)=>async(dispatch)=>{
   console.log('am I even in my thunk')
@@ -172,7 +180,36 @@ dispatch(actionLoadReviewsByUserId(Reviews))
 //   dispatch(actionLoadSpot(`ffuuckk`))
 // }
 // }
+export const  ThunkEditReviewByReviewId= (reviewReq,spotId,reviewId,objReviews,dispatch)=>async(dispatch)=>{
 
+  try{
+
+    console.log('************IM IN MY EDIT REVIEWS THUNK THUNK')
+  // console.log('this is newReview in thunkAddSpot',reviewReq)
+  // console.log('this is our spotId',spotId)
+  // console.log('this is objReviewsInOurThunk',objReviews)
+const res = await csrfFetch(`/api/reviews/${reviewId}`,{
+  method: 'PUT',
+  headers: {
+    'Content-Type': 'application/json'},
+    body: JSON.stringify(reviewReq)
+});
+if(res.ok) {
+  const  Review  = await res.json(); // { Spots: [] }
+  // do the thing with this data
+  console.log('Review added is',Review)
+
+  return actionEditReviewByReviewId(Review,objReviews)
+
+}
+
+}
+catch (error) {
+console.log(error)
+throw error;
+}
+
+}
 export const  ThunkAddReviewBySpotId= (reviewReq,spotId,userId,objReviews,dispatch)=>async(dispatch)=>{
   // let realId=parseInt(spotId)
   try{
@@ -273,6 +310,9 @@ export default function reviewsReducer(state=initialState, action) {
 
         // let newState={...state,spot:action.payload}
       return newState
+    }
+    case EDIT_REVIEWS_BY_REVIEW_ID: {
+      
     }
     case LOAD_REVIEWS_BY_USERID: {
       let returnObj={}

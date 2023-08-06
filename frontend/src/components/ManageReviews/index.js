@@ -25,6 +25,7 @@ export default function ManageReviews() {
   let thisUser = useSelector((state) => state.session)
   let actionType="DELETEAREVIEW"
   let ourUserId=thisUser.user.userId
+  const [reloadData, setReloadData] = useState(1);
   useEffect(() => {
     const fetchData = async () => {
       // await ThunkLoadSingle(dispatch, spotId);
@@ -74,7 +75,7 @@ let data2=JSON.stringify(thisUsersReviews)
 
         <div className="eachReview">
           <div className="nameOfReviewer">
-          
+
             {thisUsersReviews[ele] && (<h2>{thisUsersReviews[ele]['User']["firstName"]}</h2>)}
           </div>
           <div className="monthAndDate">
@@ -84,10 +85,18 @@ let data2=JSON.stringify(thisUsersReviews)
               {thisUsersReviews[ele]["review"]}
             </p>
             </div>
-            {thisUser.user && typeof thisUsersReviews==="object" &&  thisUsersReviews[ele]['User']['id']===thisUser.user.id && (<><h1>
-              {JSON.stringify(thisUsersReviews)}</h1>
+            {thisUser.user && typeof thisUsersReviews==="object" &&  thisUsersReviews[ele]['User']['id']===thisUser.user.id && (<>
         {/* !thisSpotsReviews.find((ele) => ele.userId === thisUser.user.id) && thisSpot.ownerId !== thisUser.user.id */}
+        <OpenModalButton
+          buttonText="Update"
+          // onButtonClick={closeMenu}
 
+
+          modalComponent={<SubmitReviewModal  spotId={ele} userId={ele} objReviews={thisUsersReviews} setReloadData={setReloadData} actionType={"EDITAREVIEW"} onClose={handleModalClose}
+          />
+        }
+        onClick={handleModalOpen}
+        />
 
         <OpenModalButton
           buttonText="Delete"

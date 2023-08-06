@@ -59,7 +59,8 @@ export default function SpotsCurrentUser() {
             <div className="buttons"> <Link exact to={`/spots/updateAspot/${ele.id}`}><button type="button" className="updateDelete">Update</button></Link>  <OpenModalButton
                 buttonText="Delete"
                 modalComponent={<DeleteSpotModal spotsId={ele.id} ourArray={allTheSpots} actionType={actionType} keysToReviews={7}  />}
-              /> </div>
+              />
+              </div>
             </>
 
         ))}

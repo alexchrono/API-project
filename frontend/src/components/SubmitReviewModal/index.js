@@ -6,10 +6,11 @@ import { useModal,setTest } from "../../context/Modal";
 import "./submitReview.css";
 import { ThunkAddReviewBySpotId } from "../../store/reviews";
 
-function SubmitReviewModal({spotId,userId,objReviews,setReloadData},) {
+function SubmitReviewModal({spotId,userId,objReviews,setReloadData,actionType},) {
   const dispatch = useDispatch();
-  const [review, setReview] = useState("");
-  const [stars, setStars] = useState("");
+
+  const [review, setReview] = useState(actionType === 'EDITAREVIEW' ? 'ALEX YOU ARE A GENIUS' : '');
+  const [stars, setStars] = useState(actionType === 'EDITAREVIEW' ? 'ALEX YOU ARE A GENIUS' : '');
   const [errors, setErrors] = useState({});
   const { closeModal,setOnModalClose } = useModal();
 
@@ -18,7 +19,9 @@ function SubmitReviewModal({spotId,userId,objReviews,setReloadData},) {
     e.preventDefault();
     setErrors({});
     let realStars=parseInt(stars)
+
 return dispatch(ThunkAddReviewBySpotId({ review, stars:realStars },spotId,userId,objReviews,dispatch)).then(setReloadData(true)).then(closeModal())
+
 
       // .catch(async (res) => {
       //   const data = await res.json();
@@ -51,6 +54,7 @@ return dispatch(ThunkAddReviewBySpotId({ review, stars:realStars },spotId,userId
           <input
             type="text"
             id="starRate"
+            value={stars}
             placeholder="Out of 1-5 stars, how many?"
             onChange={(e) => setStars(e.target.value)}
             required

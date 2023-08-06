@@ -24,7 +24,7 @@ export default function Spot() {
   let allReviews = useSelector((state) => state.reviews)
   let thisSpotsReviews = useSelector((state) => state.reviews.spot)
   let thisUser = useSelector((state) => state.session)
-  const [reloadData, setReloadData] = useState(false);
+  const [reloadData, setReloadData] = useState(1);
   let actionType="DELETEAREVIEW"
 
   useEffect(() => {
@@ -211,7 +211,7 @@ export default function Spot() {
           // onButtonClick={closeMenu}
 
 
-          modalComponent={<SubmitReviewModal onClose={handleModalClose} spotId={spotId} userId={thisUser.user.userId} objReviews={thisSpotsReviews} setReloadData={setReloadData}
+          modalComponent={<SubmitReviewModal onClose={handleModalClose} spotId={spotId} userId={thisUser.user.userId} objReviews={thisSpotsReviews} setReloadData={setReloadData} reloadData={reloadData}
           />
         }
         onClick={handleModalOpen}
@@ -235,8 +235,8 @@ export default function Spot() {
               {thisSpotsReviews[ele]["review"]}
             </p>
             </div>
-            {thisUser.user && typeof thisSpotsReviews==="object" &&  thisSpotsReviews[ele]['User']['id']===thisUser.user.id && (<><h1>
-              {JSON.stringify(thisSpotsReviews)}</h1>
+            {thisUser.user && typeof thisSpotsReviews==="object" &&  thisSpotsReviews[ele]['User']['id']===thisUser.user.id && (<>
+
         {/* !thisSpotsReviews.find((ele) => ele.userId === thisUser.user.id) && thisSpot.ownerId !== thisUser.user.id */}
 
 
