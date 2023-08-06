@@ -140,15 +140,16 @@ dispatch(actionLoadReviewsBySpotId(Reviews))
   }
 }
 
-export const ThunkLoadReviewsByUserId=(dispatch,spotId)=>async(dispatch)=>{
-  console.log('hit my thunk with spotId value of',spotId)
-  const res = await csrfFetch(`/api/reviews/current`)
+export async function ThunkLoadReviewsByUserId(dispatch,spotId){
+
+  const res = await csrfFetch(`/api/reviews/current`,{
+    method: 'GET'})
 
   if(res.ok) {
     const  {Reviews}  = await res.json();
     console.log('reviews is',Reviews)
 
-return(actionLoadReviewsByUserId(Reviews))
+dispatch(actionLoadReviewsByUserId(Reviews))
 
   } else {
     const errors = await res.json();
@@ -275,7 +276,9 @@ export default function reviewsReducer(state=initialState, action) {
     }
     case LOAD_REVIEWS_BY_USERID: {
       let returnObj={}
-      action.payload.forEach((ele)=>{
+      let ourBoy=action.payload
+
+      ourBoy.forEach((ele)=>{
 
 
         returnObj[ele.id]={

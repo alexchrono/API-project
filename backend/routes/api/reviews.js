@@ -95,7 +95,7 @@ router.post('/:reviewId/images',requireAuth,authError,async (req,res)=>{
 
 
 
-router.get('/current',requireAuth,authError,async(req,res)=>{
+router.get('/current',requireAuth,async(req,res)=>{
     let goal=await Review.findAll({
 
 
@@ -115,7 +115,7 @@ router.get('/current',requireAuth,authError,async(req,res)=>{
 
              ]
     })
-    if(goal){
+    if(goal.length>0){
     let newArray=[]
     goal.forEach((ele)=>{
         newArray.push(ele.toJSON())
@@ -125,7 +125,8 @@ router.get('/current',requireAuth,authError,async(req,res)=>{
 
 
      newArray.forEach((ele2)=>{
-       ele2.Spot.previewImage=ele2.Spot.SpotImages[0].url
+       ele2.Spot.previewImage=7
+    //    ele2.Spot.SpotImages[0].url
        delete ele2.Spot.SpotImages
     // let goal
     // if (ele2.SpotImages){

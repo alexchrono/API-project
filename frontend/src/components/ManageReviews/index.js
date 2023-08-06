@@ -27,14 +27,15 @@ export default function ManageReviews() {
   let ourUserId=thisUser.user.userId
   useEffect(() => {
     const fetchData = async () => {
-    //   await ThunkLoadSingle(dispatch, spotId);
+      // await ThunkLoadSingle(dispatch, spotId);
+      await ThunkLoadReviewsByUserId(dispatch,spotId)
       // console.log('aboveTHunkLoadReviews with spotId value of', spotId)
-      await ThunkLoadReviewsByUserId(dispatch, ourUserId)
+
     };
 
 
     fetchData();
-  }, [dispatch, spotId]);
+  }, [dispatch,ourUserId]);
   const handleModalOpen = () => {
     setIsModalOpen(true);
   };
@@ -57,10 +58,12 @@ export default function ManageReviews() {
 //   }
 // }
 
-
+let data1=JSON.stringify(allReviews)
+let data2=JSON.stringify(thisUsersReviews)
   return (
     <>
-    <h1>{JSON.stringify(allReviews)}</h1>
+    <h1>{data1}</h1>
+    <h3>{data2}</h3>
 
 
 
