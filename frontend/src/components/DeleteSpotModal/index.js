@@ -7,6 +7,7 @@ import { useModal } from "../../context/Modal";
 import "./deleteSpot.css";
 import { ThunkDeleteAspot } from "../../store/spots";
 import { ThunkDeleteAreview } from "../../store/reviews";
+import './deleteSpot.css'
 function DeleteSpotModal({spotsId,ourArray,actionType,keysToReviews2,setReloadData}) {
     const { closeModal } = useModal();
   const dispatch = useDispatch();

@@ -163,7 +163,7 @@ export default function Spot() {
         </>
       )}
 
-      {thisSpotsReviews && keysToReviews.length >= 1 && keysToReviews.map((ele) => (
+      {thisSpotsReviews && keysToReviews.length >= 1 && keysToReviews.reverse().map((ele) => (
         <div className="eachReview" key={ele}>
           <div className="nameOfReviewer">
             {thisSpotsReviews[ele] && <h2 className="names">{thisSpotsReviews[ele]['User']["firstName"]}</h2>}
@@ -178,7 +178,7 @@ export default function Spot() {
             <>
               <OpenModalButton
                 buttonText="Delete"
-                modalComponent={<DeleteSpotModal spotsId={ele} ourArray={thisSpotsReviews} actionType={actionType} keysToReviews2={keysToReviews2} onClose={handleModalClose} />}
+                modalComponent={<DeleteSpotModal spotsId={ele} ourArray={thisSpotsReviews} actionType={'deleteAspot'} keysToReviews2={keysToReviews2} setReloadData={setReloadData} onClose={handleModalClose} />}
                 onClick={handleModalOpen}
               />
             </>
