@@ -7,7 +7,7 @@ import { useModal } from "../../context/Modal";
 import "./deleteSpot.css";
 import { ThunkDeleteAspot } from "../../store/spots";
 import { ThunkDeleteAreview } from "../../store/reviews";
-function DeleteSpotModal({spotsId,ourArray,actionType,keysToReviews2}) {
+function DeleteSpotModal({spotsId,ourArray,actionType,keysToReviews2,setReloadData}) {
     const { closeModal } = useModal();
   const dispatch = useDispatch();
   console.log('INSIDE OF OUR MODAL keysToReview2 is',keysToReviews2)
@@ -81,6 +81,11 @@ function DeleteSpotModal({spotsId,ourArray,actionType,keysToReviews2}) {
 }}>No</button> </div>)}
 {actionType==='DELETEAREVIEW' &&(<div><button type="button" onClick={async (e)=>{
    await dispatch(ThunkDeleteAreview(dispatch,spotsId,ourArray,keysToReviews2))
+   function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+  let randomNum = getRandomInt(1, 99)
+   setReloadData(randomNum)
    closeModal()
 }}
 

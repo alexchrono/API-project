@@ -37,7 +37,7 @@ export default function ManageReviews() {
 
 
     fetchData();
-  }, [dispatch,ourUserId]);
+  }, [dispatch,ourUserId,reloadData]);
   const handleModalOpen = () => {
     setIsModalOpen(true);
   };
@@ -109,7 +109,7 @@ console.log(`ALL OF THIS USERS REVIEWS IS`,thisUsersReviews)
           // onButtonClick={closeMenu}
 
 
-          modalComponent={<DeleteSpotModal  spotsId={ele} ourArray={thisUsersReviews} actionType={actionType} keysToReviews2={keysToReviews2} onClose={handleModalClose}
+          modalComponent={<DeleteSpotModal  spotsId={ele} ourArray={thisUsersReviews} actionType={actionType} keysToReviews2={keysToReviews2} setReloadData={setReloadData} onClose={handleModalClose}
           />
         }
         onClick={handleModalOpen}

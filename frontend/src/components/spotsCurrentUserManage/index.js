@@ -1,6 +1,6 @@
 // frontend/src/components/Navigation/index.js
 import React from 'react';
-import { useEffect } from 'react'
+import { useEffect,useState } from 'react'
 import { NavLink, useHistory, Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 // import { getInitialState } from '../../store/spots';
@@ -16,10 +16,11 @@ export default function SpotsCurrentUser() {
   let history = useHistory()
   const dispatch = useDispatch();
   let allTheSpots = useSelector((state) => state.spots.allSpots)
-  
+
   let actionType="DELETEASPOT"
   let thisUser = useSelector((state) => state.session)
   let ourGuy=thisUser.user.id
+  const [reloadData, setReloadData] = useState(1);
   useEffect(() => {
     const fetchData = async () => {
       await ThunkLoadSpotsCurrentUser(dispatch);
@@ -59,7 +60,7 @@ export default function SpotsCurrentUser() {
             <div className="price"> <p>{`$${ele.price} night`}</p></div></div></Link>
             <div className="buttons"> <Link exact to={`/spots/updateAspot/${ele.id}`}><button type="button" className="updateDelete">Update</button></Link>  <OpenModalButton
                 buttonText="Delete"
-                modalComponent={<DeleteSpotModal spotsId={ele.id} ourArray={allTheSpots} actionType={actionType} keysToReviews={7}  />}
+                modalComponent={<DeleteSpotModal spotsId={ele.id} ourArray={allTheSpots} actionType={actionType} keysToReviews={7}   />}
               />
               </div>
             </>
