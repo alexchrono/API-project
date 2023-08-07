@@ -32,6 +32,7 @@ export default function Spots() {
         {allTheSpots.map((ele) =>
         (
           <div className='daddyOfPics'>
+          
           <Link exact to={`/spots/${ele.id}`} key={ele.id}>
             <div className='imgDiv toolTip'>
               <img src={ele.previewImage} className='image2' alt={`Spot ${ele.id}`} />
