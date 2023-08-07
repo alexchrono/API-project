@@ -117,7 +117,7 @@ const invalidCredentials = (err, req, res, next) => {
       return res.json({
         user: safeUser
       });
-    },invalidCredentials,
+    }
   );
 
   router.use(invalidCredentials)

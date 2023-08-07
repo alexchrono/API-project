@@ -14,16 +14,17 @@ function LoginFormModal() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setErrors({});
+    setErrors('');
     return dispatch(sessionActions.login({ credential, password }))
       .then(closeModal)
       .catch(async (res) => {
+        setErrors({})
         const data = await res.json();
         if (data && data.errors) {
-          setErrors(data.message);
-          console.log(data.message)
+          setErrors(data.errors);
+          console.log(data.errors)
           return setErrors({
-            credentials: 'The provided credentials were invalid'
+            credentials: 'The provided credentials were'
           });
         }
       });
@@ -60,7 +61,7 @@ function LoginFormModal() {
         )}
         <button type="submit"
         disabled={credential.length<4 || password.length<6}>Log In</button>
-         {errors.credentials && (<p style={{color:"red",textAlign:'center'}}>The provided credentials were invalid</p>)}
+         {errors!=='' && (<p style={{color:"red",textAlign:'center'}}>The provided credentials were invalid</p>)}
 
       </form>
     </>
