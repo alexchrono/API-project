@@ -38,48 +38,25 @@ function DeleteSpotModal({spotsId,ourArray,actionType,keysToReviews2,setReloadDa
 
   return (
     <>
-      <h1>Confirm Delete</h1>
+      <div><h1>Confirm Delete</h1></div>
       {actionType==='DELETEASPOT' && (<p>Are you sure you want to remove this spot?</p>)}
       {actionType==='DELETEAREVIEW' && (<p>Are you sure you want to delete this review?</p>)}
-      {/* <form onSubmit={handleSubmit}> */}
-        {/* <label>
-          Username or Email */}
-          {/* <input
-            type="text"
-            value={credential}
-            onChange={(e) => setCredential(e.target.value)}
-            required
-          />
-        </label>
-        {errors.credential && <p>{errors.credential}</p>}
-        <label>
-          Password
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </label> */}
-        {/* {errors.credential && (
-          <p>{errors.credential}</p>
-        )} */}
+
 
         {actionType==='DELETEASPOT' &&(<div><button type="button" onClick={async (e)=>{
    await dispatch(ThunkDeleteAspot(dispatch,spotsId,ourArray))
    closeModal()
-}}
 
+}}>Yes</button></div>)}
 
-        >Yes</button>     <button type="button" onClick={async (e)=>{
+{actionType==='DELETEASPOT' &&(
+  <div>
+<button type="button" onClick={async (e)=>{
 
           closeModal()
 
-// return await ThunkDeleteAspot();
-// return dispatch(sessionActions.login({ credential, password }))
-// .then(closeModal)
-
 }}>No</button> </div>)}
+
 {actionType==='DELETEAREVIEW' &&(<div><button type="button" onClick={async (e)=>{
    await dispatch(ThunkDeleteAreview(dispatch,spotsId,ourArray,keysToReviews2))
    function getRandomInt(min, max) {
@@ -88,20 +65,22 @@ function DeleteSpotModal({spotsId,ourArray,actionType,keysToReviews2,setReloadDa
   let randomNum = getRandomInt(1, 99)
    setReloadData(randomNum)
    closeModal()
-}}
+}}>Yes (Delete Review)</button></div>)}
 
 
-        >Yes (Delete Review)</button>
+
+{actionType==='DELETEAREVIEW' &&(<div>
+
+
+
+
+
 
         <button type="button" onClick={async (e)=>{
 
-          closeModal()
+          closeModal()}}>No (Keep Review)</button> </div> )}
 
-// return await ThunkDeleteAspot();
-// return dispatch(sessionActions.login({ credential, password }))
-// .then(closeModal)
 
-}}>No (Keep Review)</button> </div>)}
 
       {/* </form> */}
     </>

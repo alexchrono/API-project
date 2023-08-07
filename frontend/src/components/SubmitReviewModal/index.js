@@ -1,3 +1,69 @@
+// // frontend/src/components/LoginFormModal/index.js
+// import React, { useState } from "react";
+// import * as sessionActions from "../../store/session";
+// import { useDispatch } from "react-redux";
+// import { useModal,setTest } from "../../context/Modal";
+// import "./submitReview.css";
+// import { ThunkAddReviewBySpotId } from "../../store/reviews";
+// import { ThunkEditReviewByReviewId } from "../../store/reviews";
+// import {useHistory} from 'react-router-dom'
+// function SubmitReviewModal({ spotId, userId, objReviews, setReloadData, reloadData, actionType }) {
+//   const dispatch = useDispatch();
+//   const history = useHistory();
+//   const [review, setReview] = useState(actionType === 'EDITAREVIEW' ? 'ALEX YOU ARE A GENIUS' : '');
+//   const [stars, setStars] = useState(actionType === 'EDITAREVIEW' ? 3 : '');
+//   const [errors, setErrors] = useState({});
+//   const { closeModal } = useModal();
+
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+//     setErrors({});
+
+//     try {
+//       const realStars = parseInt(stars);
+//       console.log('spotIDis',spotId)
+//         const newReview = { review:review, stars: realStars };
+//         await ThunkAddReviewBySpotId(newReview, spotId, userId, objReviews, dispatch).then(setReloadData((prevReloadData) => prevReloadData + 1)).then(closeModal())
+
+
+//     } catch (error) {
+//       console.error('Error submitting review:', error);
+//       // Handle error and setErrors if needed
+//     }
+//   };
+
+//   return (
+//     <>
+//       <h1>How was your stay?</h1>
+//       <form onSubmit={handleSubmit}>
+//         <textarea
+//           value={review}
+//           placeholder="Leave your review here..."
+//           onChange={(e) => setReview(e.target.value)}
+//           required
+//         />
+
+//         <input
+//           type="number"
+//           id="starRate"
+//           value={stars}
+//           placeholder="Out of 1-5 stars, how many?"
+//           onChange={(e) => setStars(e.target.value)}
+//           required
+//         />
+//         <label htmlFor="starRate">Stars</label>
+
+//         <button type="submit" disabled={Object.keys(errors).length > 0}>
+//           Submit Your Review
+//         </button>
+//       </form>
+//     </>
+//   );
+// }
+
+// export default SubmitReviewModal;
+
+
 // frontend/src/components/LoginFormModal/index.js
 import React, { useState } from "react";
 import * as sessionActions from "../../store/session";
@@ -8,7 +74,7 @@ import { ThunkAddReviewBySpotId } from "../../store/reviews";
 import { ThunkEditReviewByReviewId } from "../../store/reviews";
 import {useHistory} from 'react-router-dom'
 
-function SubmitReviewModal({spotId,userId,objReviews,setReloadData, reloadData, actionType},) {
+function SubmitReviewModal({spotId,userId,objReviews,setReloadData,actionType},) {
   const dispatch = useDispatch();
   const history=useHistory()
   const [review, setReview] = useState(actionType === 'EDITAREVIEW' ? 'ALEX YOU ARE A GENIUS' : '');
@@ -22,20 +88,19 @@ function SubmitReviewModal({spotId,userId,objReviews,setReloadData, reloadData, 
     setErrors({});
     let realStars=parseInt(stars)
 if(actionType==='EDITAREVIEW'){
- console.log('REVIEW ID IS ',reviewId)
+  let counter=0
 
   // reviewReq,spotId,reviewId,objReviews,dispatch
-  await ThunkEditReviewByReviewId({ review, stars: realStars }, userId, objReviews, dispatch)
-  setReloadData((prevReloadData)=>prevReloadData +1)
+  return dispatch(ThunkEditReviewByReviewId({ review, stars: realStars }, spotId, reviewId, objReviews, dispatch))
+  setReloadData(counter--)
   history.push(`/spots/${spotId}`)
   closeModal()
 }
 
     else{
-      console.log('WE HITTING OUR ELSE')
-// return dispatch(ThunkAddReviewBySpotId({ review, stars:realStars },spotId,userId,objReviews,dispatch)).then(setReloadData(true)).then(closeModal())}
+return dispatch(ThunkAddReviewBySpotId({ review, stars:realStars },spotId,userId,objReviews,dispatch)).then(setReloadData(true)).then(closeModal())}
 
-    }
+
       // .catch(async (res) => {
       //   const data = await res.json();
       //   if (data && data.errors) {
