@@ -188,7 +188,7 @@ export default function Spot() {
             <>
               <OpenModalButton
                 buttonText="Delete"
-                modalComponent={<DeleteSpotModal spotsId={ele} ourArray={thisSpotsReviews} actionType={'deleteAspot'} keysToReviews2={keysToReviews2} setReloadData={setReloadData} onClose={handleModalClose} />}
+                modalComponent={<DeleteSpotModal spotsId={ele} ourArray={thisSpotsReviews} actionType={'DELETEASPOT'} keysToReviews2={keysToReviews2} setReloadData={setReloadData} onClose={handleModalClose} />}
                 onClick={handleModalOpen}
               />
             </>

@@ -1,24 +1,22 @@
 .delete-modal {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
+    width: 400px;
+    height: 400px;
   }
 
   .delete-modal h1 {
-    font-size: 1.5rem;
+    font-size: 15px;
     margin-bottom: 10px;
   }
 
   .delete-modal p {
-    font-size: 1rem;
+    font-size: 10px;
     margin-bottom: 20px;
   }
 
   .delete-modal button {
     margin: 5px;
     padding: 10px 20px;
-    font-size: 1rem;
+    font-size: 6px;
     background-color: #ff5050;
     color: #ffffff;
     border: none;

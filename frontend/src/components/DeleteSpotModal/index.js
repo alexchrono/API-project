@@ -38,7 +38,7 @@ function DeleteSpotModal({spotsId,ourArray,actionType,keysToReviews2,setReloadDa
 
   return (
     <>
-      <div><h1>Confirm Delete</h1></div>
+      <h1>Confirm Delete</h1>
       {actionType==='DELETEASPOT' && (<p>Are you sure you want to remove this spot?</p>)}
       {actionType==='DELETEAREVIEW' && (<p>Are you sure you want to delete this review?</p>)}
 
