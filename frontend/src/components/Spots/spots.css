@@ -18,6 +18,8 @@
 }
 
 .cityStateandStars {
+  margin-top:0px;
+  padding-top:0px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -41,12 +43,21 @@
 }
 
 .toolTip .tooltiptext {
-  visibility: hidden;
+display: none;
 }
 
 .toolTip:hover .tooltiptext {
+
+  display: inline-block;
+  bottom:78%;
+  left: 50%;
+  transform: translateX(-50%);
   visibility: visible;
   opacity: 1;
+  position: absolute;
+  background-color: beige;
+  font-size:2vw;
+
 }
 
 .cityState {
@@ -56,4 +67,29 @@
 .avgRating {
   flex: 1;
   text-align: right;
+}
+
+.link {
+  color: inherit; /* This will inherit the color from the parent element */
+  text-decoration: none; /* Optional: remove underline */
+}
+
+.fancyText{
+font-family: 'PT Sans', sans-serif;
+font-weight: 600;
+font-size:19px;
+}
+
+
+
+.material-symbols-outlined {
+  font-variation-settings:
+  'FILL' 1,
+  'wght' 700,
+  'GRAD' 0,
+  'opsz' 48
+}
+
+.left{
+  text-align: left;
 }

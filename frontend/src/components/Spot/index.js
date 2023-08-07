@@ -145,7 +145,7 @@ export default function Spot() {
   return (
     <>
       <div className='daddyOfSingleDetail'>
-        <h2>{thisSpot.name}</h2>
+        <h2 className="titleOfSingle">{thisSpot.name}</h2>
         <div className='cityAndStarsContainer'><span className='cityAndStars'>{`${thisSpot.city}, ${thisSpot.state}, ${thisSpot.country}`}</span>  </div></div>
 
 
@@ -173,7 +173,7 @@ export default function Spot() {
 
             </div></div></div>
         <div className="below70percent">
-          <div className='below'><h2>Hosted by,{thisSpot.Owner && (thisSpot.Owner.firstName)} {thisSpot.Owner && (thisSpot.Owner.lastName)}</h2></div><div className="descriptionz">
+          <div className='below'><h2>Hosted by {thisSpot.Owner && (thisSpot.Owner.firstName)} {thisSpot.Owner && (thisSpot.Owner.lastName)}</h2></div><div className="descriptionz">
             {thisSpot.description}</div> </div>
         <div className="borderBoxRight">
           <div class="priceStarReview"> <h2 class="inline">{`$${thisSpot.price} night`}</h2> <p class="inline">  {

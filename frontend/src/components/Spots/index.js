@@ -34,15 +34,16 @@ export default function Spots() {
 
           <div className='daddyOfPics'>
 
-          <Link exact to={`/spots/${ele.id}`} key={ele.id}>
+          <Link exact to={`/spots/${ele.id}`} className="link" key={ele.id}>
             <div className='imgDiv toolTip'>
               <img src={ele.previewImage} className='image2' alt={`Spot ${ele.id}`} />
 
             <span className='tooltiptext'>{ele.name}</span>
             </div>
-            <div className="cityStateandStars"> <span className='inline'>{`${ele.city}, ${ele.state}`}</span>  {!isNaN(ele.avgRating) ? (<span className='inline'><i class="fa-solid fa-star"></i>{ele.avgRating}</span>) : (<span>New</span>)}
+            <div className="cityStateandStars fancyText"> <span className='inline'>{`${ele.city}, ${ele.state}`}</span>  {!isNaN(ele.avgRating) ? (<span className='inline'><span className="material-symbols-outlined">
+grade</span>{ele.avgRating.toFixed(1)}</span>) : (<span className="fancyText">New</span>)}
             </div>
-            <div className="price"> <p>{`$${ele.price} night`}</p>
+            <div className="price fancyText"> <p className="left">{`$${ele.price} night`}</p>
             </div>
             </Link>
           </div>
