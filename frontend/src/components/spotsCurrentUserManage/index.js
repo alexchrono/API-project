@@ -17,6 +17,7 @@ export default function SpotsCurrentUserManage() {
     };
     fetchData();
   }, [dispatch]);
+  //test
 
   return (
     <div className="pictureBox">
