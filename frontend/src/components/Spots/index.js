@@ -40,7 +40,7 @@ export default function Spots() {
 
             <span className='tooltiptext'>{ele.name}</span>
             </div>
-            <div className="cityStateandStars fancyText"> <span className='inline'>{`${ele.city}, ${ele.state}`}</span>  {!isNaN(ele.avgRating) ? (<span className='inline'><span className="material-symbols-outlined">
+            <div className="cityStateandStars fancyText"> <span className='inlineCity'>{`${ele.city}, ${ele.state}`}</span>  {!isNaN(ele.avgRating) ? (<span className='inline'><span className="material-symbols-outlined">
 grade</span>{ele.avgRating.toFixed(1)}</span>) : (<span className="fancyText">New</span>)}
             </div>
             <div className="price fancyText"> <p className="left">{`$${ele.price} night`}</p>

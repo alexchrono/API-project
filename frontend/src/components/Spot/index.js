@@ -108,7 +108,14 @@ export default function Spot() {
                 : "N/A"}
             </span>
             ) : null}
-            <p className="inlineRev">{thisSpot.numReviews} Reviews</p>
+            <p className="inlineRev">{thisSpot.numReviews === 1 ? `${thisSpot.numReviews.toFixed(1)} Review` : thisSpot.numReviews > 1 ? `${thisSpot.numReviews.toFixed(1)} Reviews`
+  : null}
+
+
+
+
+
+</p>
             </div>
           <div className="center">
             <button type="button" className="bigRed" onClick={(e)=>{
@@ -127,6 +134,8 @@ export default function Spot() {
     <span className="fancy">New</span>
   </span>
 ) : (
+
+
   Number.isInteger(thisSpot.avgStarRating) ? (
     <span>
       <span className="material-symbols-outlined">grade</span>
@@ -134,7 +143,12 @@ export default function Spot() {
     </span>
   ) : null
 )}
-        <span className="bigger"> ·</span> <span className="fancy">{`${thisSpot.numReviews} reviews`}</span>
+    {thisSpot.numReviews === 1 ? (<><span className="bigger"> ·</span> <span className="fancy">{`${thisSpot.numReviews} Review`}</span></>) : thisSpot.numReviews > 1 ? (
+      <span>
+    <span className="bigger">  ·     </span>
+      <span className="fancy">{`${thisSpot.numReviews} Reviews`}</span>
+    </span>
+    ) : null}
       </div>
 
       {thisUser.user && typeof thisSpotsReviews === "object" && checkNoReviewAndCheckNotOwner() && (

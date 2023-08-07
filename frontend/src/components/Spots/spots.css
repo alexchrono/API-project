@@ -35,6 +35,10 @@
 .inline {
   display: inline-block;
 }
+.inlineCity{
+  display:inline-block;
+  font-size:16px;
+}
 
 .tooltip {
   position: relative;
