@@ -30,8 +30,9 @@ export default function Spots() {
 
       <div className='pictureBox'>
         {allTheSpots.map((ele) =>
-        (<Link exact to={`/spots/${ele.id}`} key={ele.id}>
+        (
           <div className='daddyOfPics'>
+          <Link exact to={`/spots/${ele.id}`} key={ele.id}>
             <div className='imgDiv toolTip'>
               <img src={ele.previewImage} className='image2' alt={`Spot ${ele.id}`} />
 
@@ -41,8 +42,9 @@ export default function Spots() {
             </div>
             <div className="price"> <p>{`$${ele.price} night`}</p>
             </div>
+            </Link>
           </div>
-        </Link>))}
+        ))}
       </div>
 
 
