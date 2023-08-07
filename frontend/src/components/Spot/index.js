@@ -19,7 +19,7 @@ export default function Spot() {
   const thisUser = useSelector((state) => state.session);
   const [reloadData, setReloadData] = useState(1);
   const actionType = "DELETEAREVIEW";
-  function getMonthNameFromNumber(number) {
+  function getMonthFromNum(number) {
     const months = [
       "January", "February", "March", "April", "May", "June",
       "July", "August", "September", "October", "November", "December"
@@ -102,9 +102,11 @@ export default function Spot() {
               </span>
             ) : thisSpot.avgStarRating ? (
               <span className="starz">
-                <span className="material-symbols-outlined">grade</span>
-                {thisSpot.avgStarRating.toFixed(1)}
-              </span>
+              <span className="material-symbols-outlined">grade</span>
+              {thisSpot.avgStarRating !== undefined
+                ? thisSpot.avgStarRating.toFixed(1)
+                : "N/A"}
+            </span>
             ) : null}
             <p className="inlineRev">{thisSpot.numReviews} Reviews</p>
             </div>
@@ -119,13 +121,19 @@ export default function Spot() {
       </div>
       <hr className="hrLine" />
       <div className="starAndReviewsForReviews">
-        {thisSpot.numReviews === 0 ? (
-          <span><span className="material-symbols-outlined">grade</span><span className="fancy">New</span></span>
-        ) : Number.isInteger(thisSpot.avgStarRating) ? (
-          <span><span className="material-symbols-outlined">grade</span>{`${thisSpot.avgStarRating.toFixed(1)}`}</span>
-        ) : (
-          <span>{`STAR  ${thisSpot.avgStarRating}`}</span>
-        )}
+      {thisSpot.numReviews === 0 ? (
+  <span>
+    <span className="material-symbols-outlined">grade</span>
+    <span className="fancy">New</span>
+  </span>
+) : (
+  Number.isInteger(thisSpot.avgStarRating) ? (
+    <span>
+      <span className="material-symbols-outlined">grade</span>
+      {thisSpot.avgStarRating.toFixed(1)}
+    </span>
+  ) : null
+)}
         <span className="bigger"> ·</span> <span className="fancy">{`${thisSpot.numReviews} reviews`}</span>
       </div>
 
@@ -147,7 +155,7 @@ export default function Spot() {
             {thisSpotsReviews[ele] && <h2 className="names">{thisSpotsReviews[ele]['User']["firstName"]}</h2>}
           </div>
           <div className="monthAndDate">
-            <h3 className="datez">{`${thisSpotsReviews[ele]["createdAt"].slice(5, 7)} ${thisSpotsReviews[ele]["createdAt"].slice(0, 4)} `}</h3>
+            <h3 className="datez">{`${ getMonthFromNum(thisSpotsReviews[ele]["createdAt"].slice(5, 7))} ${thisSpotsReviews[ele]["createdAt"].slice(0, 4)} `}</h3>
           </div>
           <div className="reviewOfUser">
             <p>{thisSpotsReviews[ele]["review"]}</p>
