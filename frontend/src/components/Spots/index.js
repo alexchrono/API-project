@@ -32,10 +32,10 @@ export default function Spots() {
         {allTheSpots.map((ele) =>
         (<Link exact to={`/spots/${ele.id}`} key={ele.id}>
           <div className='daddyOfPics'>
-            <div className='imgDiv'>
+            <div className='imgDiv toolTip'>
               <img src={ele.previewImage} className='image2' alt={`Spot ${ele.id}`} />
-            </div>
-            <div className='nameOfPlace'><h4>{ele.name}</h4>
+
+            <span className='tooltiptext'>{ele.name}</span>
             </div>
             <div className="cityStateandStars"> <span className='inline'>{`${ele.city}, ${ele.state}`}</span>  {!isNaN(ele.avgRating) ? (<span className='inline'><i class="fa-solid fa-star"></i>{ele.avgRating}</span>) : (<span>New</span>)}
             </div>
