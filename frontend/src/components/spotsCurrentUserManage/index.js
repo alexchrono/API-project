@@ -1,81 +1,57 @@
-// frontend/src/components/Navigation/index.js
-import React from 'react';
-import { useEffect,useState } from 'react'
-import { NavLink, useHistory, Link } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-// import { getInitialState } from '../../store/spots';
 import { ThunkLoadSpotsCurrentUser } from '../../store/spots';
 import OpenModalButton from '../OpenModalButton';
 import DeleteSpotModal from '../DeleteSpotModal';
-import './currentUser.css'
+import './currentUser.css';
 
-
-
-
-export default function SpotsCurrentUser() {
-  let history = useHistory()
+export default function SpotsCurrentUserManage() {
   const dispatch = useDispatch();
-  let allTheSpots = useSelector((state) => state.spots.allSpots)
+  const allTheSpots = useSelector((state) => state.spots.allSpots);
+  const actionType = 'DELETEASPOT';
 
-  let actionType="DELETEASPOT"
-  let thisUser = useSelector((state) => state.session)
-  let ourGuy=thisUser.user.id
-  const [reloadData, setReloadData] = useState(1);
   useEffect(() => {
     const fetchData = async () => {
       await ThunkLoadSpotsCurrentUser(dispatch);
     };
-
     fetchData();
   }, [dispatch]);
 
-
-  if (!Array.isArray(allTheSpots)) {
-    console.log(`allTheSpotsisnotanArrayitLooksLike`, allTheSpots)
-  }
-  else if(allTheSpots.length===0){
-    return (
-      <>
-      <Link exact to="/spots/new">Create a New Spot</Link>
-      </>
-    )
-  }
-  else {
-    return (
-      <>
-      <h1>Manage Spots</h1>
-      <div className='pictureBox'>
-        {allTheSpots.map((ele) =>
-        (<>
-        <Link exact to={`/spots/${ele.id}`} key={ele.id}>
-          <div className='daddyOfPics'>
-            <div className='imgDiv'>
-              <img src={ele.previewImage} className='image2' alt={`Spot ${ele.id}`} />
-            </div>
-            <div className='nameOfPlace'><h4>{ele.name}</h4>
-            </div>
-            <div className="cityStateandStars"> <span className='inline'>{`${ele.city}, ${ele.state}`}</span>  {!isNaN(ele.avgRating) ? (<span className='inline'><i class="fa-solid fa-star"></i>{ele.avgRating}</span>) : (<span>New</span>)}
-            </div>
-
-            <div className="price"> <p>{`$${ele.price} night`}</p></div></div></Link>
-            <div className="buttons"> <Link exact to={`/spots/updateAspot/${ele.id}`}><button type="button" className="updateDelete">Update</button></Link>  <OpenModalButton
-                buttonText="Delete"
-                modalComponent={<DeleteSpotModal spotsId={ele.id} ourArray={allTheSpots} actionType={actionType} keysToReviews={7}   />}
-              />
+  return (
+    <div className="pictureBox">
+      {Array.isArray(allTheSpots) ? (
+        allTheSpots.map((ele) => (
+          <div className="daddyOfPics" key={ele.id}>
+            <Link to={`/spots/${ele.id}`} className="link">
+              <div className="imgDiv toolTip">
+                <img src={ele.previewImage} className="image2" alt={`Spot ${ele.id}`} />
+                <span className="tooltiptext">{ele.name}</span>
               </div>
-            </>
-
-        ))}
-      </div>
-      </>
-
-
-    );
-
-  }
+            </Link>
+            <div className="nameAndButtons">
+              <div className="nameOfPlace">
+                <h4>{ele.name}</h4>
+              </div>
+              <div className="buttons">
+                <Link to={`/spots/updateAspot/${ele.id}`}>
+                  <button type="button" className="updateDelete">
+                    Update
+                  </button>
+                </Link>
+                <OpenModalButton
+                  buttonText="Delete"
+                  modalComponent={
+                    <DeleteSpotModal spotsId={ele.id} ourArray={allTheSpots} actionType={actionType} keysToReviews={7} />
+                  }
+                />
+              </div>
+            </div>
+          </div>
+        ))
+      ) : (
+        <p>Loading spots...</p>
+      )}
+    </div>
+  );
 }
-
-
-/*onClick={(e)=>{
-  history.push(`/spots/${ele.id}`)
-}} */

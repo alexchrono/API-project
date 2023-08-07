@@ -23,7 +23,7 @@ export default function ManageReviews() {
   let allReviews = useSelector((state) => state.reviews)
   let thisUsersReviews = useSelector((state) => state.reviews.user)
   let thisUser = useSelector((state) => state.session)
-  let actionType="DELETEAREVIEW"
+  let actionType="DELETEASPOT"
   let ourUserId=thisUser.user.userId
   const [reloadData, setReloadData] = useState(1);
   useEffect(() => {

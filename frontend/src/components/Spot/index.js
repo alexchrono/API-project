@@ -49,7 +49,14 @@ export default function Spot() {
   const { SpotImages } = thisSpot;
   const keysToReviews = Object.keys(thisSpotsReviews);
   const keysToReviews2 = [...keysToReviews];
-
+  function doubleCheck(){
+    for (let ele of keysToReviews) {
+      if (thisSpotsReviews[ele]['userId'] === thisUser.user.id || thisSpot.ownerId === thisUser.user.id) {
+        return false;
+      }
+      return true;
+    }
+  }
   function checkNoReviewAndCheckNotOwner() {
     for (let ele of keysToReviews) {
       if (thisSpotsReviews[ele]['userId'] === thisUser.user.id || thisSpot.ownerId === thisUser.user.id) {
@@ -151,7 +158,7 @@ export default function Spot() {
     ) : null}
       </div>
 
-      {thisUser.user && typeof thisSpotsReviews === "object" && checkNoReviewAndCheckNotOwner() && (
+      {thisUser.user && typeof thisSpotsReviews === "object" && checkNoReviewAndCheckNotOwner() &&doubleCheck() && (
         <>
           <OpenModalButton
             buttonText="Post Your Review"
@@ -160,6 +167,8 @@ export default function Spot() {
             }
             onClick={handleModalOpen}
           />
+
+            {!keysToReviews.length &&(<p>be the first to post a review!</p>)}
         </>
       )}
 
