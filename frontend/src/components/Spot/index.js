@@ -1,273 +1,168 @@
-import React from 'react';
-import { useEffect } from 'react'
+import React, { useEffect, useState } from 'react';
 import { NavLink, useHistory, Link, useParams } from 'react-router-dom';
-import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { ThunkLoadSingle } from '../../store/spots';
 import { ThunkLoadReviewsBySpotId } from '../../store/reviews';
 import OpenModalButton from '../OpenModalButton';
-import './spot.css'
+import './spot.css';
 import SubmitReviewModal from '../SubmitReviewModal';
 import DeleteSpotModal from '../DeleteSpotModal';
-import { useModal,setTest,test } from "../../context/Modal";
-
-
-
-
+import { useModal, setTest, test } from '../../context/Modal';
 
 export default function Spot() {
-  let { spotId } = useParams()
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  const { spotId } = useParams();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const dispatch = useDispatch();
-  let thisSpot = useSelector((state) => state.spots.singleSpot)
-  let allReviews = useSelector((state) => state.reviews)
-  let thisSpotsReviews = useSelector((state) => state.reviews.spot)
-  let thisUser = useSelector((state) => state.session)
+  const thisSpot = useSelector((state) => state.spots.singleSpot);
+  const thisSpotsReviews = useSelector((state) => state.reviews.spot);
+  const thisUser = useSelector((state) => state.session);
   const [reloadData, setReloadData] = useState(1);
-  let actionType="DELETEAREVIEW"
+  const actionType = "DELETEAREVIEW";
+  function getMonthNameFromNumber(number) {
+    const months = [
+      "January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
+    ];
+
+    const monthIndex = parseInt(number, 10) - 1;
+    return months[monthIndex] || "Invalid Month";
+  }
 
   useEffect(() => {
     const fetchData = async () => {
       await ThunkLoadSingle(dispatch, spotId);
-      // console.log('aboveTHunkLoadReviews with spotId value of', spotId)
-      await ThunkLoadReviewsBySpotId(dispatch, spotId)
+      await ThunkLoadReviewsBySpotId(dispatch, spotId);
     };
 
-
     fetchData();
-  }, [dispatch, spotId,reloadData]);
+  }, [dispatch, spotId, reloadData]);
+
   const handleModalOpen = () => {
     setIsModalOpen(true);
   };
-
 
   const handleModalClose = () => {
     setIsModalOpen(false);
   };
 
+  const { SpotImages } = thisSpot;
+  const keysToReviews = Object.keys(thisSpotsReviews);
+  const keysToReviews2 = [...keysToReviews];
 
-  let { SpotImages } = thisSpot
-
-
-  // console.log('STATE.REVIEWS aka allReviews LOOKS LIKE',allReviews)
-  // console.log('STATE.REVIEWS.SPOT aka thisSpotsReviews LOOKS LIKE',thisSpotsReviews)
-  let keysToReviews=Object.keys(thisSpotsReviews)
-  let keysToReviews2=[...keysToReviews]
-  // console.log('KEYS TO REVIEWS LOOKS LIKE ',keysToReviews)
-  function checkNoReviewAndCheckNotOwner(){
-  for(let ele of keysToReviews){
-    if(thisSpotsReviews[ele]['userId']===thisUser.user.id || thisSpot.ownerId===thisUser.user.id)
-    {return false}
-    return true
+  function checkNoReviewAndCheckNotOwner() {
+    for (let ele of keysToReviews) {
+      if (thisSpotsReviews[ele]['userId'] === thisUser.user.id || thisSpot.ownerId === thisUser.user.id) {
+        return false;
+      }
+      return true;
+    }
   }
-}
 
-
-
-
-
-
-  // return (
-  //   <div className='daddyOfSingleDetail'>
-  //     <h2>{thisSpot.name}</h2>
-  //     <div className='cityAndStarsContainer'>
-  //       <span className='cityAndStars'>{`${thisSpot.city}, ${thisSpot.state}, ${thisSpot.country}`}</span>
-  //     </div>
-  //     <div className="fromScatch">
-  //       <div className="mainPic">
-  //       <img className="respond" src={SpotImages && (SpotImages[0].url)}/></div>
-
-
-  //       {SpotImages && SpotImages.length > 1 && SpotImages.map((ele) => {
-  //           if (ele.id !== SpotImages[0].id) {
-
-
-  //             return <div className="individSidePiece"><img key={ele.id} src={ele.url} className="sidePiece" alt={`Image ${ele.id}`} /></div>;
-  //           }
-  //           return null; // Return null for elements that don't meet the condition
-  //         })}
-
-
-  //       {/* <div className="b">b</div>
-  //       <div className="c">c</div>
-  //       <div className="d">d</div>
-  //       <div className="e">e</div> */}
-  //     </div>
-  //     {/* <div className='detailsPictureBox'>
-
-
-  //         <img className="respond" src={SpotImages && (SpotImages[0].url)}></img>
-
-
-  //       <div className="sidePicsContainer">
-
-
-
-
-
-
-  //       </div>
-
-
-
-
-
-
-  //     </div> */}
-  //     <div className="daddyBelow">
-  //       <div className='below'>Hosted by, <p>{thisSpot.Owner && (thisSpot.Owner.firstName)} {thisSpot.Owner && (thisSpot.Owner.lastName)}</p></div>
-  //       <div className="borderBox"><h2>{`$${thisSpot.price} night`}</h2>
-  //         <p>STAR  {thisSpot.avgStarRating}</p>
-  //         <p>{thisSpot.numReviews} Reviews </p>
-  //         <button type="button">Register</button></div>
-  //     </div>
-
-
-
-
-
-
-  //   </div>
-  // );
-
-
-  // console.log(console.log('this is all of reviews State', allReviews))
-  // console.log('THESE ARE ALL THE REVIEWS', thisSpotsReviews)
-  // console.log('THIS IS THE STATEUSER DATA', thisUser)
-  // console.log('THIS IS THIS SPOT', thisSpot)
-  //thisUser.id will give me id
-
-
-  // console.log('************** THIS ALL OF REVIEWS NOW',allReviews)
-  // console.log('********************* THIS SPOTS REVIEWSNOW',thisSpotsReviews)
-  // console.log('*******************this spot reviews index 0 user now',thisSpotsReviews.User)
   return (
     <>
       <div className='daddyOfSingleDetail'>
         <h2 className="titleOfSingle">{thisSpot.name}</h2>
-        <div className='cityAndStarsContainer'><span className='cityAndStars'>{`${thisSpot.city}, ${thisSpot.state}, ${thisSpot.country}`}</span>  </div></div>
-
+        <div className='cityAndStarsContainer'><span className='cityAndStars'>{`${thisSpot.city}, ${thisSpot.state}, ${thisSpot.country}`}</span>  </div>
+      </div>
 
       <div className="mainPicAndDaddyBelowWrapper">
         <div className='detailsPictureBox'>
           <div className="mainPic">
             {SpotImages && SpotImages.map((ele) => {
               if (ele.preview === true) {
-                return (<img key={ele.id} src={ele.url} className="respond" alt={`Image ${ele.id}`} />)
+                return (<img key={ele.id} src={ele.url} className="respond" alt={`Image ${ele.id}`} />);
               }
             })}
-          </div><div className="sidePicsContainer">
-
-
+          </div>
+          <div className="sidePicsContainer">
             <div className="sidePicsAndDaddyBelowWrapper">
               {SpotImages && SpotImages.length > 1 && SpotImages.map((ele) => {
                 if (ele.preview === false) {
-
-
                   return <div className="sidePieceHolder"><img key={ele.id} src={ele.url} className="respond" alt={`Image ${ele.id}`} /> </div>;
                 }
-                return null; // Return null for elements that don't meet the condition
+                return null;
               })}
-
-
-            </div></div></div>
+            </div>
+          </div>
+        </div>
         <div className="below70percent">
-          <div className='below'><h2>Hosted by {thisSpot.Owner && (thisSpot.Owner.firstName)} {thisSpot.Owner && (thisSpot.Owner.lastName)}</h2></div><div className="descriptionz">
-            {thisSpot.description}</div> </div>
+          <div className="below">
+            <h2>Hosted by {thisSpot.Owner && thisSpot.Owner.firstName} {thisSpot.Owner && thisSpot.Owner.lastName}</h2>
+          </div>
+          <div className="descriptionz">{thisSpot.description}</div>
+        </div>
         <div className="borderBoxRight">
-          <div class="priceStarReview"> <h2 class="inline">{`$${thisSpot.price} night`}</h2> <p class="inline">  {
-            thisSpot.numReviews === 0 ? (
-              <span>{`STAR  NEW`}</span>
-            ) : thisSpot.avgStarRating && Number.isInteger(thisSpot.avgStarRating) ? (
-              <span>{`STAR  ${thisSpot.avgStarRating}.0`}</span>
-            ) : (
-              <span>{`STAR  ${thisSpot.avgStarRating}`}</span>
-            )
-          }</p>
-            <p class="inline">{thisSpot.numReviews} Reviews </p></div>
-          <button type="button" class="bigRed">Register</button></div>
+          <div className="priceStarReview">
+            <span className="inline-left">{`$${thisSpot.price} night`}</span>
+            <div className="starsandReviews"></div>
+            {thisSpot.numReviews === 0 ? (
+              <span className="starz">
+                <span className="material-symbols-outlined">grade</span>New
+              </span>
+            ) : thisSpot.avgStarRating ? (
+              <span className="starz">
+                <span className="material-symbols-outlined">grade</span>
+                {thisSpot.avgStarRating.toFixed(1)}
+              </span>
+            ) : null}
+            <p className="inlineRev">{thisSpot.numReviews} Reviews</p>
+            </div>
+          <div className="center">
+            <button type="button" className="bigRed" onClick={(e)=>{
+              alert("Feature coming soon")
+            }}>
+              Reserve
+            </button>
+          </div>
+        </div>
       </div>
-      <hr class="hrLine"></hr>
+      <hr className="hrLine" />
       <div className="starAndReviewsForReviews">
+        {thisSpot.numReviews === 0 ? (
+          <span><span className="material-symbols-outlined">grade</span><span className="fancy">New</span></span>
+        ) : Number.isInteger(thisSpot.avgStarRating) ? (
+          <span><span className="material-symbols-outlined">grade</span>{`${thisSpot.avgStarRating.toFixed(1)}`}</span>
+        ) : (
+          <span>{`STAR  ${thisSpot.avgStarRating}`}</span>
+        )}
+        <span className="bigger"> ·</span> <span className="fancy">{`${thisSpot.numReviews} reviews`}</span>
+      </div>
 
-
-        {
-          thisSpot.numReviews === 0 ? (
-            <span>{`STAR  NEW`}</span>
-          ) : thisSpot.avgStarRating && Number.isInteger(thisSpot.avgStarRating) ? (
-            <span>{`STAR  ${thisSpot.avgStarRating}.0`}</span>
-          ) : (
-            <span>{`STAR  ${thisSpot.avgStarRating}`}</span>
-          )
-        }
-        <span>   CNTR DOT</span>  <span>{`${thisSpot.numReviews} reviews`}</span></div>
-
-
-      {thisUser.user && typeof thisSpotsReviews==="object" &&  checkNoReviewAndCheckNotOwner() && (<>
-        {/* !thisSpotsReviews.find((ele) => ele.userId === thisUser.user.id) && thisSpot.ownerId !== thisUser.user.id */}
-        <OpenModalButton
-          buttonText="Post Your Review"
-          // onButtonClick={closeMenu}
-
-
-          modalComponent={<SubmitReviewModal spotId={spotId} userId={thisUser.user.userId} objReviews={thisSpotsReviews} setReloadData={setReloadData} reloadData={reloadData} onClose={handleModalClose}
+      {thisUser.user && typeof thisSpotsReviews === "object" && checkNoReviewAndCheckNotOwner() && (
+        <>
+          <OpenModalButton
+            buttonText="Post Your Review"
+            modalComponent={
+              <SubmitReviewModal spotId={spotId} userId={thisUser.user.userId} objReviews={thisSpotsReviews} setReloadData={setReloadData} reloadData={reloadData} onClose={handleModalClose} />
+            }
+            onClick={handleModalOpen}
           />
-        }
-        onClick={handleModalOpen}
-        />
-      </>)}
+        </>
+      )}
 
-
-
-
-      {thisSpotsReviews && keysToReviews.length >= 1 &&  keysToReviews.map((ele) => (
-
-
-        <div className="eachReview">
+      {thisSpotsReviews && keysToReviews.length >= 1 && keysToReviews.map((ele) => (
+        <div className="eachReview" key={ele}>
           <div className="nameOfReviewer">
-            {thisSpotsReviews[ele] && (<h2>{thisSpotsReviews[ele]['User']["firstName"]}</h2>)}
+            {thisSpotsReviews[ele] && <h2 className="names">{thisSpotsReviews[ele]['User']["firstName"]}</h2>}
           </div>
           <div className="monthAndDate">
-            <h3>{`${thisSpotsReviews[ele]["createdAt"].slice(5, 7)} ${thisSpotsReviews[ele]["createdAt"].slice(0, 4)} `}</h3></div>
-            <div className="reviewOfUser">
-            <p>
-              {thisSpotsReviews[ele]["review"]}
-            </p>
-            </div>
-            {thisUser.user && typeof thisSpotsReviews==="object" &&  thisSpotsReviews[ele]['User']['id']===thisUser.user.id && (<>
-
-        {/* !thisSpotsReviews.find((ele) => ele.userId === thisUser.user.id) && thisSpot.ownerId !== thisUser.user.id */}
-
-
-        <OpenModalButton
-          buttonText="Delete"
-          // onButtonClick={closeMenu}
-
-
-          modalComponent={<DeleteSpotModal  spotsId={ele} ourArray={thisSpotsReviews} actionType={actionType} keysToReviews2={keysToReviews2} onClose={handleModalClose}
-          />
-        }
-        onClick={handleModalOpen}
-        />
-     </> )}
+            <h3 className="datez">{`${thisSpotsReviews[ele]["createdAt"].slice(5, 7)} ${thisSpotsReviews[ele]["createdAt"].slice(0, 4)} `}</h3>
           </div>
-
-))}
-
-
-
-
+          <div className="reviewOfUser">
+            <p>{thisSpotsReviews[ele]["review"]}</p>
+          </div>
+          {thisUser.user && typeof thisSpotsReviews === "object" && thisSpotsReviews[ele]['User']['id'] === thisUser.user.id && (
+            <>
+              <OpenModalButton
+                buttonText="Delete"
+                modalComponent={<DeleteSpotModal spotsId={ele} ourArray={thisSpotsReviews} actionType={actionType} keysToReviews2={keysToReviews2} onClose={handleModalClose} />}
+                onClick={handleModalOpen}
+              />
+            </>
+          )}
+        </div>
+      ))}
     </>
-
-
-
-
-
-
-
-
   );
-
-
 }
