@@ -41,6 +41,7 @@ export default function Spot() {
   const handleModalOpen = () => {
     setIsModalOpen(true);
   };
+  //so i can reseed
 
   const handleModalClose = () => {
     setIsModalOpen(false);
