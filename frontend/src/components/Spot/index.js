@@ -159,7 +159,7 @@ export default function Spot() {
     ) : null}
       </div>
 
-      {thisUser.user && typeof thisSpotsReviews === "object" && checkNoReviewAndCheckNotOwner() &&doubleCheck() && (
+      {thisUser.user && typeof thisSpotsReviews === "object" && checkNoReviewAndCheckNotOwner()  && (
         <>
           <OpenModalButton
             buttonText="Post Your Review"
@@ -188,7 +188,7 @@ export default function Spot() {
             <>
               <OpenModalButton
                 buttonText="Delete"
-                modalComponent={<DeleteSpotModal spotsId={ele} ourArray={thisSpotsReviews} actionType={'DELETEASPOT'} keysToReviews2={keysToReviews2} setReloadData={setReloadData} onClose={handleModalClose} />}
+                modalComponent={<DeleteSpotModal spotsId={ele} ourArray={thisSpotsReviews} actionType={'DELETEAREVIEW'} keysToReviews2={keysToReviews2} setReloadData={setReloadData} onClose={handleModalClose} />}
                 onClick={handleModalOpen}
               />
             </>
