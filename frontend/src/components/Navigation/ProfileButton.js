@@ -6,6 +6,7 @@ import * as sessionActions from '../../store/session';
 import OpenModalButton from '../OpenModalButton';
 import LoginFormModal from '../LoginFormModal';
 import SignupFormModal from '../SignupFormModal';
+import './Navigation.css'
 
 function ProfileButton({ user }) {
   const history=useHistory()
@@ -47,8 +48,13 @@ function ProfileButton({ user }) {
     <>
       {user && (
           <><Link exact to='/spots/new'><button type="button">Create a New Spot</button></Link></>)}
-      <button onClick={openMenu}>
-        <i className="fas fa-user-circle" />
+      <button id="openMenu" onClick={openMenu}>
+      <span class="material-symbols-outlined">
+menu
+</span>
+<span class="material-symbols-outlined">
+account_circle
+</span>
       </button>
       <ul className={ulClassName} ref={ulRef}>
         {user ? (

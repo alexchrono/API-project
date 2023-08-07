@@ -65,7 +65,7 @@ const invalidCredentials = (err, req, res, next) => {
 
   router.post(
     '/',
-    validateLogin,invalidCredentials,
+    validateLogin,
     async (req, res, next) => {
         const { credential, password } = req.body;
 
@@ -117,7 +117,7 @@ const invalidCredentials = (err, req, res, next) => {
       return res.json({
         user: safeUser
       });
-    }
+    },invalidCredentials,
   );
 
   router.use(invalidCredentials)

@@ -9,7 +9,7 @@ function LoginFormModal() {
   const dispatch = useDispatch();
   const [credential, setCredential] = useState("");
   const [password, setPassword] = useState("");
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState('');
   const { closeModal } = useModal();
 
   const handleSubmit = (e) => {
@@ -20,9 +20,10 @@ function LoginFormModal() {
       .catch(async (res) => {
         const data = await res.json();
         if (data && data.errors) {
-          setErrors(data.errors);
+          setErrors(data.message);
+          console.log(data.message)
           return setErrors({
-            Email: 'Email is invalid'
+            credentials: 'The provided credentials were invalid'
           });
         }
       });
@@ -33,6 +34,7 @@ function LoginFormModal() {
     <>
       <h1>Log In</h1>
       <form onSubmit={handleSubmit}>
+
         <label>
           Username or Email
           <input
@@ -52,11 +54,13 @@ function LoginFormModal() {
             required
           />
         </label>
+
         {errors.credential && (
           <p>{errors.credential}</p>
         )}
         <button type="submit"
-        disabled={Object.keys(errors).length>0}>Log In</button>
+        disabled={credential.length<4 || password.length<6}>Log In</button>
+         {errors.credentials && (<p style={{color:"red",textAlign:'center'}}>The provided credentials were invalid</p>)}
 
       </form>
     </>
