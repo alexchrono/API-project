@@ -180,11 +180,13 @@ dispatch(actionLoadReviewsByUserId(Reviews))
 //   dispatch(actionLoadSpot(`ffuuckk`))
 // }
 // }
-export const  ThunkEditReviewByReviewId= (reviewReq,spotId,reviewId,objReviews,dispatch)=>async(dispatch)=>{
+export async function ThunkEditReviewByReviewId(reviewReq,spotId,userId,objReviews,dispatch){
 
   try{
-    console.log('firstReviewIdis',reviewId)
+    console.log('8888888888888888888firstReviewIdis',spotId)
     console.log('************IM IN MY EDIT REVIEWS THUNK THUNK')
+    console.log('reviewReqis',reviewReq)
+    console.log('objReviews is',objReviews)
   // console.log('this is newReview in thunkAddSpot',reviewReq)
   // console.log('this is our spotId',spotId)
   // console.log('this is objReviewsInOurThunk',objReviews)
@@ -321,7 +323,7 @@ export default function reviewsReducer(state=initialState, action) {
       let returnObj={}
       let review=objReviews
       let ourId=Review.id
-      let keysToThis=Object.keys(objReviews)
+      let keysToThis=Object.keys(objReviews.spot)
       let UserObject=Review.User
       let ReviewImagesArray=Review["ReviewImages"]
         returnObj={

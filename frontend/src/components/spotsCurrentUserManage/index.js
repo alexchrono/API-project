@@ -16,6 +16,7 @@ export default function SpotsCurrentUser() {
   let history = useHistory()
   const dispatch = useDispatch();
   let allTheSpots = useSelector((state) => state.spots.allSpots)
+  
   let actionType="DELETEASPOT"
   let thisUser = useSelector((state) => state.session)
   let ourGuy=thisUser.user.id

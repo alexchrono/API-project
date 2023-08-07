@@ -6,32 +6,36 @@ import { useModal,setTest } from "../../context/Modal";
 import "./submitReview.css";
 import { ThunkAddReviewBySpotId } from "../../store/reviews";
 import { ThunkEditReviewByReviewId } from "../../store/reviews";
+import {useHistory} from 'react-router-dom'
 
-function SubmitReviewModal({spotId,userId,objReviews,setReloadData,actionType},) {
+function SubmitReviewModal({spotId,userId,objReviews,setReloadData, reloadData, actionType},) {
   const dispatch = useDispatch();
-
+  const history=useHistory()
   const [review, setReview] = useState(actionType === 'EDITAREVIEW' ? 'ALEX YOU ARE A GENIUS' : '');
   const [stars, setStars] = useState(actionType === 'EDITAREVIEW' ? 3 : '');
   const [errors, setErrors] = useState({});
   const { closeModal,setOnModalClose } = useModal();
-
+  let reviewId=userId
 
   const handleSubmit = async(e) => {
     e.preventDefault();
     setErrors({});
     let realStars=parseInt(stars)
 if(actionType==='EDITAREVIEW'){
-  let counter=0
-  await dispatch(ThunkEditReviewByReviewId({ review, stars: realStars }, spotId, userId, objReviews, dispatch))
-  setReloadData(counter--)
-  // history.push(`/api/spots/${something}`)
+ console.log('REVIEW ID IS ',reviewId)
+
+  // reviewReq,spotId,reviewId,objReviews,dispatch
+  await ThunkEditReviewByReviewId({ review, stars: realStars }, userId, objReviews, dispatch)
+  setReloadData((prevReloadData)=>prevReloadData +1)
+  history.push(`/spots/${spotId}`)
   closeModal()
 }
 
     else{
-return dispatch(ThunkAddReviewBySpotId({ review, stars:realStars },spotId,userId,objReviews,dispatch)).then(setReloadData(true)).then(closeModal())}
+      console.log('WE HITTING OUR ELSE')
+// return dispatch(ThunkAddReviewBySpotId({ review, stars:realStars },spotId,userId,objReviews,dispatch)).then(setReloadData(true)).then(closeModal())}
 
-
+    }
       // .catch(async (res) => {
       //   const data = await res.json();
       //   if (data && data.errors) {

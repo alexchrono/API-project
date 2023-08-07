@@ -204,24 +204,24 @@ export default function Spot() {
         <span>   CNTR DOT</span>  <span>{`${thisSpot.numReviews} reviews`}</span></div>
 
 
-      {thisUser.user && typeof thisSpotsReviews==="object" &&  checkNoReviewAndCheckNotOwner() && (<h1>
+      {thisUser.user && typeof thisSpotsReviews==="object" &&  checkNoReviewAndCheckNotOwner() && (<>
         {/* !thisSpotsReviews.find((ele) => ele.userId === thisUser.user.id) && thisSpot.ownerId !== thisUser.user.id */}
         <OpenModalButton
           buttonText="Post Your Review"
           // onButtonClick={closeMenu}
 
 
-          modalComponent={<SubmitReviewModal onClose={handleModalClose} spotId={spotId} userId={thisUser.user.userId} objReviews={thisSpotsReviews} setReloadData={setReloadData} reloadData={reloadData}
+          modalComponent={<SubmitReviewModal spotId={spotId} userId={thisUser.user.userId} objReviews={thisSpotsReviews} setReloadData={setReloadData} reloadData={reloadData} onClose={handleModalClose}
           />
         }
         onClick={handleModalOpen}
         />
-      </h1>)}
+      </>)}
 
 
 
 
-      {thisSpotsReviews && keysToReviews.length >= 1 && keysToReviews.map((ele) => (
+      {thisSpotsReviews && keysToReviews.length >= 1 &&  keysToReviews.map((ele) => (
 
 
         <div className="eachReview">

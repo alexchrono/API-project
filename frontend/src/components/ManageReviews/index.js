@@ -16,7 +16,7 @@ import { ThunkLoadReviewsByUserId } from '../../store/reviews';
 
 
 export default function ManageReviews() {
-  let { spotId } = useParams()
+
   const [isModalOpen, setIsModalOpen] = useState(false)
   const dispatch = useDispatch();
   let thisSpot = useSelector((state) => state.spots.singleSpot)
@@ -29,7 +29,8 @@ export default function ManageReviews() {
   useEffect(() => {
     const fetchData = async () => {
       // await ThunkLoadSingle(dispatch, spotId);
-      await ThunkLoadReviewsByUserId(dispatch,spotId)
+       // reviewReq,spotId,reviewId,objReviews,dispatch
+      await ThunkLoadReviewsByUserId(dispatch,ourUserId)
       // console.log('aboveTHunkLoadReviews with spotId value of', spotId)
 
     };
@@ -47,9 +48,11 @@ export default function ManageReviews() {
   };
 
 
-
+  console.log('THISUSERS REVIEWS IS',thisUsersReviews)
   let keysToReviews=Object.keys(thisUsersReviews)
+  console.log('KEYS TO REVIEWS IS',keysToReviews)
   let keysToReviews2=[...keysToReviews]
+  let somethingBig=thisUsersReviews
   // console.log('KEYS TO REVIEWS LOOKS LIKE ',keysToReviews)
 //   function checkNoReviewAndCheckNotOwner(){
 //   for(let ele of keysToReviews){
@@ -58,9 +61,10 @@ export default function ManageReviews() {
 //     return true
 //   }
 // }
-
+let somethingbig=thisUsersReviews
 let data1=JSON.stringify(allReviews)
 let data2=JSON.stringify(thisUsersReviews)
+console.log(`ALL OF THIS USERS REVIEWS IS`,thisUsersReviews)
   return (
     <>
     {/* <h1>{data1}</h1>
@@ -74,6 +78,7 @@ let data2=JSON.stringify(thisUsersReviews)
 
 
         <div className="eachReview">
+
           <div className="nameOfReviewer">
 
             {thisUsersReviews[ele] && (<h2>{thisUsersReviews[ele]['User']["firstName"]}</h2>)}
@@ -90,9 +95,10 @@ let data2=JSON.stringify(thisUsersReviews)
         <OpenModalButton
           buttonText="Update"
           // onButtonClick={closeMenu}
+                         // reviewReq,spotId,reviewId,objReviews,dispatch
+                        //  spotId,userId,objReviews,setReloadData,actionType
 
-
-          modalComponent={<SubmitReviewModal  spotId={ele} userId={ele} objReviews={thisUsersReviews} setReloadData={setReloadData} actionType={"EDITAREVIEW"} onClose={handleModalClose}
+          modalComponent={<SubmitReviewModal spotId={ele} userId={ele} objReviews={thisUsersReviews} setReloadData={setReloadData} reloadData={reloadData} actionType={"EDITAREVIEW"} onClose={handleModalClose}
           />
         }
         onClick={handleModalOpen}
