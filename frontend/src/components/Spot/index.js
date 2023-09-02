@@ -58,9 +58,17 @@ export default function Spot() {
       return true;
     }
   }
+  function initialCheck() {
+    for (let ele of keysToReviews){
+
+    if(thisSpotsReviews[ele]['User']['id'] === thisUser.user.id){return false}
+  }
+  return true
+}
   function checkNoReviewAndCheckNotOwner() {
+    if (initialCheck()===false) {return false}
     for (let ele of keysToReviews) {
-      if (thisSpotsReviews[ele]['userId'] === thisUser.user.id || thisSpot.ownerId === thisUser.user.id) {
+      if (thisSpot.ownerId === thisUser.user.id) {
         return false;
       }
       return true;
