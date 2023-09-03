@@ -96,6 +96,7 @@ else {
 
           <div className="nameOfReviewer">
             {thisUsersReviews[ele] && allSpots && (<h2>{allSpots[thisUsersReviews[ele]['spotId']]['name']}</h2>)}
+            {thisUsersReviews[ele] && allSpots && (<h2>{allSpots[thisUsersReviews[ele]['spotId']]['name']}</h2>)}
           </div>
           {/* <div className="prettyPicture"><img src=`${allSpots}`</div> */}
           <div className="monthAndDate">
