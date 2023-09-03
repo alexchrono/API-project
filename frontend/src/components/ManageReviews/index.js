@@ -4,6 +4,7 @@ import { NavLink, useHistory, Link, useParams } from 'react-router-dom';
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { ThunkLoadSingle } from '../../store/spots';
+import { ThunkLoad } from '../../store/spots';
 import { ThunkLoadReviewsBySpotId } from '../../store/reviews';
 import OpenModalButton from '../OpenModalButton';
 import './ManageReviews.css'
@@ -20,6 +21,7 @@ export default function ManageReviews() {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const dispatch = useDispatch();
   let thisSpot = useSelector((state) => state.spots.singleSpot)
+  let allSpots = useSelector((state)=>state.spots.allSpots)
   let allReviews = useSelector((state) => state.reviews)
   let thisUsersReviews = useSelector((state) => state.reviews.user)
   let thisUser = useSelector((state) => state.session)
@@ -35,6 +37,7 @@ export default function ManageReviews() {
       await ThunkLoadReviewsByUserId(dispatch, ourUserId);} catch (error) {
         setNoReviews(4)
       }
+      await ThunkLoad(dispatch);
       // console.log('aboveTHunkLoadReviews with spotId value of', spotId)
 
     };
@@ -71,10 +74,12 @@ else {
   //     return true
   //   }
   // }
-  let somethingbig = thisUsersReviews
+  // let somethingbig = thisUsersReviews
   let data1 = JSON.stringify(allReviews)
   let data2 = JSON.stringify(thisUsersReviews)
   console.log(`ALL OF THIS USERS REVIEWS IS`, thisUsersReviews)
+
+  console.log(`allSpots is`,allSpots)
   return (
     <>
       {/* <h1>{data1}</h1>
@@ -90,9 +95,9 @@ else {
         <div className="eachReview">
 
           <div className="nameOfReviewer">
-
-            {thisUsersReviews[ele] && (<h2>{thisUsersReviews[ele]['User']["firstName"]}</h2>)}
+            {thisUsersReviews[ele] && allSpots && (<h2>{allSpots[thisUsersReviews[ele]['spotId']]['name']}</h2>)}
           </div>
+          {/* <div className="prettyPicture"><img src=`${allSpots}`</div> */}
           <div className="monthAndDate">
             <h3>{`${thisUsersReviews[ele]["createdAt"].slice(5, 7)} ${thisUsersReviews[ele]["createdAt"].slice(0, 4)} `}</h3></div>
           <div className="reviewOfUser">
