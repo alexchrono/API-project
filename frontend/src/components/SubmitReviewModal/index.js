@@ -75,12 +75,12 @@ import { ThunkAddReviewBySpotId } from "../../store/reviews";
 import { ThunkEditReviewByReviewId } from "../../store/reviews";
 import {useHistory} from 'react-router-dom'
 
-function SubmitReviewModal({spotId,userId,objReviews,setReloadData,reloadData,actionType},) {
+function SubmitReviewModal({spotId,userId,objReviews,setReloadData,reloadData,actionType,Review,Stars},) {
   const dispatch = useDispatch();
   const history=useHistory()
 
-  const [review, setReview] = useState(actionType === 'EDITAREVIEW' ? 'ALEX YOU ARE A GENIUS' : '');
-  const [stars, setStars] = useState(actionType === 'EDITAREVIEW' ? 3 : '');
+  const [review, setReview] = useState(actionType === 'EDITAREVIEW' ? Review : '');
+  const [stars, setStars] = useState(actionType === 'EDITAREVIEW' ? Stars : '');
   const [errors, setErrors] = useState({});
   const { closeModal,setOnModalClose } = useModal();
   let reviewId=userId
@@ -90,7 +90,7 @@ function SubmitReviewModal({spotId,userId,objReviews,setReloadData,reloadData,ac
     setErrors({});
     let realStars=parseInt(stars)
 if(actionType==='EDITAREVIEW'){
-  let counter=0
+
 
   // reviewReq,spotId,reviewId,objReviews,dispatch
   return dispatch(ThunkEditReviewByReviewId({ review, stars: realStars }, spotId, reviewId, objReviews, dispatch)).then(setReloadData(reloadData+1)).then(history.push(`/spots/${spotId}`)).then(closeModal())
