@@ -1,3 +1,9 @@
 .PreviewImage {
 width: 25%;
 }
+
+.spreadOut {
+display: flex;
+width: 25%;
+justify-content: space-between;
+}

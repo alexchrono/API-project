@@ -29,6 +29,16 @@ export default function ManageReviews() {
   let actionType = "DELETEAREVIEW"
   let ourUserId = thisUser.user.userId
   const [reloadData, setReloadData] = useState(1);
+
+  function getMonthFromNum(number) {
+    const months = [
+      "January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
+    ];
+
+    const monthIndex = parseInt(number, 10) - 1;
+    return months[monthIndex] || "Invalid Month";
+  }
   useEffect(() => {
     const fetchData = async () => {
       // await ThunkLoadSingle(dispatch, spotId);
@@ -98,11 +108,16 @@ else {
 
           <div className="nameOfReviewer">
             {thisUsersReviews[ele] && allSpots[thisUsersReviews[ele]['spotId']-1] && (<h2>{allSpots[thisUsersReviews[ele]['spotId']-1]['name']}</h2>)}</div>
+
             <div>{thisUsersReviews[ele] && allSpots[thisUsersReviews[ele]['spotId']-1] && (<img src={allSpots[thisUsersReviews[ele]['spotId']-1]['previewImage']} className="PreviewImage" alt='preview'/>)}
           </div>
           {/* <div className="prettyPicture"><img src=`${allSpots}`</div> */}
+          <div className="spreadOut">
           <div className="monthAndDate">
-            <h3>{`${thisUsersReviews[ele]["createdAt"].slice(5, 7)} ${thisUsersReviews[ele]["createdAt"].slice(0, 4)} `}</h3></div>
+            <h3>{`${ getMonthFromNum(thisUsersReviews[ele]["createdAt"].slice(5, 7))} ${thisUsersReviews[ele]["createdAt"].slice(0, 4)} `}</h3></div>
+            <div className="numberStars">{thisUsersReviews[ele] && allSpots[thisUsersReviews[ele]['spotId']-1] && (<span><span className="material-symbols-outlined">grade</span>{thisUsersReviews[ele]['stars'].toFixed(1)}</span>)}
+          </div>
+          </div>
           <div className="reviewOfUser">
             <p>
               {thisUsersReviews[ele]["review"]}

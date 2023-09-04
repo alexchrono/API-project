@@ -70,6 +70,7 @@ import * as sessionActions from "../../store/session";
 import { useDispatch } from "react-redux";
 import { useModal,setTest } from "../../context/Modal";
 import "./submitReview.css";
+
 import { ThunkAddReviewBySpotId } from "../../store/reviews";
 import { ThunkEditReviewByReviewId } from "../../store/reviews";
 import {useHistory} from 'react-router-dom'
@@ -77,6 +78,7 @@ import {useHistory} from 'react-router-dom'
 function SubmitReviewModal({spotId,userId,objReviews,setReloadData,reloadData,actionType},) {
   const dispatch = useDispatch();
   const history=useHistory()
+
   const [review, setReview] = useState(actionType === 'EDITAREVIEW' ? 'ALEX YOU ARE A GENIUS' : '');
   const [stars, setStars] = useState(actionType === 'EDITAREVIEW' ? 3 : '');
   const [errors, setErrors] = useState({});
