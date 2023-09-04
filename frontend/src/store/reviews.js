@@ -180,7 +180,7 @@ dispatch(actionLoadReviewsByUserId(Reviews))
 //   dispatch(actionLoadSpot(`ffuuckk`))
 // }
 // }
-export async function ThunkEditReviewByReviewId(reviewReq,spotId,userId,objReviews,dispatch){
+export const ThunkEditReviewByReviewId=(reviewReq,spotId,userId,objReviews,dispatch)=>async(dispatch)=>{
 
   try{
     console.log('8888888888888888888firstReviewIdis',spotId)
@@ -201,7 +201,7 @@ if(res.ok) {
   // do the thing with this data
   console.log('Review added is',Review)
 
-  dispatch(actionEditReviewByReviewId(Review,objReviews))
+  return actionEditReviewByReviewId(Review,objReviews)
 
 }
 

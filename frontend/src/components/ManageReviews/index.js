@@ -131,7 +131,7 @@ else {
               // reviewReq,spotId,reviewId,objReviews,dispatch
               //  spotId,userId,objReviews,setReloadData,actionType
 
-              modalComponent={<SubmitReviewModal spotId={ele} userId={ele} objReviews={thisUsersReviews} setReloadData={setReloadData} reloadData={reloadData} actionType={"EDITAREVIEW"} Review={thisUsersReviews[ele]["review"]} Stars={thisUsersReviews[ele]['stars'].toFixed(1)}onClose={handleModalClose}
+              modalComponent={<SubmitReviewModal spotId={ele} userId={ele} objReviews={thisUsersReviews} setReloadData={setReloadData} reloadData={reloadData} actionType={"EDITAREVIEW"} Review={thisUsersReviews[ele]["review"]} Stars={thisUsersReviews[ele]['stars'].toFixed(1)} onClose={handleModalClose}
               />
               }
               onClick={handleModalOpen}
