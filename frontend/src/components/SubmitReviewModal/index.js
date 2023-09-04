@@ -74,7 +74,7 @@ import { ThunkAddReviewBySpotId } from "../../store/reviews";
 import { ThunkEditReviewByReviewId } from "../../store/reviews";
 import {useHistory} from 'react-router-dom'
 
-function SubmitReviewModal({spotId,userId,objReviews,setReloadData,actionType},) {
+function SubmitReviewModal({spotId,userId,objReviews,setReloadData,reloadData,actionType},) {
   const dispatch = useDispatch();
   const history=useHistory()
   const [review, setReview] = useState(actionType === 'EDITAREVIEW' ? 'ALEX YOU ARE A GENIUS' : '');
@@ -91,14 +91,11 @@ if(actionType==='EDITAREVIEW'){
   let counter=0
 
   // reviewReq,spotId,reviewId,objReviews,dispatch
-  return dispatch(ThunkEditReviewByReviewId({ review, stars: realStars }, spotId, reviewId, objReviews, dispatch))
-  setReloadData(counter--)
-  history.push(`/spots/${spotId}`)
-  closeModal()
+  return dispatch(ThunkEditReviewByReviewId({ review, stars: realStars }, spotId, reviewId, objReviews, dispatch)).then(setReloadData(reloadData+1)).then(history.push(`/spots/${spotId}`)).then(closeModal())
 }
 
     else{
-return dispatch(ThunkAddReviewBySpotId({ review, stars:realStars },spotId,userId,objReviews,dispatch)).then(setReloadData(true)).then(closeModal())}
+return dispatch(ThunkAddReviewBySpotId({ review, stars:realStars },spotId,userId,objReviews,dispatch)).then(setReloadData(reloadData+1)).then(closeModal())}
 
 
       // .catch(async (res) => {
