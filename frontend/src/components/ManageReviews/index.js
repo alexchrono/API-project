@@ -63,7 +63,9 @@ export default function ManageReviews() {
 else {
   let keysToReviews = Object.keys(thisUsersReviews)
 
-  let keysToReviews2={...keysToReviews}
+  let keysToReviews2=[...keysToReviews]
+  console.log('this users reviews is',thisUsersReviews)
+  console.log(`all spots is`,allSpots)
   // console.log('KEYS TO REVIEWS LOOKS LIKE ',keysToReviews)
   //   function checkNoReviewAndCheckNotOwner(){
   //   for(let ele of keysToReviews){
@@ -95,8 +97,8 @@ else {
         <div className="eachReview">
 
           <div className="nameOfReviewer">
-            {thisUsersReviews[ele] && allSpots[thisUsersReviews[ele]['spotId']] && (<h2>{allSpots[thisUsersReviews[ele]['spotId']]['name']}</h2>)}</div>
-            <div>{thisUsersReviews[ele] && allSpots[thisUsersReviews[ele]['spotId']] && (<img src={allSpots[thisUsersReviews[ele]['spotId']]['previewImage']} className="PreviewImage" alt='preview'/>)}
+            {thisUsersReviews[ele] && allSpots[thisUsersReviews[ele]['spotId']-1] && (<h2>{allSpots[thisUsersReviews[ele]['spotId']-1]['name']}</h2>)}</div>
+            <div>{thisUsersReviews[ele] && allSpots[thisUsersReviews[ele]['spotId']-1] && (<img src={allSpots[thisUsersReviews[ele]['spotId']-1]['previewImage']} className="PreviewImage" alt='preview'/>)}
           </div>
           {/* <div className="prettyPicture"><img src=`${allSpots}`</div> */}
           <div className="monthAndDate">
