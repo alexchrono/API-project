@@ -158,7 +158,7 @@ else  {
 
 
 })
-router.put('/:reviewId',authError,validateLogin,async(req,res)=>{
+router.put('/:reviewId',requireAuth, validateLogin,async(req,res)=>{
 let testReview=await Review.findByPk(req.params.reviewId)
 if(!testReview){
     res.status(404)
@@ -169,17 +169,17 @@ if(!testReview){
 }
 else if(testReview && testReview.userId===req.user.id){
 const {review,stars}=req.body
-testReview.review=review
-testReview.stars=stars
-testReview.updatedAt=Date.now()
+await testReview.update({review,stars,updatedAt:Date.now()})
+// testReview.review=review
+// testReview.stars=stars
+// testReview.updatedAt=Date.now()
+
 res.status(200)
 .setHeader('Content-Type','application/json')
 .json(testReview)
 }
-else {
-next(err)
-}
-},catchAuthError)
+
+})
 
 
 router.delete('/:reviewId',requireAuth,authError,async (req,res,next)=>{

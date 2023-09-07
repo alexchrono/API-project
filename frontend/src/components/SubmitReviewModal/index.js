@@ -91,9 +91,10 @@ function SubmitReviewModal({spotId,userId,objReviews,setReloadData,reloadData,ac
     let realStars=parseInt(stars)
 if(actionType==='EDITAREVIEW'){
 
-
+console.log(`spotId is`,spotId)
+console.log('reviewId is',reviewId)
   // reviewReq,spotId,reviewId,objReviews,dispatch
-  return dispatch(ThunkEditReviewByReviewId({ review, stars: realStars }, spotId, reviewId, objReviews, dispatch)).then(setReloadData(reloadData+1)).then(history.push(`/spots/${spotId}`)).then(closeModal())
+  return await dispatch(ThunkEditReviewByReviewId({ review, stars: realStars }, spotId, reviewId, objReviews, dispatch)).then(setReloadData(reloadData+1)).then(history.push(`/spots/${spotId}`)).then(closeModal())
 }
 
     else{
@@ -105,7 +106,7 @@ return dispatch(ThunkAddReviewBySpotId({ review, stars:realStars },spotId,userId
       //   if (data && data.errors) {
       //     console.log('we hit the error in submitreviewmodal line 24')
       //     // setErrors(data.errors);
-      //     // return setErrors({
+          // return setErrors({
       //     //   Email: 'Email is invalid'
       //     // });
       //   }
@@ -113,7 +114,7 @@ return dispatch(ThunkAddReviewBySpotId({ review, stars:realStars },spotId,userId
 
   };
 
-  return (
+  return (//
     <>
       <h1>How was your stay?</h1>
       <form onSubmit={handleSubmit}>

@@ -105,7 +105,7 @@ else {
 
 
         <div className="eachReview">
-
+          <h1>{thisUsersReviews[ele]['spotId']}</h1>
           <div className="nameOfReviewer">
             {thisUsersReviews[ele] && allSpots[thisUsersReviews[ele]['spotId']-1] && (<h2>{allSpots[thisUsersReviews[ele]['spotId']-1]['name']}</h2>)}</div>
 
@@ -114,6 +114,7 @@ else {
           {/* <div className="prettyPicture"><img src=`${allSpots}`</div> */}
           <div className="spreadOut">
           <div className="monthAndDate">
+
             <h3>{`${ getMonthFromNum(thisUsersReviews[ele]["createdAt"].slice(5, 7))} ${thisUsersReviews[ele]["createdAt"].slice(0, 4)} `}</h3></div>
             <div className="numberStars">{thisUsersReviews[ele] && allSpots[thisUsersReviews[ele]['spotId']-1] && (<span><span className="material-symbols-outlined">grade</span>{thisUsersReviews[ele]['stars'].toFixed(1)}</span>)}
           </div>
@@ -131,7 +132,7 @@ else {
               // reviewReq,spotId,reviewId,objReviews,dispatch
               //  spotId,userId,objReviews,setReloadData,actionType
 
-              modalComponent={<SubmitReviewModal spotId={ele} userId={ele} objReviews={thisUsersReviews} setReloadData={setReloadData} reloadData={reloadData} actionType={"EDITAREVIEW"} Review={thisUsersReviews[ele]["review"]} Stars={thisUsersReviews[ele]['stars'].toFixed(1)} onClose={handleModalClose}
+              modalComponent={<SubmitReviewModal spotId={thisUsersReviews[ele]['spotId']} userId={parseInt(ele)} objReviews={thisUsersReviews} setReloadData={setReloadData} reloadData={reloadData} actionType={"EDITAREVIEW"} Review={thisUsersReviews[ele]["review"]} Stars={thisUsersReviews[ele]['stars'].toFixed(1)} onClose={handleModalClose}
               />
               }
               onClick={handleModalOpen}

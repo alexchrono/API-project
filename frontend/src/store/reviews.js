@@ -180,17 +180,18 @@ dispatch(actionLoadReviewsByUserId(Reviews))
 //   dispatch(actionLoadSpot(`ffuuckk`))
 // }
 // }
-export const ThunkEditReviewByReviewId=(reviewReq,spotId,userId,objReviews,dispatch)=>async(dispatch)=>{
+export const ThunkEditReviewByReviewId=(reviewReq,spotId,reviewId,objReviews,dispatch)=>async(dispatch)=>{
 
   try{
     console.log('8888888888888888888firstReviewIdis',spotId)
     console.log('************IM IN MY EDIT REVIEWS THUNK THUNK')
     console.log('reviewReqis',reviewReq)
     console.log('objReviews is',objReviews)
+
   // console.log('this is newReview in thunkAddSpot',reviewReq)
   // console.log('this is our spotId',spotId)
   // console.log('this is objReviewsInOurThunk',objReviews)
-const res = await csrfFetch(`/api/reviews/${spotId}`,{
+const res = await csrfFetch(`/api/reviews/${reviewId}`,{
   method: 'PUT',
   headers: {
     'Content-Type': 'application/json'},
@@ -315,18 +316,15 @@ export default function reviewsReducer(state=initialState, action) {
     }
     case EDIT_REVIEWS_BY_REVIEW_ID: {
 
-
       let {Review,objReviews}=action.payload
       console.log('inside of our reducer')
       console.log('review is just ',Review)
       console.log('objReviews is',objReviews)
       let returnObj={}
-      let review=objReviews
-      let ourId=Review.id
-      let keysToThis=Object.keys(objReviews.spot)
       let UserObject=Review.User
+      let RevId=Review.id
       let ReviewImagesArray=Review["ReviewImages"]
-        returnObj={
+        objReviews[RevId]={
           userId: Review.userId,
           spotId: Review.spotId,
           review: Review.review,
@@ -338,16 +336,17 @@ export default function reviewsReducer(state=initialState, action) {
 
 
       }
+
       let newVar=JSON.stringify(objReviews)
       let newVar2=JSON.parse(newVar)
-      let newState={...state,user: {...objReviews,ourId:returnObj}}
+      let newState={...objReviews}
       console.log('NEWSTATE IN OUR REVIEW THUNK IS',newState)
       return newState
     }
     case LOAD_REVIEWS_BY_USERID: {
       let returnObj={}
       let ourBoy=action.payload
-
+      
       ourBoy.forEach((ele)=>{
 
 
