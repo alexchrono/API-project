@@ -1,183 +1,238 @@
 'use strict';
 const { Spot } = require('../models');
 const bcrypt = require("bcryptjs");
+const faker = require('faker');
+
+function randInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function uV(set, fakerFunc) {
+  let value;
+  while (true) {
+    value = fakerFunc();
+    if (!set.has(value)) {
+      set.add(value);
+      return value;
+    }
+  }
+}
+
+function randLat() {
+  return randInt(-90, 90) + Math.random().toFixed(4);
+}
+
+function randLong() {
+  return randInt(-180, 180) + Math.random().toFixed(4);
+}
+
+const placeNames = [
+  "Point",
+  "Manor",
+  "Hideaway",
+  "Bungalow",
+  "Retreat",
+  "Cottage",
+  "Estate",
+  "Haven",
+  "Mansion",
+  "Villa",
+  "Resort",
+  "Lodge",
+  "Sanctuary",
+  "Palace",
+  "Meadow",
+  "Gardens",
+  "Ridge",
+  "Hillside",
+  "Cabin",
+  "Oasis",
+  "Paradise",
+  "Domain",
+  "Nook",
+  "Hacienda",
+  "Domain",
+  "Springs",
+  "Acres",
+  "Village",
+  "Quarters",
+  "Nirvana",
+  "Terrace",
+  "Chateau",
+  "Canyon",
+  "Cove",
+  "Vineyard",
+  "Pines",
+  "Woods",
+  "Maze",
+  "Hollow",
+  "Henge"
+];
+
+const placeAdj = [
+  "Serenity",
+  "Serene",
+  "Humble",
+  "Tranquil",
+  "Picturesque",
+  "Rustic",
+  "Quaint",
+  "Scenic",
+  "Idyllic",
+  "Charming",
+  "Enchanting",
+  "Majestic",
+  "Breathtaking",
+  "Cozy",
+  "Secluded",
+  "Peaceful",
+  "Lush",
+  "Hidden",
+  "Historic",
+  "Mystical",
+  "Splendid",
+  "Panoramic",
+  "Verdant",
+  "Tranquility",
+  "Elegant",
+  "Dreamy",
+  "Calm",
+  "Delightful",
+  "Radiant",
+  "Romantic",
+  "Inviting",
+  "Pristine",
+  "Enigmatic",
+  "Spectacular",
+  "Heavenly",
+  "Awe-Inspiring",
+  "Enchanted",
+  "Soothing",
+  "Harmonious"
+];
+
+const desc1 = [
+  "Serene getaway",
+  "Cozy retreat",
+  "Tranquil hideaway",
+  "Picturesque escape",
+  "Rustic cabin",
+  "Charming cottage",
+  "Secluded oasis",
+  "Peaceful haven",
+  "Historic charm",
+  "Enchanting lodge",
+  "Scenic beauty",
+  "Elegant mansion",
+  "Inviting home",
+  "Spectacular views",
+  "Heavenly haven",
+  "Harmonious abode",
+  "Enigmatic retreat",
+  "Soothing ambiance",
+  "Radiant quarters",
+  "Quaint village",
+  "Nirvana sanctuary",
+  "Tranquility haven",
+  "Delightful stay",
+  "Pristine accommodations",
+  "Hidden gem",
+  "Calm escape",
+  "Idyllic location",
+  "Spectacular panorama",
+  "Lush surroundings",
+  "Modern comfort",
+  "Urban elegance",
+  "Relaxing space",
+  "Cultural experiences",
+  "Vibrant neighborhood",
+  "Artistic ambiance",
+  "Bohemian charm",
+  "Stunning views",
+  "Luxury retreat",
+  "Natural beauty",
+  "Urban oasis",
+  "Quaint charm",
+];
+
+const desc2 = [
+  "Breathtaking views.",
+  "Nearby pool.",
+  "Clean quarters.",
+  "Divine air conditioning.",
+  "Hometown feel.",
+  "Private balcony.",
+  "Luxurious amenities.",
+  "Gourmet cuisine.",
+  "Secluded location.",
+  "Relaxing atmosphere.",
+  "Friendly staff.",
+  "Scenic surroundings.",
+  "Cozy fireplace.",
+  "Charming decor.",
+  "Spacious rooms.",
+  "Outdoor activities.",
+  "Tranquil gardens.",
+  "Mountain vistas.",
+  "Historic charm.",
+  "Modern comforts.",
+  "Peaceful ambiance.",
+  "Spectacular sunsets.",
+  "Picturesque landscapes.",
+  "Lakeside setting.",
+  "Enchanting views.",
+  "Natural beauty.",
+  "Fine dining.",
+  "Romantic setting.",
+  "Family-friendly.",
+  "Adventure nearby.",
+  "Stunning architecture.",
+  "Soothing spa.",
+  "Golf course access.",
+  "Hiking trails.",
+  "Cultural experiences.",
+  "Wildlife encounters.",
+  "Relaxing massages.",
+  "Outdoor adventures."
+];
+
+function fakePrice() {
+  const num1 = randInt(50, 300);
+  const num2 = randInt(10, 99);
+  return parseFloat(`${num1}.${num2}`);
+}
 
 let options = {};
 if (process.env.NODE_ENV === 'production') {
   options.schema = process.env.SCHEMA;  // define your schema in options object
 }
-/** @type {import('sequelize-cli').Migration} */
+
 module.exports = {
-  async up (queryInterface, Sequelize) {
-    await Spot.bulkCreate([
-      {
-        "ownerId": 1,
-        "address": "1537 Longview Avenue",
-        "city": "Atlanta",
-        "state": "Georgia",
+  async up(queryInterface, Sequelize) {
+    for (let i = 0; i < 50; i++) {
+      const randSpot = {
+        "ownerId": uV(randInt(1, 25), faker.random.number),
+        "address": uV(new Set(), faker.address.streetAddress),
+        "city": faker.address.city(),
+        "state": faker.address.state(),
         "country": "USA",
-        "lat": 33.7490,
-        "lng": -84.3880,
-        "name": "Serenity Point",
-        "description": "Scenic spot with breathtaking views",
-        "price": 17.34
-      },
-      {
-        "ownerId": 1,
-        "address": "1600 Shortridge Street",
-        "city": "Spring Hill",
-        "state": "Kansas",
-        "country": "USA",
-        "lat": 38.8816,
-        "lng": -94.8191,
-        "name": "Tranquil Retreat",
-        "description": "Peaceful escape surrounded by nature",
-        "price": 50.47
-      },
-      {
-        "ownerId": 1,
-        "address": "1300 Oakridge Drive",
-        "city": "St. Louis",
-        "state": "Missouri",
-        "country": "USA",
-        "lat": 37.7749,
-        "lng": -122.4194,
-        "name": "Hidden Haven",
-        "description": "Secluded spot amidst lush greenery",
-        "price": 50.47
-      },
-      {
-        "ownerId": 2,
-        "address": "1537 Longview Avenue",
-        "city": "Atlanta",
-        "state": "Georgia",
-        "country": "USA",
-        "lat": 33.7490,
-        "lng": -84.3880,
-        "name": "Sunset Vista",
-        "description": "Gorgeous view of the setting sun",
-        "price": 17.34
-      },
-      {
-        "ownerId": 2,
-        "address": "1600 Shortridge Street",
-        "city": "Spring Hill",
-        "state": "Kansas",
-        "country": "USA",
-        "lat": 38.8816,
-        "lng": -94.8191,
-        "name": "Nature's Haven",
-        "description": "Surrounded by scenic beauty",
-        "price": 50.47
-      },
-      {
-        "ownerId": 2,
-        "address": "1300 Oakridge Drive",
-        "city": "St. Louis",
-        "state": "Missouri",
-        "country": "USA",
-        "lat": 37.7749,
-        "lng": -122.4194,
-        "name": "Wilderness Retreat",
-        "description": "Untamed beauty at its best",
-        "price": 50.47
-      },
-      {
-        "ownerId": 2,
-        "address": "1537 Longview Avenue",
-        "city": "Atlanta",
-        "state": "Georgia",
-        "country": "USA",
-        "lat": 33.7490,
-        "lng": -84.3880,
-        "name": "Enchanted Grove",
-        "description": "Magical spot filled with charm",
-        "price": 17.34
-      },
-      {
-        "ownerId": 3,
-        "address": "1600 Shortridge Street",
-        "city": "Spring Hill",
-        "state": "Kansas",
-        "country": "USA",
-        "lat": 38.8816,
-        "lng": -94.8191,
-        "name": "Tranquility Retreat",
-        "description": "Escape to serenity and calmness",
-        "price": 50.47
-      },
-      {
-        "ownerId": 3,
-        "address": "1300 Oakridge Drive",
-        "city": "St. Louis",
-        "state": "Missouri",
-        "country": "USA",
-        "lat": 37.7749,
-        "lng": -122.4194,
-        "name": "Nature's Oasis",
-        "description": "Harmony with nature at its finest",
-        "price": 50.47
-      },
-      {
-        "ownerId": 3,
-        "address": "1537 Longview Avenue",
-        "city": "Atlanta",
-        "state": "Georgia",
-        "country": "USA",
-        "lat": 33.7490,
-        "lng": -84.3880,
-        "name": "Sunset Paradise",
-        "description": "Awe-inspiring sunsets by the beach",
-        "price": 17.34
-      },
-      {
-        "ownerId": 3,
-        "address": "1600 Shortridge Street",
-        "city": "Spring Hill",
-        "state": "Kansas",
-        "country": "USA",
-        "lat": 38.8816,
-        "lng": -94.8191,
-        "name": "Serenity Gardens",
-        "description": "Tranquil gardens with blooming flowers",
-        "price": 50.47
-      },
-      {
-        "ownerId": 3,
-        "address": "1300 Oakridge Drive",
-        "city": "St. Louis",
-        "state": "Missouri",
-        "country": "USA",
-        "lat": 37.7749,
-        "lng": -122.4194,
-        "name": "Whispering Pines",
-        "description": "Gentle winds through the pine forest",
-        "price": 50.47
-      }
-    ]
-    , { validate: true });
-    /**
-     * Add seed commands here.
-     *
-     * Example:
-     * await queryInterface.bulkInsert('People', [{
-     *   name: 'John Doe',
-     *   isBetaMember: false
-     * }], {});
-    */
+        "lat": randLat(),
+        "lng": randLong(),
+        "name": uV(new Set(), () => `${placeAdj[randInt(0, 39)]} ${placeNames[randInt(0, 39)]}`),
+        "description": uV(new Set(), () => `${desc1[randInt(0, 39)]} ${desc2[randInt(0, 39)]}`),
+        "price": fakePrice()
+      };
+      await Spot.create(randSpot, { validate: true });
+    }
   },
 
-  async down (queryInterface, Sequelize) {
-    /**
-     * Add commands to revert seed here.
-     *
-     * Example:
-     * await queryInterface.bulkDelete('People', null, {});
-     */
-    options.tableName = 'Spots';
-    const Op = Sequelize.Op;
-    return queryInterface.bulkDelete(options, {
-     ownerId: { [Op.in]: [1,2,3] }
-    }, {});
+  async down(queryInterface, Sequelize) {
+    try {
+      options.tableName = 'Spots';
+      const Op = Sequelize.Op;
+      await Spot.destroy({ where: {} });
+    } catch (error) {
+      console.error('Error while deleting seed data:', error);
+    }
   }
 };

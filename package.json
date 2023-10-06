@@ -23,5 +23,8 @@
   "bugs": {
     "url": "https://github.com/alexchrono/API-project/issues"
   },
-  "homepage": "https://github.com/alexchrono/API-project#readme"
+  "homepage": "https://github.com/alexchrono/API-project#readme",
+  "dependencies": {
+    "faker": "^6.6.6"
+  }
 }

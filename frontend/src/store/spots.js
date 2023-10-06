@@ -93,10 +93,7 @@ export const actionLoadSpots = (spotsFromDB) => ({
   type: LOAD_SPOTS,
   payload: spotsFromDB
 })
-export const actionLoadSpotsCurrentUser = (spots) => ({
-  type: LOAD_SPOTS_CURRENT_USER,
-  payload: spots
-})
+
 
 //thunks
 
@@ -233,7 +230,7 @@ export const ThunkDeleteAspot= (dispatch,spotsId,ourArray)=>async(dispatch)=>{
     method: 'DELETE'});
   if(res.ok) {
     let newArray=ourArray.filter((ele)=>ele.id!==spotsId)
-    
+
 dispatch(actionDeleteSpot(newArray))
 
 
