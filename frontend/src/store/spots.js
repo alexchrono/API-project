@@ -94,6 +94,13 @@ export const actionLoadSpots = (spotsFromDB) => ({
   payload: spotsFromDB
 })
 
+export const actionLoadSpotsCurrentUser = (spotsOfCurrentUser) => ({
+  type: LOAD_SPOTS_CURRENT_USER,
+  payload: spotsOfCurrentUser
+})
+
+
+
 
 //thunks
 
@@ -104,7 +111,7 @@ export async function ThunkLoadSpotsCurrentUser(dispatch){
   if(res.ok) {
     const  ourJam  = await res.json();
     console.log('ourJamis',ourJam)
-dispatch(actionLoadSpotsCurrentUser(ourJam))
+    dispatch(actionLoadSpotsCurrentUser(ourJam))
 
   } else {
     const errors = await res.json();

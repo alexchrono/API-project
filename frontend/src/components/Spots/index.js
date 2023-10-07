@@ -36,8 +36,8 @@ export default function Spots() {
 
           <Link exact to={`/spots/${ele.id}`} className="link" key={ele.id}>
             <div className='imgDiv toolTip'>
-              <img src={ele.previewImage} className='image2' alt={`Spot ${ele.id}`} />
-
+              <img src={`${process.env.PUBLIC_URL}${ele.previewImage}`} className='image2' alt={`Spot ${ele.id}`} />
+              {/* <img src={ele.previewImage} className='image2' alt={`Spot ${ele.id}`} /> */}
             <span className='tooltiptext'>{ele.name}</span>
             </div>
             <div className="cityStateandStars fancyText"> <span className='inlineCity'>{`${ele.city}, ${ele.state}`}</span>  {!isNaN(ele.avgRating) ? (<span className='inline'><span className="material-symbols-outlined">

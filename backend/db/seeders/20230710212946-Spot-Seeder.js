@@ -5,7 +5,7 @@ const bcrypt = require("bcryptjs");
 
 
 function fake_price(){
-    num1 = randInt(5, 30)
+    num1 = randInt(200, 600)
     num2 = randInt(10, 99)
     return parseFloat(`${num1}.${num2}`)
 }
@@ -332,7 +332,7 @@ module.exports = {
         "lat": randLat(),
         "lng": randLong(),
         "name": uV(new Set(), () => `${placeAdj[randInt(0, 39)]} ${placeNames[randInt(0, 39)]}`),
-        "description": uV(new Set(), () => `${desc1[randInt(0, 39)]} ${desc2[randInt(0, 39)]}`),
+        "description": uV(new Set(), () => `${desc1[randInt(0, 39)]} with ${desc2[randInt(0, 39)]}`),
         "price": fakePrice()
       };
       allSpotsToMake.push(randSpot)

@@ -18,19 +18,19 @@ module.exports = {
         if (k === 1) {
           randSpotImage = {
             "spotId": i,
-            "url": `/public/seederSpots/exterior/img_${i}.jpg`,
+            "url": `/seederSpots/exterior/img_${i}.jpg`,
             "preview": true
           };
         } else if (k > 1 && k < 7) {
           randSpotImage = {
             "spotId": i,
-            "url": `/public/seederSpots/${i}/img_${k - 1}.jpg`,
+            "url": `/seederSpots/${i}/img_${k - 1}.jpg`,
             "preview": false
           };
         } else {
           randSpotImage = {
             "spotId": i,
-            "url": `/public/seederSpots/${i}/staticmap.jpg`,
+            "url": `/seederSpots/${i}/staticmap.jpg`,
             "preview": false
           };
         }

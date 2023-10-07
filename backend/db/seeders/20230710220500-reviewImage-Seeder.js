@@ -23,7 +23,7 @@ module.exports = {
       for (let review=1;review<51;review++){
         let reviewz={
           "reviewId": review,
-          "url": `/public/seederSpots/reviewImages/img_${user}.jpg`
+          "url": `/seederSpots/reviewImages/img_${user}.jpg`
         }
         allReviewImages.push(reviewz)
       }
