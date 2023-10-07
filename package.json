@@ -24,7 +24,7 @@
     "url": "https://github.com/alexchrono/API-project/issues"
   },
   "homepage": "https://github.com/alexchrono/API-project#readme",
-  "dependencies": {
-    "faker": "^6.6.6"
+  "devDependencies": {
+    "@faker-js/faker": "^8.1.0"
   }
 }

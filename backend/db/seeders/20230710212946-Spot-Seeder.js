@@ -1,8 +1,14 @@
 'use strict';
+// /** @type {import('sequelize-cli').Migration} */
 const { Spot } = require('../models');
 const bcrypt = require("bcryptjs");
-const faker = require('faker');
 
+
+function fake_price(){
+    num1 = randInt(5, 30)
+    num2 = randInt(10, 99)
+    return parseFloat(`${num1}.${num2}`)
+}
 function randInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
@@ -25,6 +31,113 @@ function randLat() {
 function randLong() {
   return randInt(-180, 180) + Math.random().toFixed(4);
 }
+const hawaiiStreetNames = [
+  'Aloha Street',
+  'Mahina Avenue',
+  'Haleakala Highway',
+  'Kona Coast Drive',
+  'Leilani Lane',
+  'Nalu Road',
+  'Waikiki Boulevard',
+  'Kahuna Court',
+  'Kamuela Drive',
+  'Hapuna Road',
+  'Molokai Lane',
+  'Lanikai Street',
+  'Waianae Road',
+  'Kailua Circle',
+  'Punaluu Place',
+  'Hana Highway',
+  'Pele Street',
+  'Kailani Avenue',
+  'Waimea Road',
+  'Mauna Kea Drive',
+  'Kapalua Way',
+  'Kauai Lane',
+  'Hilo Drive',
+  'Maui Street',
+  'Aiea Loop',
+  'Honokaa Lane',
+  'Pali Highway',
+  'Makapuu Avenue',
+  'Napoopoo Road',
+  'Kailani Street',
+  'Lahaina Road',
+  'Hanalei Drive',
+  'Ko Olina Drive',
+  'Hana Road',
+  'Kapoho Circle',
+  'Kapua Lane',
+  'Kapuai Place',
+  'Nanakuli Avenue',
+  'Kilauea Avenue',
+  'Waipio Road',
+  'Laie Drive',
+  'Poipu Road',
+  'Kaneohe Bay Drive',
+  'Pukalani Street',
+  'Kahului Way',
+  'Koloa Court',
+  'Kalaheo Street',
+  'Kula Highway',
+  'Kaimuki Lane',
+  'Lihue Court',
+];
+
+
+
+const hawaiiCities = [
+  'Honolulu',
+  'Hilo',
+  'Kailua',
+  'Kapolei',
+  'Kaneohe',
+  'Waipahu',
+  'Pearl City',
+  'Mililani',
+  'Ewa Beach',
+  'Waianae',
+  'Wahiawa',
+  'Schofield Barracks',
+  'Makakilo',
+  'Waikoloa',
+  'Kihei',
+  'Lahaina',
+  'Wailuku',
+  'Kahului',
+  'Haiku',
+  'Pukalani',
+  'Makawao',
+  'Paia',
+  'Kula',
+  'Lanai City',
+  'Kaunakakai',
+  'Koloa',
+  'Lihue',
+  'Kapaa',
+  'Hanalei',
+  'Princeville',
+  'Hanapepe',
+  'Waimea',
+  'Kekaha',
+  'Hawi',
+  'Paauilo',
+  'Kapaau',
+  'Naalehu',
+  'Pahala',
+  'Volcano',
+  'Captain Cook',
+  'Holualoa',
+  'Kealakekua',
+  'Kailua-Kona',
+  'Laie',
+  'Kahuku',
+  'Hauula',
+  'Waialua',
+  'Haleiwa',
+  'Waimanalo',
+];
+
 
 const placeNames = [
   "Point",
@@ -211,10 +324,10 @@ module.exports = {
   async up(queryInterface, Sequelize) {
     for (let i = 1; i < 51; i++) {
       let randSpot = {
-        "ownerId": uV(randInt(1, 25), faker.random.number),
-        "address": uV(new Set(), faker.address.streetAddress),
-        "city": faker.address.city(),
-        "state": faker.address.state(),
+        "ownerId": randInt(1, 25),
+        "address": `${randInt(10000,99990)} ${hawaiiStreetNames[randInt(0,48)]}`,
+        "city": hawaiiCities[randInt(0,45)],
+        "state": 'Hawaii',
         "country": "USA",
         "lat": randLat(),
         "lng": randLong(),

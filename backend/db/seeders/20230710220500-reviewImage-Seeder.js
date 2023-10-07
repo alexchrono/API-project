@@ -21,11 +21,11 @@ module.exports = {
     let allReviewImages=[]
     for (let user=1;user<26;user++){
       for (let review=1;review<51;review++){
-        let review={
+        let reviewz={
           "reviewId": review,
           "url": `/public/seederSpots/reviewImages/img_${user}.jpg`
         }
-        allReviewImages.push(review)
+        allReviewImages.push(reviewz)
       }
     }
     await ReviewImage.bulkCreate(allReviewImages,{ validate: true })

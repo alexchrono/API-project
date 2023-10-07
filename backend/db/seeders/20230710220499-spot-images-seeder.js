@@ -1,5 +1,5 @@
 'use strict';
-const { SpotImage } = require('../models');
+const { SpotImage } = require('../models/');
 const bcrypt = require("bcryptjs");
 
 let options = {};
