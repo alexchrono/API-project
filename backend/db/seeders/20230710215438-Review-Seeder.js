@@ -517,7 +517,7 @@ module.exports = {
   let allReviewsToMake=[]
   for (let i=1;i<26;i++){
 
-    for (let k=1;k<51;k++){
+    for (let k=1;k<151;k++){
       if (i===k){
         continue
       }

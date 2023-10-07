@@ -447,19 +447,53 @@ if (process.env.NODE_ENV === 'production') {
 let allSpotsToMake=[]
 module.exports = {
   async up(queryInterface, Sequelize) {
-    for (let i = 1; i < 51; i++) {
-      let randSpot = {
+    for (let i = 1; i < 151; i++) {
+      let randSpot
+      if (i<=51){
+        randSpot = {
         "ownerId": randInt(1, 25),
-        "address": `${randInt(10000,99990)} ${hawaiiStreetNames[randInt(0,48)]}`,
-        "city": hawaiiCities[randInt(0,45)],
-        "state": 'Hawaii',
-        "country": "USA",
-        "lat": randLat(),
-        "lng": randLong(),
-        "name": uV(new Set(), () => `${placeAdj[randInt(0, 39)]} ${placeNames[randInt(0, 39)]}`),
-        "description": uV(new Set(), () => `${desc1[randInt(0, 39)]} with ${desc2[randInt(0, 39)]}`),
+        "address": `${randInt(10000,99990)} ${SeychellesStreetNames[randInt(0,48)]}`,
+        "city": seychellesCities[randInt(0,20)],
+        "state": 'Seychelles',
+        "country": "Seychelles",
+        "lat": -4.6796+randInt(1,5),
+        "lng": 55.4920+randInt(1,4),
+        "name": uV(new Set(), () => `${placeAdj[randInt(0, 48)]} ${placeNames[randInt(0, 48)]}`),
+        "description": uV(new Set(), () => `${desc1[randInt(0, 48)]} with ${desc2[randInt(0, 48)]}`),
         "price": fakePrice()
       };
+    }
+
+    else if (i>51 && i<=101){
+      randSpot = {
+        "ownerId": randInt(1, 25),
+        "address": `${randInt(10000,99990)} ${MaldivesStreetNames[randInt(0,23)]}`,
+        "city": MaldivesCities[randInt(0,23)],
+        "state": 'Maldives',
+        "country": "Maldives",
+        "lat": 3.2028+randInt(1,5),
+        "lng": 73.2207+randInt(1,4),
+        "name": uV(new Set(), () => `${placeAdj[randInt(0, 48)]} ${placeNames[randInt(0, 48)]}`),
+        "description": uV(new Set(), () => `${desc1[randInt(0, 48)]} with ${desc2[randInt(0, 48)]}`),
+        "price": fakePrice()
+      };
+
+    }
+    else {
+      randSpot = {
+        "ownerId": randInt(1, 25),
+        "address": `${randInt(10000,99990)} ${BoraBoraStreetNames[randInt(0,29)]}`,
+        "city": BoraBoraCities[randInt(0,16)],
+        "state": 'Bora Bora,French Polynesia',
+        "country": "France",
+        "lat": 3.2028+randInt(1,5),
+        "lng": 73.2207+randInt(1,4),
+        "name": uV(new Set(), () => `${placeAdj[randInt(0, 48)]} ${placeNames[randInt(0, 48)]}`),
+        "description": uV(new Set(), () => `${desc1[randInt(0, 48)]} with ${desc2[randInt(0, 48)]}`),
+        "price": fakePrice()
+      };
+
+    }
       allSpotsToMake.push(randSpot)
     }
 

@@ -20,7 +20,7 @@ module.exports = {
     */
     let allReviewImages=[]
     for (let user=1;user<26;user++){
-      for (let review=1;review<51;review++){
+      for (let review=1;review<151;review++){
         let reviewz={
           "reviewId": review,
           "url": `/seederSpots/reviewImages/img_${user}.jpg`

@@ -9,7 +9,10 @@ if (process.env.NODE_ENV === 'production') {
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    for (let i = 1; i < 51; i++) {
+    function randInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+    for (let i = 1; i < 151; i++) {
       let randSpotImages = [];
 
       for (let k = 1; k < 8; k++) {
@@ -21,18 +24,36 @@ module.exports = {
             "url": `/seederSpots/exterior/img_${i}.jpg`,
             "preview": true
           };
-        } else if (k > 1 && k < 7) {
+        } else if (k >= 2 && k <= 6) {
           randSpotImage = {
             "spotId": i,
             "url": `/seederSpots/${i}/img_${k - 1}.jpg`,
             "preview": false
           };
         } else {
-          randSpotImage = {
+          if (i<=51 && k===7){
+            randSpotImage= {
             "spotId": i,
-            "url": `/seederSpots/${i}/staticmap.jpg`,
+            "url": `/seederSpots/seychellesLocation/img_${randInt(1,3)}.jpg`,
             "preview": false
-          };
+            }
+          }
+          else if(i>=52 && i<=101 && k===7){
+            randSpotImage= {
+              "spotId": i,
+              "url": `/seederSpots/MaldivesLocation/img_${randInt(1,3)}.jpg`,
+              "preview": false
+              }
+
+          }
+          else if (i>101 && k===7){
+            randSpotImage= {
+              "spotId": i,
+              "url": `/seederSpots/BoraBoraLocation/img_${randInt(1,3)}.jpg`,
+              "preview": false
+              }
+
+          }
         }
 
         randSpotImages.push(randSpotImage);
