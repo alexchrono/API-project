@@ -210,7 +210,7 @@ router.post('/:spotId/reviews', requireAuth, validateLogin3, async (req, res) =>
                 message: `Spot couldn't be found`
             })
     }
-    
+
     let test = await Review.findOne({
         where: {
             userId: req.user.id,
@@ -798,7 +798,7 @@ if(minPrice && maxPrice){
             },
             {
                 model: SpotImage,
-                attributes: ['url']
+                attributes: ['url','preview']
             }]
     })
 
@@ -832,13 +832,15 @@ if(minPrice && maxPrice){
         delete ele.Reviews
     })
     newArray.forEach((ele) => {
+        let foundPreviewImage= false
         ele.SpotImages.forEach((spotimg) => {
-            if (spotimg.url) {
+            console.log('THIS IS SPOTIMG**',spotimg)
+
+            if (!foundPreviewImage && spotimg.preview) {
                 ele.previewImage = spotimg.url
+                console.log('THIS IS WHAT WE ATTACHING TO PREVIEWIMAGE',spotimg.url)
             }
-            else {
-                ele.previewImage = 'no image for this spot'
-            }
+       
 
 
         })
