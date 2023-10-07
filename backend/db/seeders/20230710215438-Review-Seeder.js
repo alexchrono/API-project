@@ -514,6 +514,7 @@ module.exports = {
     ]
   ]
 
+  let allReviewsToMake=[]
   for (let i=1;i<26;i++){
 
     for (let k=1;k<51;k++){
@@ -521,17 +522,22 @@ module.exports = {
         continue
       }
       else {
-      const reviewPicked=allReviews[randInt(0,2)][randInt(0,39)]
-      const randReview=  {
+      let reviewPicked=allReviews[randInt(0,2)][randInt(0,39)]
+      let randReview=  {
         "spotId": k,
         "userId": i,
         "review": reviewPicked.review,
         "stars": reviewPicked.stars
       }
-      await Review.create(randReview,{ validate: true })
+
+      allReviewsToMake.push(randReview)
+
     }
 
   }
+  await Review.bulkCreate(allReviewsToMake,{ validate: true })
+
+
   }
   },
 
@@ -544,3 +550,5 @@ module.exports = {
       console.error('Error while deleting seed data:', error);
     }
   }
+
+};

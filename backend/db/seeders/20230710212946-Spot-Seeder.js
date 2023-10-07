@@ -206,11 +206,11 @@ let options = {};
 if (process.env.NODE_ENV === 'production') {
   options.schema = process.env.SCHEMA;  // define your schema in options object
 }
-
+let allSpotsToMake=[]
 module.exports = {
   async up(queryInterface, Sequelize) {
-    for (let i = 0; i < 50; i++) {
-      const randSpot = {
+    for (let i = 1; i < 51; i++) {
+      let randSpot = {
         "ownerId": uV(randInt(1, 25), faker.random.number),
         "address": uV(new Set(), faker.address.streetAddress),
         "city": faker.address.city(),
@@ -222,8 +222,10 @@ module.exports = {
         "description": uV(new Set(), () => `${desc1[randInt(0, 39)]} ${desc2[randInt(0, 39)]}`),
         "price": fakePrice()
       };
-      await Spot.create(randSpot, { validate: true });
+      allSpotsToMake.push(randSpot)
     }
+
+    await Spot.bulkCreate(allSpotsToMake, { validate: true });
   },
 
   async down(queryInterface, Sequelize) {
