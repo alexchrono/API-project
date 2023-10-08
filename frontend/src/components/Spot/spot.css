@@ -274,3 +274,19 @@ margin-right:5px;
     margin-bottom:5px;
     padding-bottom:0px;
 }
+
+.selectedImage .respond {
+    filter: brightness(25%);
+}
+
+.overlaySeashell {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    height: 30px;
+    width: 30px;
+}
+
+.sidePieceHolder {
+    position: relative;
+}
