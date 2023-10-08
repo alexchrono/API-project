@@ -19,6 +19,16 @@ export default function Spot() {
   const thisUser = useSelector((state) => state.session);
   const [reloadData, setReloadData] = useState(1);
   const actionType = "DELETEAREVIEW";
+  const { SpotImages } = thisSpot;
+  const firstMainImage = SpotImages?.find(img => img.preview === true) || {}
+  const [mainImage, setMainImage] = useState(firstMainImage?.url)
+  const keysToReviews = Object.keys(thisSpotsReviews);
+  const keysToReviews2 = [...keysToReviews];
+  const [isLoading, setIsLoading] = useState(true)
+  const [pic2switch, setPic2Switch] = useState('')
+  const [startCarousel, setStartCarousel] = useState(0)
+  const [spotImagesState, setSpotImagesState] = useState([])
+
   function getMonthFromNum(number) {
     const months = [
       "January", "February", "March", "April", "May", "June",
@@ -31,12 +41,15 @@ export default function Spot() {
 
   useEffect(() => {
     const fetchData = async () => {
-      await ThunkLoadSingle(dispatch, spotId);
+      let findPicz = await ThunkLoadSingle(dispatch, spotId);
       await ThunkLoadReviewsBySpotId(dispatch, spotId);
+      setMainImage(findPicz?.SpotImages.find((img => img.preview)))
+      setSpotImagesState(findPicz?.SpotImages)
+      setIsLoading(false)
     };
 
     fetchData();
-  }, [dispatch, spotId, reloadData]);
+  }, [dispatch, spotId]);
 
   const handleModalOpen = () => {
     setIsModalOpen(true);
@@ -47,10 +60,11 @@ export default function Spot() {
     setIsModalOpen(false);
   };
 
-  const { SpotImages } = thisSpot;
-  const keysToReviews = Object.keys(thisSpotsReviews);
-  const keysToReviews2 = [...keysToReviews];
-  function doubleCheck(){
+
+  // const handleClickSmallPics=(sidePic)=>{
+  //   const ourIndex=SpotImages.findIndex(img => img.id===sidePic.id)
+  // }
+  function doubleCheck() {
     for (let ele of keysToReviews) {
       if (thisSpotsReviews[ele]['userId'] === thisUser.user.id || thisSpot.ownerId === thisUser.user.id) {
         return false;
@@ -59,14 +73,29 @@ export default function Spot() {
     }
   }
   function initialCheck() {
-    for (let ele of keysToReviews){
+    for (let ele of keysToReviews) {
 
-    if(thisSpotsReviews[ele]['User']['id'] === thisUser.user.id){return false}
+      if (thisSpotsReviews[ele]['User']['id'] === thisUser.user.id) { return false }
+    }
+    return true
   }
-  return true
-}
+  const imageSwitcher = (ele, index) => {
+    //first we set something to main image.  we just taking a variable
+    const prevMainImg = mainImage;
+    //then we copy state.  making a copy of an  array.
+    const copySpotImagesState = [...spotImagesState];
+    //find the index of the bigscreen guy
+    const mainImageIndex = copySpotImagesState.findIndex(img => img.url === prevMainImg?.url);
+    //
+    if (mainImageIndex !== -1) {
+      copySpotImagesState[mainImageIndex] = ele;
+    }
+
+    setMainImage(ele.url);
+    setSpotImagesState(copySpotImagesState);
+  }
   function checkNoReviewAndCheckNotOwner() {
-    if (initialCheck()===false) {return false}
+    if (initialCheck() === false) { return false }
     for (let ele of keysToReviews) {
       if (thisSpot.ownerId === thisUser.user.id) {
         return false;
@@ -74,8 +103,11 @@ export default function Spot() {
       return true;
     }
   }
+  if (isLoading) {
+    return null
+  }
 
-  return (
+  else return (
     <>
       <div className='daddyOfSingleDetail'>
         <h2 className="titleOfSingle">{thisSpot.name}</h2>
@@ -85,22 +117,31 @@ export default function Spot() {
       <div className="mainPicAndDaddyBelowWrapper">
         <div className='detailsPictureBox'>
           <div className="mainPic">
-            {SpotImages && SpotImages.map((ele) => {
-              if (ele.preview === true) {
-                return (<img key={ele.id} src={ele.url} className="respond" alt={`Image ${ele.id}`} />);
-              }
-            })}
+            {SpotImages && (
+              <img src={mainImage?.url} className="respond" alt={`picture of image ${mainImage?.id}`}></img>
+
+            )}
           </div>
           <div className="sidePicsContainer">
             <div className="sidePicsAndDaddyBelowWrapper">
-              {SpotImages && SpotImages.length > 1 && SpotImages.map((ele) => {
+              {spotImagesState && spotImagesState?.length > 1 && spotImagesState.slice(startCarousel, startCarousel + 4).map((ele, index) => {
                 if (ele.preview === false) {
-                  return <div className="sidePieceHolder"><img key={ele.id} src={ele.url} className="respond" alt={`Image ${ele.id}`} /> </div>;
+                  return <div className="sidePieceHolder"><img key={ele.id} id={`sidePic${index}`} src={ele?.url} className="respond" alt={`${ele.id}`} onClick={() => {
+                    imageSwitcher(ele, index)
+                  }} /> </div>;
                 }
                 return null;
               })}
             </div>
           </div>
+        </div>
+        <div>
+          <button onClick={(e) => {
+            setStartCarousel(prevStart => spotImagesState[prevStart - 4] ? (prevStart - 4) : 0)
+          }} disabled={startCarousel === 0}>Left</button>
+          <button onClick={(e) => {
+            setStartCarousel(prevStart => spotImagesState[prevStart + 4] ? (prevStart + 4) : prevStart)
+          }} disabled={startCarousel + 4 >= spotImagesState.length}>Right</button>
         </div>
         <div className="below70percent">
           <div className="below">
@@ -118,23 +159,23 @@ export default function Spot() {
               </span>
             ) : thisSpot.avgStarRating ? (
               <span className="starz">
-              <span className="material-symbols-outlined">grade</span>
-              {thisSpot.avgStarRating !== undefined
-                ? thisSpot.avgStarRating.toFixed(1)
-                : "N/A"}
-            </span>
+                <span className="material-symbols-outlined">grade</span>
+                {thisSpot.avgStarRating !== undefined
+                  ? thisSpot.avgStarRating.toFixed(1)
+                  : "N/A"}
+              </span>
             ) : null}
             <p className="inlineRev">{thisSpot.numReviews === 1 ? `${thisSpot.numReviews.toFixed(1)} Review` : thisSpot.numReviews > 1 ? `${thisSpot.numReviews.toFixed(1)} Reviews`
-  : null}
+              : null}
 
 
 
 
 
-</p>
-            </div>
+            </p>
+          </div>
           <div className="center">
-            <button type="button" className="bigRed" onClick={(e)=>{
+            <button type="button" className="bigRed" onClick={(e) => {
               alert("Feature coming soon")
             }}>
               Reserve
@@ -144,30 +185,30 @@ export default function Spot() {
       </div>
       <hr className="hrLine" />
       <div className="starAndReviewsForReviews">
-      {thisSpot.numReviews === 0 ? (
-  <span>
-    <span className="material-symbols-outlined">grade</span>
-    <span className="fancy">New</span>
-  </span>
-) : (
+        {thisSpot.numReviews === 0 ? (
+          <span>
+            <span className="material-symbols-outlined">grade</span>
+            <span className="fancy">New</span>
+          </span>
+        ) : (
 
 
-  Number.isInteger(thisSpot.avgStarRating) ? (
-    <span>
-      <span className="material-symbols-outlined">grade</span>
-      {thisSpot.avgStarRating.toFixed(1)}
-    </span>
-  ) : null
-)}
-    {thisSpot.numReviews === 1 ? (<><span className="bigger"> ·</span> <span className="fancy">{`${thisSpot.numReviews} Review`}</span></>) : thisSpot.numReviews > 1 ? (
-      <span>
-    <span className="bigger">  ·     </span>
-      <span className="fancy">{`${thisSpot.numReviews} Reviews`}</span>
-    </span>
-    ) : null}
+          Number.isInteger(thisSpot.avgStarRating) ? (
+            <span>
+              <span className="material-symbols-outlined">grade</span>
+              {thisSpot.avgStarRating.toFixed(1)}
+            </span>
+          ) : null
+        )}
+        {thisSpot.numReviews === 1 ? (<><span className="bigger"> ·</span> <span className="fancy">{`${thisSpot.numReviews} Review`}</span></>) : thisSpot.numReviews > 1 ? (
+          <span>
+            <span className="bigger">  ·     </span>
+            <span className="fancy">{`${thisSpot.numReviews} Reviews`}</span>
+          </span>
+        ) : null}
       </div>
 
-      {thisUser.user && typeof thisSpotsReviews === "object" && checkNoReviewAndCheckNotOwner()  && (
+      {thisUser.user && typeof thisSpotsReviews === "object" && checkNoReviewAndCheckNotOwner() && (
         <>
           <OpenModalButton
             buttonText="Post Your Review"
@@ -177,7 +218,7 @@ export default function Spot() {
             onClick={handleModalOpen}
           />
 
-            {!keysToReviews.length &&(<p>be the first to post a review!</p>)}
+          {!keysToReviews.length && (<p>be the first to post a review!</p>)}
         </>
       )}
 
@@ -187,7 +228,7 @@ export default function Spot() {
             {thisSpotsReviews[ele] && <h2 className="names">{thisSpotsReviews[ele]['User']["firstName"]}</h2>}
           </div>
           <div className="monthAndDate">
-            <h3 className="datez">{`${ getMonthFromNum(thisSpotsReviews[ele]["createdAt"].slice(5, 7))} ${thisSpotsReviews[ele]["createdAt"].slice(0, 4)} `}</h3>
+            <h3 className="datez">{`${getMonthFromNum(thisSpotsReviews[ele]["createdAt"].slice(5, 7))} ${thisSpotsReviews[ele]["createdAt"].slice(0, 4)} `}</h3>
           </div>
           <div className="reviewOfUser">
             <p>{thisSpotsReviews[ele]["review"]}</p>

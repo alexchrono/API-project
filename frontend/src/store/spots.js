@@ -128,7 +128,8 @@ export async function ThunkLoadSingle(dispatch,spotId){
     const  Spot  = await res.json(); // { Spots: [] }
     // do the thing with this data
     console.log('single Spot loaded is',Spot)
- dispatch(actionLoadSpot(Spot))
+ await dispatch(actionLoadSpot(Spot))
+ return Spot
 
 }
 else {
