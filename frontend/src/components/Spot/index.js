@@ -27,6 +27,7 @@ export default function Spot() {
   const [isLoading,setIsLoading]=useState(true)
   const [pic2switch,setPic2Switch]=useState('')
   const [startCarousel,setStartCarousel]=useState(0)
+  const [spotsForDisplay,setSpotsForDisplay]=useState([])
 
   function getMonthFromNum(number) {
     const months = [
@@ -42,7 +43,12 @@ export default function Spot() {
     const fetchData = async () => {
        let findPicz= await ThunkLoadSingle(dispatch, spotId);
       await ThunkLoadReviewsBySpotId(dispatch, spotId);
-      await setMainImage(findPicz?.SpotImages.find((img => img.preview)))
+      let ourBoy={...findPicz?.SpotImages.find((img => img.preview))}
+      let copyArray=[...findPicz.SpotImages]
+      ourBoy.preview=false
+      copyArray.unshift(ourBoy)
+      setMainImage(findPicz?.SpotImages.find((img => img.preview)))
+      setSpotsForDisplay(copyArray)
       setIsLoading(false)
     };
 
@@ -99,14 +105,13 @@ export default function Spot() {
       <div className="mainPicAndDaddyBelowWrapper">
         <div className='detailsPictureBox'>
           <div className="mainPic">
-             {SpotImages &&  (
+            {mainImage &&  (
               <img src={mainImage?.url} className="respond" alt={`picture of image ${mainImage?.id}`}></img>
-
-             )}
+)}
           </div>
           <div className="sidePicsContainer">
             <div className="sidePicsAndDaddyBelowWrapper">
-              {SpotImages && SpotImages?.length > 1 && SpotImages.slice(startCarousel,startCarousel+4).map((ele,index) => {
+              {spotsForDisplay && spotsForDisplay?.length > 1 && spotsForDisplay.slice(startCarousel,startCarousel+4).map((ele,index) => {
                 if (ele.preview === false) {
                   return <div className="sidePieceHolder"><img key={ele.id} id={`sidePic${index}`}src={ele?.url} className="respond" alt={`${ele.id}`} onClick={(e)=>{
 
@@ -123,10 +128,10 @@ export default function Spot() {
         </div>
         <div>
         <button onClick={(e)=>{
-          setStartCarousel(prevStart => SpotImages[prevStart-4]?(prevStart-4):0)
+          setStartCarousel(prevStart => spotsForDisplay[prevStart-4]?(prevStart-4):0)
         }} disabled={startCarousel === 0}>Left</button>
         <button onClick={(e)=>{
-          setStartCarousel(prevStart => SpotImages[prevStart+4]?(prevStart+4):prevStart)}} disabled={startCarousel + 4 >= SpotImages.length}>Right</button>
+          setStartCarousel(prevStart => spotsForDisplay[prevStart+4]?(prevStart+4):prevStart)}} disabled={startCarousel + 4 >= spotsForDisplay.length}>Right</button>
         </div>
         <div className="below70percent">
           <div className="below">
