@@ -120,7 +120,7 @@ export default function Spot() {
                       setMainImage(ele);
                     }}>
                       <img key={ele.id} id={`sidePic${index}`} src={ele?.url} className="respond" alt={`${ele.id}`} />
-                      {index === selectedImage && <img src="seashell.jpg" className="overlaySeashell" />}
+                      {index === selectedImage && <img src="/frontendImages/conch.png" className="overlaySeashell" />}
                     </div>
                   );
                 }
