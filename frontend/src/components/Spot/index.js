@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { NavLink, useHistory, Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { ThunkLoadSingle } from '../../store/spots';
 import { ThunkLoadReviewsBySpotId } from '../../store/reviews';
@@ -7,7 +7,6 @@ import OpenModalButton from '../OpenModalButton';
 import './spot.css';
 import SubmitReviewModal from '../SubmitReviewModal';
 import DeleteSpotModal from '../DeleteSpotModal';
-import { useModal, setTest, test } from '../../context/Modal';
 
 export default function Spot() {
   const { spotId } = useParams();
@@ -23,9 +22,7 @@ export default function Spot() {
   const firstMainImage = SpotImages?.find(img => img.preview === true) || {}
   const [mainImage, setMainImage] = useState(firstMainImage?.url)
   const keysToReviews = Object.keys(thisSpotsReviews);
-  const keysToReviews2 = [...keysToReviews];
   const [isLoading, setIsLoading] = useState(true)
-  const [pic2switch, setPic2Switch] = useState('')
   const [startCarousel, setStartCarousel] = useState(0)
   const [spotsForDisplay, setSpotsForDisplay] = useState([])
   const [selectedImage, setSelectedImage] = useState(0)
@@ -59,23 +56,21 @@ export default function Spot() {
   const handleModalOpen = () => {
     setIsModalOpen(true);
   };
-  //so i can reseed
+
 
   const handleModalClose = () => {
     setIsModalOpen(false);
   };
 
 
-  // const handleClickSmallPics=(sidePic)=>{
-  //   const ourIndex=SpotImages.findIndex(img => img.id===sidePic.id)
-  // }
   function doubleCheck() {
     for (let ele of keysToReviews) {
       if (thisSpotsReviews[ele]['userId'] === thisUser.user.id || thisSpot.ownerId === thisUser.user.id) {
         return false;
       }
-      return true;
     }
+      return true;
+
   }
   function initialCheck() {
     for (let ele of keysToReviews) {
@@ -89,9 +84,9 @@ export default function Spot() {
     for (let ele of keysToReviews) {
       if (thisSpot.ownerId === thisUser.user.id) {
         return false;
-      }
+      }}
       return true;
-    }
+
   }
   if (isLoading) {
     return null
@@ -231,7 +226,7 @@ export default function Spot() {
             <>
               <OpenModalButton
                 buttonText="Delete"
-                modalComponent={<DeleteSpotModal spotsId={ele} ourArray={thisSpotsReviews} actionType={'DELETEAREVIEW'} keysToReviews2={keysToReviews2} setReloadData={setReloadData} onClose={handleModalClose} />}
+                modalComponent={<DeleteSpotModal spotsId={ele} ourArray={thisSpotsReviews} actionType={'DELETEAREVIEW'} keysToReviews={keysToReviews} setReloadData={setReloadData} onClose={handleModalClose} />}
                 onClick={handleModalOpen}
               />
             </>
