@@ -18,6 +18,11 @@ h1 {
     text-shadow: 6px 0px 0px #715e5e;
 
 }
+#logo {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
 
 #starfish {
     width: 200px;
@@ -27,8 +32,10 @@ h1 {
 
 #centered {
     text-align: center;
-    height: 200px;
-    overflow: none;
+    height: auto;
+    position: relative;
+    width: 775px;
+    padding-bottom: 30px;
 }
 
 #mainText {
@@ -36,5 +43,36 @@ margin: 0px;
 }
 #subtext {
     font-size: 20px;
+    position: absolute;
+    right: 0;
+    bottom: -32px;
+
+    max-width: calc(100% - 20px);
     text-align: right;
+}
+
+
+#select {
+    font-size: 31px;
+    margin-left:12%;
+}
+
+#allFlags {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 98%;
+    padding: 0 1%;
+    margin-top:130px;
+
+}
+
+#allFlags img {
+    width: 23%;
+    height: auto;
+    filter: brightness(0.3)
+}
+
+#allFlags img:hover {
+    filter: brightness(1)
 }
