@@ -1,0 +1,37 @@
+@font-face {
+    font-family: 'Rb';
+    src: url('../../../public/fonts/Red\ Bright\ Demo.otf') format('opentype');
+}
+
+body {
+
+    background: linear-gradient(to right,#3498DB, #A9EEE6,#f4d5d5,#f7cbcb)
+}
+h1 {
+    display: inline-block;
+    font-family: Rb;
+    font-size: 160px;
+    font-weight: 1;
+    color: #ec8080;
+    background: linear-gradient(45deg, red, yellow, green);
+    -webkit-background-clip: text;
+    color: transparent;
+    text-shadow: 2px 0px 0px #8e7676;
+
+}
+
+#starfish {
+    width: 200px;
+    vertical-align: bottom;
+    margin-bottom: 16px;
+}
+
+#centered {
+    text-align: center;
+    height: 200px;
+    overflow: none;
+}
+
+#mainText {
+margin: 0px;
+}
