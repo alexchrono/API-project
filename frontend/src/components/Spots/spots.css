@@ -18,7 +18,6 @@
 }
 
 .cityStateandStars {
-  margin-top:0px;
   padding-top:0px;
   display: flex;
   justify-content: space-between;
@@ -53,11 +52,9 @@ display: none;
 .toolTip:hover .tooltiptext {
 
   display: inline-block;
-  bottom:78%;
+  bottom:90%;
   left: 50%;
   transform: translateX(-50%);
-  visibility: visible;
-  opacity: 1;
   position: absolute;
   background-color: beige;
   font-size:2vw;

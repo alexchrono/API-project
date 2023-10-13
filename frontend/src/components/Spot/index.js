@@ -17,11 +17,11 @@ export default function Spot() {
   const thisSpotsReviews = useSelector((state) => state.reviews.spot);
   const thisUser = useSelector((state) => state.session);
   const [reloadData, setReloadData] = useState(1);
-  const actionType = "DELETEAREVIEW";
   const { SpotImages } = thisSpot;
   const firstMainImage = SpotImages?.find(img => img.preview === true) || {}
   const [mainImage, setMainImage] = useState(firstMainImage?.url)
   const keysToReviews = Object.keys(thisSpotsReviews);
+  const keysToReviewsReversed=[...keysToReviews.reverse()]
   const [isLoading, setIsLoading] = useState(true)
   const [startCarousel, setStartCarousel] = useState(0)
   const [spotsForDisplay, setSpotsForDisplay] = useState([])
@@ -211,7 +211,7 @@ export default function Spot() {
         </>
       )}
 
-      {thisSpotsReviews && keysToReviews.length >= 1 && keysToReviews.reverse().map((ele) => (
+      {thisSpotsReviews && keysToReviews.length >= 1 && keysToReviewsReversed.map((ele) => (
         <div className="eachReview" key={ele}>
           <div className="nameOfReviewer">
             {thisSpotsReviews[ele] && <h2 className="names">{thisSpotsReviews[ele]['User']["firstName"]}</h2>}

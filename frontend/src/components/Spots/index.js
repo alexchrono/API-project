@@ -1,16 +1,14 @@
-// frontend/src/components/Navigation/index.js
+
 import React from 'react';
 import { useEffect } from 'react'
-import { NavLink, useHistory, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-// import { getInitialState } from '../../store/spots';
 import { ThunkLoad } from '../../store/spots';
 import './spots.css'
 
 
 
 export default function Spots() {
-  let history = useHistory()
   const dispatch = useDispatch();
   let allTheSpots = useSelector((state) => state.spots.allSpots)
   useEffect(() => {
@@ -23,7 +21,7 @@ export default function Spots() {
 
 
   if (!Array.isArray(allTheSpots)) {
-    console.log(`allTheSpotsisnotanArrayitLooksLike`, allTheSpots)
+    return null
   }
   else {
     return (
@@ -34,17 +32,16 @@ export default function Spots() {
 
           <div className='daddyOfPics'>
 
-          <Link exact to={`/spots/${ele.id}`} className="link" key={ele.id}>
-            <div className='imgDiv toolTip'>
-              <img src={`${process.env.PUBLIC_URL}${ele.previewImage}`} className='image2' alt={`Spot ${ele.id}`} />
-              {/* <img src={ele.previewImage} className='image2' alt={`Spot ${ele.id}`} /> */}
-            <span className='tooltiptext'>{ele.name}</span>
-            </div>
-            <div className="cityStateandStars fancyText"> <span className='inlineCity'>{`${ele.city}, ${ele.state}`}</span>  {!isNaN(ele.avgRating) ? (<span className='inline'><span className="material-symbols-outlined">
-grade</span>{ele.avgRating.toFixed(1)}</span>) : (<span className="fancyText">New</span>)}
-            </div>
-            <div className="price fancyText"> <p className="left">{`$${ele.price} night`}</p>
-            </div>
+            <Link exact to={`/spots/${ele.id}`} className="link" key={ele.id}>
+              <div className='imgDiv toolTip'>
+                <img src={`${process.env.PUBLIC_URL}${ele.previewImage}`} className='image2' alt={`Spot ${ele.id}`} />
+                <span className='tooltiptext'>{ele.name}</span>
+              </div>
+              <div className="cityStateandStars fancyText"> <span className='inlineCity'>{`${ele.city}, ${ele.state}`}</span>  {!isNaN(ele.avgRating) ? (<span className='inline'><span className="material-symbols-outlined">
+                grade</span>{ele.avgRating.toFixed(1)}</span>) : (<span className="fancyText">New</span>)}
+              </div>
+              <div className="price fancyText"> <p className="left">{`$${ele.price} night`}</p>
+              </div>
             </Link>
           </div>
         ))}
@@ -55,8 +52,3 @@ grade</span>{ele.avgRating.toFixed(1)}</span>) : (<span className="fancyText">Ne
 
   }
 }
-
-
-/*onClick={(e)=>{
-  history.push(`/spots/${ele.id}`)
-}} */
