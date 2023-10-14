@@ -13,6 +13,10 @@ const UPDATE_SPOT = 'session/update_spot';
 const DELETE_SPOT = 'session/delete_spot';
 const LOAD_SPOT = 'session/load_spot'; // GET spots/:spotId
 const LOAD_SPOTS_CURRENT_USER = 'session/load_spots/current_user';
+const LOAD_SPOTS_BORABORA = 'session/load_spots/borabora'
+const LOAD_SPOTS_MALDIVES = 'session/load_spots/maldives'
+const LOAD_SPOTS_SEYCHELLES = 'session/load_spots/seychelles'
+
 
 
 // export const getInitialState = async () => {
@@ -69,6 +73,19 @@ export const createSpot = () => ({
 });
 export const loadSpots = (spots) => ({
   type: LOAD_SPOTS,
+  payload:spots
+});
+
+export const loadSpotsBoraBora = (spots) => ({
+  type: LOAD_SPOTS_BORABORA,
+  payload:spots
+});
+export const loadSpotsSeychelles = (spots) => ({
+  type: LOAD_SPOTS_SEYCHELLES,
+  payload:spots
+});
+export const loadSpotsMaldives = (spots) => ({
+  type: LOAD_SPOTS_MALDIVES,
   payload:spots
 });
 export const actionAddSpot = (newSpot) => ({

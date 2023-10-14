@@ -26,6 +26,7 @@ export default function Spot() {
   const [startCarousel, setStartCarousel] = useState(0)
   const [spotsForDisplay, setSpotsForDisplay] = useState([])
   const [selectedImage, setSelectedImage] = useState(0)
+  
 
   function getMonthFromNum(number) {
     const months = [

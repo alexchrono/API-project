@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 import './LandingPage.css';
 
 
 export default function LandingPage() {
 
     const [selectedImage, setSelectedImage] = useState(0)
+    const history=useHistory()
 
     return (
         <>
@@ -22,10 +24,19 @@ export default function LandingPage() {
                 </div>
 
                 <div id='allFlags'>
-                    <img src={process.env.PUBLIC_URL + '/frontendImages/boraboraflag.jpg'} ></img>
-                    <img src={process.env.PUBLIC_URL + '/frontendImages/MaldivesFlag.jpg'}></img>
-                    <img src={process.env.PUBLIC_URL + '/frontendImages/seychellesflag.jpg'}></img>
-                    <img src={process.env.PUBLIC_URL + '/frontendImages/chooseAll.jpg'}></img>
+
+                    <div class='flag' onClick={(e)=>{
+                        history.push('/destination/bora-bora')
+                    }}><p class='country'>Bora Bora</p><img src={process.env.PUBLIC_URL + '/frontendImages/boraboraflag.jpg'} ></img></div>
+                    <div class='flag' onClick={(e)=>{
+                        history.push('/destination/maldives')
+                    }}><p class='country'>Maldives</p><img src={process.env.PUBLIC_URL + '/frontendImages/MaldivesFlag.jpg'}></img></div>
+                    <div class='flag' onClick={(e)=>{
+                        history.push('/destination/seychelles')
+                    }}><p class='country'>Seychelles</p><img src={process.env.PUBLIC_URL + '/frontendImages/seychellesflag.jpg'}></img></div>
+                    <div class='flag' onClick={(e)=>{
+                        history.push('/destination/all')
+                    }}><p class='country'>All</p><img src={process.env.PUBLIC_URL + '/frontendImages/chooseAll.jpg'}></img></div>
 
                 </div>
 

@@ -31,7 +31,9 @@ function App() {
         <Route exact path='/reviews/current' component={ManageReviews} />
         <Route exact path="/spots/new" component={createSpot} />
         <Route exact path="/spots/:spotId" component={spot} />
-        <Route exact path="/z" component={spots} />
+        <Route exact path="/destination/:country" component={spots} />
+        
+
         <Route exact path="/" component={LandingPage} />
 
         </Switch>}

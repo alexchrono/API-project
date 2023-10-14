@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { useEffect } from 'react'
-import { Link } from 'react-router-dom';
+import { Link,useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { ThunkLoad } from '../../store/spots';
 import './spots.css'
@@ -11,9 +11,15 @@ import './spots.css'
 export default function Spots() {
   const dispatch = useDispatch();
   let allTheSpots = useSelector((state) => state.spots.allSpots)
+  const {country}=useParams()
   useEffect(() => {
     const fetchData = async () => {
-      await ThunkLoad(dispatch);
+      if (country==='all')await ThunkLoad(dispatch)
+
+      else if(country==='maldives') await ThunkLoadMaldives(dispatch)
+      else if (country==='bora-bora') await thunkLoadBoraBora(dispatch)
+      else if (country==='seychelles') await thunkLoadSeychelles(dispatch)
+
     };
 
     fetchData();
